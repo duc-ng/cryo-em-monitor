@@ -1,0 +1,27 @@
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node index",
+    "dev": "nodemon index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duc-ng/web-monitoring.git"
+  },
+  "author": "Duc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/duc-ng/web-monitoring/issues"
+  },
+  "homepage": "https://github.com/duc-ng/web-monitoring#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "glob": "^7.1.6"
+  }
+}
