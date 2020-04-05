@@ -22,14 +22,15 @@ Installing Node.js on MacOS:
 ```
 brew install node
 ```
-Other: [official installation page](https://nodejs.org/en/download/package-manager/)
+Other: [official Node.js installation page](https://nodejs.org/en/download/package-manager/)
 
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [React.js](https://reactjs.org/) - Frontend framework
+* [Node.js](https://expressjs.com/) - JavaScript runtime environemnt
+* [Express.js](https://expressjs.com/) - backend framework
+* [Plot.ly](https://plotly.com/javascript/) - Interactive plots
 
 
 
