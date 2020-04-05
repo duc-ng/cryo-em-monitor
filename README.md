@@ -46,7 +46,7 @@ http://localhost:3000
 ## Built With
 
 * [React.js](https://reactjs.org/) - Frontend framework
-* [Node.js](https://expressjs.com/) - JavaScript runtime environemnt
+* [Node.js](https://nodejs.org/en/) - JavaScript runtime environemnt
 * [Express.js](https://expressjs.com/) - backend framework
 * [Plot.ly](https://plotly.com/javascript/) - Interactive plots
 
