@@ -22,7 +22,25 @@ Installing Node.js on MacOS:
 ```
 brew install node
 ```
-Other: [official Node.js installation page](https://nodejs.org/en/download/package-manager/)
+Other: official Node.js installation page
+
+```
+https://nodejs.org/en/download/package-manager/
+```
+
+### Run
+
+Run application by navigating to folder via 'cd'. Then:
+```
+node app.js
+
+```
+And open 
+```
+http://localhost:3000
+
+```
+
 
 
 ## Built With
