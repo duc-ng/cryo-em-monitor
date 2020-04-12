@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Web tool</title>
     <link rel="stylesheet" href="style.css" />
-    <script src="skript.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="plotly-latest.min.js"></script>
+    <script src="skript.js" defer></script>
   </head>
   <body style="font-family: Helvetica, Arial, Geneva, sans-serif;">
     <ul>
@@ -34,19 +35,19 @@
       </h2>
       <hr />
       <div class="overview" id="activityBox1">
-        <span class="counter" id="imagesRecorded"></span>
+        <span class="counter" id="imagesRecorded">0</span>
         <br />Images Recorded
       </div>
       <div class="overview" id="activityBox2">
-        <span class="counter" id="imagesImported"></span>
+        <span class="counter" id="imagesImported">0</span>
         <br />Images Imported
       </div>
       <div class="overview" id="activityBox3">
-        <span class="counter" id="ImagesProcessed"></span>
+        <span class="counter" id="imagesProcessed">0</span>
         <br />Images Processed
       </div>
       <div class="overview" id="activityBox4">
-        <span class="counter" id="processingErrors"></span>
+        <span class="counter" id="processingErrors">0</span>
         <br />Processing Errors
       </div>
     </div>
@@ -54,17 +55,18 @@
     <div class="wrapper">
       <h2 id="Graphs">Graphs</h2>
       <hr />
-      <div id="chart1"></div>
-      <div id="chart2"></div>
-      <div id="chart3"></div>
-      <div id="chart4"></div>
-      <div id="chart5"></div>
-      <div id="chart6"></div>
-
+      <div id="chart-container">
+        <div id="chart1"></div>
+        <div id="chart2"></div>
+        <div id="chart3"></div>
+        <div id="chart4"></div>
+        <div id="chart5"></div>
+        <div id="chart6"></div>
+      </div>
     </div>
 
-    <!--Last movie-->
-    <h2 id="Lastmovie">Last movie</h2>
+    <!--Recent Thumbnails-->
+    <h2 id="Lastmovie">Recent Thumbnails</h2>
     <hr />
     <img
       src="image.png"
@@ -82,26 +84,7 @@
       style="width: 256px; height: 256px;"
     />
 
-    <!--Entire session-->
-    <h2 id="Entiresession">Thumbnails for the entire session</h2>
-    <hr />
-    <img
-      src="image.png"
-      alt="HTML5 Icon"
-      style="width: 256px; height: 256px;"
-    />
-    <img
-      src="image.png"
-      alt="HTML5 Icon"
-      style="width: 256px; height: 256px;"
-    />
-    <img
-      src="image.png"
-      alt="HTML5 Icon"
-      style="width: 256px; height: 256px;"
-    />
-
-    <!--Logs         -->
+    <!--Logs-->
     <h2 id="logs">Logs</h2>
     <log>bla bla bla bla bla bla</log>
   </body>

@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "express": "^4.17.1",
-    "glob": "^7.1.6"
+    "glob": "^7.1.6",
+    "socket.io": "^2.3.0"
   }
 }

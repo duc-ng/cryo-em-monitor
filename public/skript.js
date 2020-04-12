@@ -1,146 +1,100 @@
-//call API: images recorded
-function fetchImagesRecorded() {
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      var myObj = JSON.parse(this.responseText);
-      document.getElementById("imagesRecorded").innerHTML = myObj.number;
-    }
-  };
-  xmlhttp.open("GET", "/api/imagesrecorded", true);
-  xmlhttp.send();
-}
-fetchImagesRecorded()
-setInterval(fetchImagesRecorded, 1000);
+//variables
+var fixedDataPoints = 5;
 
-//call API: images recorded
-function fetchImagesImported() {
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      var myObj = JSON.parse(this.responseText);
-      document.getElementById("imagesImported").innerHTML = myObj.number;
-    }
-  };
-  xmlhttp.open("GET", "/api/imagesimported", true);
-  xmlhttp.send();
-}
-fetchImagesImported()
-setInterval(fetchImagesImported, 1000);
-
-//call API: images processed
-function fetchImagesProcessed() {
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      var myObj = JSON.parse(this.responseText);
-      document.getElementById("ImagesProcessed").innerHTML = myObj.number;
-    }
-  };
-  xmlhttp.open("GET", "/api/imagesprocessed", true);
-  xmlhttp.send();
-}
-fetchImagesProcessed()
-setInterval(fetchImagesProcessed, 1000);
-
-
-//call API: processing errors
-function fetchProcessingErrors() {
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      var myObj = JSON.parse(this.responseText);
-      document.getElementById("processingErrors").innerHTML = myObj.number;
-    }
-  };
-  xmlhttp.open("GET", "/api/processingerrors", true);
-  xmlhttp.send();
-}
-fetchProcessingErrors()
-setInterval(fetchProcessingErrors, 1000);
-
-
-//call API: get plot data
-function fetchMeanValue(callback) {
-  var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      return callback (JSON.parse(this.responseText));
-    }
-  };
-  xmlhttp.open("GET", "/api/plotdata", true);
-  xmlhttp.send();
-}
-
-//draw charts
-function drawPlot(type) {
-  fetchMeanValue(function (plotdata) {
-
-    //init variables
-    var xData = plotdata.map((a) => a.mmsdateProcessed_Value);
-    var yData;
-    var info;
-    var divElement;
-
-    switch(type){
-      case 1: 
-        yData = plotdata.map((a) => a.mmsmean_Value);
-        info = plotdata[0].mmsmean_Info;
-        divElement = "chart1";
-        break;
-      case 2: 
-        yData = plotdata.map((a) => a.mmsdrift_Value);
-        info = plotdata[0].mmsdrift_Info;
-        divElement = "chart2";
-        break;
-      case 3: 
-        yData = plotdata.map((a) => a.mmsiciness_Value);
-        info = plotdata[0].mmsiciness_Info;
-        divElement = "chart3";
-        break;
-      case 4: 
-        yData = plotdata.map((a) => a.mmsdefocus_Value);
-        info = plotdata[0].mmsdefocus_Info;
-        divElement = "chart4";
-        break;
-      case 5: 
-        yData = plotdata.map((a) => a.mmsresolution_Value);
-        info = plotdata[0].mmsresolution_Info;
-        divElement = "chart5";
-        break;
-      case 6: 
-        yData = plotdata.map((a) => a.mmsccOfCtfFit_Value);
-        info = plotdata[0].mmsccOfCtfFit_Info;
-        divElement = "chart6";
-        break;
-      default: console.log ("error: Wrong plot type number")
-    }
+/*
+initializes variables and plots
+assumption: all star files have the same object structure
+*/
+function init(firstDataPoint) {
+  //iterate through all non-fixed star values
+  for (i = fixedDataPoints; i < Object.keys(firstDataPoint).length; i = i + 2) {
+    //create div
+    var div = document.createElement("div");
+    div.id = "chart" + i;
+    var container = document.getElementById("chart-container");
+    container.appendChild(div);
 
     //init plot
     var data = [
       {
-        x: xData,
-        y: yData,
+        y: [],
+        x: [],
         mode: "markers",
         type: "scatter",
       },
     ];
-
     var layout = {
-      title: info,
+      title: Object.values(firstDataPoint)[i + 1],
       xaxis: {
         type: "date",
         //tickformat: '%H:%M'
       },
+      //autosize: false,
+      //height: 300,
     };
-
-    //draw plot
-    Plotly.react(divElement, data, layout);
-  });
+    Plotly.newPlot(div.id, data, layout);
+  }
 }
-setInterval(drawPlot, 1000, 1);
-setInterval(drawPlot, 1000, 2);
-setInterval(drawPlot, 1000, 3);
-setInterval(drawPlot, 1000, 4);
-setInterval(drawPlot, 1000, 5);
-setInterval(drawPlot, 1000, 6);
+
+/*
+fill data points in plots
+assumption: all star files have the same object structure
+*/
+function updatePlot(datapoint) {
+  for (i = fixedDataPoints; i < Object.keys(datapoint).length; i = i + 2) {
+    Plotly.extendTraces(
+      "chart" + i,
+      {
+        x: [[Object.values(datapoint)[4]]],
+        y: [[Object.values(datapoint)[i]]],
+      },
+      [0]
+    );
+  }
+}
+
+/*
+TODO: update activity boxes
+*/
+function updateActivity(datapoint) {
+  //TODO: check for real default value
+  var default_value = "0";
+
+  //Box 1: Images Recorded
+  if (datapoint._mmsdateAuqired_Value != default_value) {
+    var value = parseInt(document.getElementById("imagesRecorded").innerHTML);
+    document.getElementById("imagesRecorded").innerHTML = value + 1;
+  }
+
+  //Box 2: Images Imported
+  if (datapoint._mmsdateImported_Value != default_value) {
+    var value = parseInt(document.getElementById("imagesImported").innerHTML);
+    document.getElementById("imagesImported").innerHTML = value + 1;
+  }
+
+  //Box 3: Images Processed
+  if (datapoint._mmsdateProcessed_Value != default_value) {
+    var value = parseInt(document.getElementById("imagesProcessed").innerHTML);
+    document.getElementById("imagesProcessed").innerHTML = value + 1;
+  }
+
+  //Box 4: Processing errors
+  if (datapoint._mmsdateExported_Value != default_value) {
+    var value = parseInt(document.getElementById("processingErrors").innerHTML);
+    document.getElementById("processingErrors").innerHTML = value + 1;
+  }
+}
+
+//main: receive new data
+var socket = io();
+var noData = true;
+socket.on("newData", function (datapoint) {
+  if (noData) {
+    init(datapoint);
+    noData = false;
+  }
+  updateActivity(datapoint);
+  updatePlot(datapoint);
+});
+
+socket.on("newImages", function (datapoint) {});
