@@ -2,16 +2,15 @@
 
 Web application for cryo-em data of the MPIB.
 
-## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
-### Prerequisites
+## Prerequisites
 
 - **Node.js** 
 
 
-### Installing
+## Installing
 
 Installing Node.js on Linux distributions:
 ```
@@ -28,18 +27,23 @@ Other: official Node.js installation page
 https://nodejs.org/en/download/package-manager/
 ```
 
-### Run
+## Run
 
-Run application by navigating to folder via 'cd'. Then:
+Navigating to folder:
+```bash
+cd server 
 ```
-node app.js
+Starting options:
 
+```bash
+npm run dev  #start server & client
+npm run server #start server 
+npm run client #start client 
 ```
-And open 
-```
-http://localhost:3000
 
-```
+Links
+- Server: http://localhost:3000
+- Client: http://localhost:5000
 
 
 

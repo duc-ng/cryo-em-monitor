@@ -1,0 +1,32 @@
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "server": "nodemon app.js",
+    "client": "cd ./../client && npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duc-ng/web-monitoring.git"
+  },
+  "author": "Duc",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/duc-ng/web-monitoring/issues"
+  },
+  "homepage": "https://github.com/duc-ng/web-monitoring#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "concurrently": "^5.1.0",
+    "express": "^4.17.1",
+    "glob": "^7.1.6",
+    "socket.io": "^2.3.0"
+  }
+}
