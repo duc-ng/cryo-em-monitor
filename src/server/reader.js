@@ -2,6 +2,7 @@
 const path = require("path");
 const fs = require("fs");
 const fspromises = require("fs").promises;
+const config = require("./../config.json");
 
 //replace specific char in string
 String.prototype.replaceAt = function (index, replacement) {
@@ -12,15 +13,15 @@ String.prototype.replaceAt = function (index, replacement) {
   );
 };
 
-//true, if creation date of file is older than x hours
-function fileIsYoungerThan(file, hours) {
+//true, if creation date of file is older than x minutes
+function fileIsYoungerThan(file, time) {
   const { birthtime } = fs.statSync(file);
-  return new Date() - birthtime < hours * 60 * 60 * 1000;
+  return new Date() - birthtime < time  * 60 * 1000;
 }
 
 /*
 convert star-file to object
-assumption: first 5 values are fixed (1 key + 4 dates)
+assumption: first value is fixed (key)
 */
 async function readStarFile(file) {
   try {
@@ -35,14 +36,6 @@ async function readStarFile(file) {
 
     //init variables
     var valueCount = Math.floor(substrings.length / 2);
-    var fixedValues = 0;
-    if (file.endsWith("data.star")) {
-      fixedValues = 5;
-    } else if (file.endsWith("images.star")) {
-      fixedValues = 1;
-    } else {
-      console.log("error: file reading");
-    }
 
     //clean data
     for (i = 0; i < substrings.length; i++) {
@@ -50,17 +43,18 @@ async function readStarFile(file) {
       substrings[i] = substrings[i].replace('"', "");
       substrings[i] = substrings[i].replace('"', "");
 
-      //if key or numeric value -> convert to float
+      //dates
       if (
-        i == valueCount ||
-        (!isNaN(parseFloat(substrings[i])) && i > valueCount + fixedValues - 1)
+        i > valueCount &&
+        file.endsWith(Object.keys(config.files)[0]) &&
+        substrings[i].length > 1
       ) {
-        substrings[i] = parseFloat(substrings[i]);
+        substrings[i] = substrings[i].replaceAt(10, " ");
       }
 
-      //clean dates
-      if (i > valueCount && i < valueCount + fixedValues) {
-        substrings[i] = substrings[i].replaceAt(10, " ");
+      //numeric values
+      if (i >= valueCount && substrings[i].match(/^[0-9.]+$/) != null) {
+        substrings[i] = parseFloat(substrings[i]);
       }
     }
 
@@ -74,7 +68,7 @@ async function readStarFile(file) {
 
   } catch (err) {
     console.log(err);
-    return
+    return;
   }
 }
 

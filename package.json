@@ -24,10 +24,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "client": "npm start",
-    "server": "cd ./src/server && nodemon server.js",
+    "server": "nodemon app.js",
     "dev": "concurrently \"npm run server\" \"npm start\""
   },
-  "proxy": "http://localhost:5000",
   "eslintConfig": {
     "extends": "react-app"
   },

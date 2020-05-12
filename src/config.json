@@ -1,0 +1,51 @@
+{
+  "app": {
+    "host": "localhost",
+    "port": 5000
+  },
+  "data": {
+    "folder": "4Duc/data4Web/Titan1/",
+    "maxAge_min": 144000,
+    "refresh_ms": 1000
+  },
+  "files": {
+    "times.star": {
+      "value0": "_mmsImageKey_Value",
+      "value1": "_mmsdateAuqired_Value",
+      "value2": "_mmsdateImported_Value",
+      "value3": "_mmsdateProcessed_Value",
+      "value4": "_mmsdateExported_Value",
+      "value5": "_mmsdateError_Value"
+    },
+    "data.star": {
+      "value0": "_mmsImageKey_Value",
+      "value1": "_mmsmean_Value",
+      "value2": "_mmsmean_Info",
+      "value3": "_mmsdrift_Value",
+      "value4": "_mmsdrift_Info",
+      "value5": "_mmsiciness_Value",
+      "value6": "_mmsiciness_Info",
+      "value7": "_mmsdefocus_Value",
+      "value8": "_mmsdefocus_Info",
+      "value9": "_mmsresolution_Value",
+      "value10": "_mmsresolution_Info",
+      "value11": "_mmsccOfCtfFit_Value",
+      "value12": "_mmsccOfCtfFit_Info"
+    },
+    "images.star": {
+      "value0": "_mmsImageKey_Value",
+      "value1": "_mmsrawAvg_Name",
+      "value2": "_mmsrawAvg_Info",
+      "value3": "_mmspsRawAvg_Name",
+      "value4": "_mmspsRawAvg_Info",
+      "value5": "_mmsmotionCorrAvg_Name",
+      "value6": "_mmsmotionCorrAvg_Info",
+      "value7": "_mmspsMotionCorrAvg_Name",
+      "value8": "_mmspsMotionCorrAvg_Info",
+      "value9": "_mmsdriftplot_Name",
+      "value10": "_mmsdriftplot_Info",
+      "value11": "_mmsctfdiag_Name",
+      "value12": "_mmsctfdiag_Info"
+    }
+  }
+}

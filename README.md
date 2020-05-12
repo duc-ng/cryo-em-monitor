@@ -5,10 +5,6 @@ Web application for cryo-em data of the MPIB.
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
-## Prerequisites
-
-- **Node.js** 
-
 
 ## Installing
 
@@ -21,19 +17,15 @@ Installing Node.js on MacOS:
 ```
 brew install node
 ```
-Other: official Node.js installation page
+Other: 
 
-```
-https://nodejs.org/en/download/package-manager/
-```
+- https://nodejs.org/en/download/package-manager/
+
 
 ## Run
 
-Navigating to folder:
-```bash
-cd server 
-```
-Starting options:
+
+Navigate to root folder and run:
 
 ```bash
 npm run dev  #start server & client
