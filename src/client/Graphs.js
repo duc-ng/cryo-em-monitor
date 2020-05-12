@@ -6,10 +6,9 @@ export default class Graphs extends Component {
     super(props);
     this.state = {
       response: true,
-      revision: 0,
       line1: {
-        x: [props.x],
-        y: [props.y], 
+        x: this.props.coord.x,
+        y: this.props.coord.y, 
         name: 'Line 1',
         mode: "markers",
         type: "scatter",
@@ -22,21 +21,26 @@ export default class Graphs extends Component {
           //tickformat: '%H:%M'
         },
         //autosize: false,
-        //height: 300,
+        height: 300,
       }
     };
   }
 
-  addData = () =>  {
-    const { line1, layout } = this.state;
-    line1.x.push(this.props.x)
-    line1.y.push(this.props.y)
-    this.setState({ revision: this.state.revision + 1 });
+  componentDidUpdate(prevProps) {
+    if (this.props.coord !== prevProps.coord) {
+      var temp = this.state.line1;
+      temp.x = this.props.coord.x;
+      temp.y = this.props.coord.y;
+      this.setState((state, props) => {
+        return {line1: temp};
+      });
+    }
   }
 
+  
   render() {
     return (
-      <div>
+      <React.Fragment>
         {this.state.response ? (
           <Plot
             revision={this.state.revision}
@@ -46,7 +50,7 @@ export default class Graphs extends Component {
         ) : (
           <p>Loading...</p>
         )}
-      </div>
+      </React.Fragment>
     );
   }
 }

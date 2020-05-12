@@ -30,7 +30,10 @@
       "value9": "_mmsresolution_Value",
       "value10": "_mmsresolution_Info",
       "value11": "_mmsccOfCtfFit_Value",
-      "value12": "_mmsccOfCtfFit_Info"
+      "value12": "_mmsccOfCtfFit_Info",
+      "value13": "_mmsastigmatism_Value",
+      "value14": "_mmsastigmatism_Info"
+      
     },
     "images.star": {
       "value0": "_mmsImageKey_Value",
@@ -47,5 +50,13 @@
       "value11": "_mmsctfdiag_Name",
       "value12": "_mmsctfdiag_Info"
     }
+  },
+  "plots": {
+      "plot1": "Mean Pixel Values of Raw Stacks [Counts/px/frame]",
+      "plot2": "Total Sample Drift [Angstroms]",
+      "plot3": "Iciness [a.u.]",
+      "plot4": "Defocus Fit [Micrometers]",
+      "plot5": "Resolution of CTF Fit [Angstroms]",
+      "plot6": "CC Value of CTF Fit [a.u.]"
   }
 }

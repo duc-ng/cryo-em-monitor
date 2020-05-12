@@ -1,75 +1,97 @@
-import React, { Component } from 'react'
-import socketIOClient from "socket.io-client"; 
-import Graphs from './Graphs'
+import React, { Component } from "react";
+import socketIOClient from "socket.io-client";
+import Graphs from "./Graphs";
+import NavBar from "./NavBar";
+import Backdrop from "./Backdrop";
+import Typography from '@material-ui/core/Typography';
 
 export default class App extends Component {
-  
-  constructor (props){
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
-      config: require('./../config.json'),
+      config: require("./../config.json"),
       timesLoaded: false,
       dataLoaded: false,
       times: [],
-      data: []
-    }
+      data: [],
+    };
   }
 
+  componentDidMount() {
+    const socket = socketIOClient(
+      this.state.config.app.host + ":" + this.state.config.app.port
+    );
 
-  componentDidMount(){
-    const {config, times, data} = this.state;
-    const socket = socketIOClient(config.app.host+":"+config.app.port); 
-    
     //new times.star
-    socket.on("newTimes", item => {
-        this.setState({
-          timesLoaded: true,
-          times: times.push(item)
-        });
-    });
-
-    //new data.star
-    socket.on("newData", item => {
+    socket.on("newTimes", (item) => {
       this.setState({
-        dataLoaded: true,
-        data: data.push(item)
+        timesLoaded: true,
+        times: this.state.times.concat([item]),
       });
     });
 
+    //new data.star
+    socket.on("newData", (item) => {
+      this.setState({
+        dataLoaded: true,
+        data: this.state.data.concat([item]),
+      });
+    });
   }
-
 
   //filter data for graphs
-  getXY = () => {
-    const {data, times, config } = this.state;
-    var starObject = config.files[Object.keys(config.files)[0]]
-    var keyName = starObject[Object.keys(starObject)[0]]
-    console.log(data)
-    var result = {x:0,y:0}
-    if (data.length !== 0 && times.length !== 0 ){
+  getGraphData = () => {
+    //init 
+    const { config, times, data } = this.state;
+    var key1 = config.files[Object.keys(config.files)[0]].value0;
+    var key2 = config.files[Object.keys(config.files)[1]].value0;
 
-      // var abc = data.map ((x) => {
-      //   return x
-      // })
+    //inner join by key
+    var mergedArray = [];
+    for (var i = 0; i < times.length; i++) {
+      for (var j = 0; j < data.length; j++) {
+        if (times[i][key1] === data[j][key2]) {
+          const mergedObj = { ...times[i], ...data[j] };
+          mergedArray.push(mergedObj);
+        }
+      }
     }
 
-    return result
-  }
+    //filter by x and y
+    const x = mergedArray.map((elem) => {
+      return elem._mmsdateAuqired_Value;
+    });
+    const y = mergedArray.map((elem) => {
+      return elem._mmsmean_Value;
+    });
+    var result = { x, y };
 
+    return result;
+  };
 
-  
   render() {
-    const {timesLoaded, dataLoaded } = this.state;
-    this.getXY()
+    //init
+    const { timesLoaded, dataLoaded } = this.state;
+    var graphs = [];
+    for (var i = 0; i < 3; i++) {
+        graphs.push(<Graphs coord={this.getGraphData()} key={i} />);
+    } 
+
+    //return
     if (!(timesLoaded && dataLoaded)) {
-      return <div>Loading...</div>;
+      return <Backdrop />
     } else {
       return (
-        //<NavBar />
-        //<Activity /> coord = {this.getXY()} 
-        <Graphs /> 
-        //<Table /> 
-        //<div>Hello!!!It is {times._mmsdateAuqired_Value} </div>  
+        <React.Fragment>
+          <NavBar />
+          <Typography variant="h5" gutterBottom> Graphs </Typography>
+          <Graphs coord={this.getGraphData()} />
+          <div>{graphs}</div>;
+        </React.Fragment>
+      
+        //<Activity />
+        //<Table />
+        //<div>Hello!!!It is {times._mmsdateAuqired_Value} </div>
       );
     }
   }
