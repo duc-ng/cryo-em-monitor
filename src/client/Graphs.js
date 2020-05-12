@@ -7,14 +7,16 @@ export default class Graphs extends Component {
     this.state = {
       response: true,
       line1: {
-        x: this.props.coord.x,
-        y: this.props.coord.y, 
+        x: this.props.attr.x,
+        y: this.props.attr.y, 
         name: 'Line 1',
         mode: "markers",
         type: "scatter",
+        hoverinfo: "text",
+        hovertext: this.props.attr.info,
       },
       layout: {
-        title: "Title Loading",
+        title: this.props.title,
         xaxis: {
           type: "date",
           //range: [],
@@ -22,15 +24,19 @@ export default class Graphs extends Component {
         },
         //autosize: false,
         height: 300,
+      },
+      config: {
+        displayModeBar: false
       }
     };
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.coord !== prevProps.coord) {
+    if (this.props.attr !== prevProps.attr) {
       var temp = this.state.line1;
-      temp.x = this.props.coord.x;
-      temp.y = this.props.coord.y;
+      temp.x = this.props.attr.x;
+      temp.y = this.props.attr.y;
+      temp.hovertext = this.props.attr.info;
       this.setState((state, props) => {
         return {line1: temp};
       });
@@ -46,6 +52,7 @@ export default class Graphs extends Component {
             revision={this.state.revision}
             data={[this.state.line1]}
             layout={this.state.layout}
+            config={this.state.config}
           />
         ) : (
           <p>Loading...</p>

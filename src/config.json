@@ -52,11 +52,12 @@
     }
   },
   "plots": {
-      "plot1": "Mean Pixel Values of Raw Stacks [Counts/px/frame]",
-      "plot2": "Total Sample Drift [Angstroms]",
-      "plot3": "Iciness [a.u.]",
-      "plot4": "Defocus Fit [Micrometers]",
-      "plot5": "Resolution of CTF Fit [Angstroms]",
-      "plot6": "CC Value of CTF Fit [a.u.]"
+      "plot0": "Mean Pixel Values",
+      "plot1": "Total Sample Drift",
+      "plot2": "Iciness",
+      "plot3": "Defocus Fit",
+      "plot4": "Resolution",
+      "plot5": "CC Value",
+      "plot6": "Astigmatism"
   }
 }
