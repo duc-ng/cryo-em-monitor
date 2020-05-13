@@ -21,11 +21,13 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "testreact": "react-scripts test",
     "eject": "react-scripts eject",
     "client": "npm start",
-    "server": "nodemon app.js",
-    "dev": "concurrently \"npm run server\" \"npm start\""
+    "server": "node app.js",
+    "serverdev": "node app.js",
+    "dev": "concurrently \"npm run serverdev\" \"npm start\"",
+    "test": "concurrently \"npm run server\" \"npm start\""
   },
   "eslintConfig": {
     "extends": "react-app"
