@@ -65,7 +65,7 @@ export default class App extends Component {
       }
     }
 
-    //filter by x and y
+    //filter 
     const x = mergedArray.map((elem) => {
       return elem[dateAcquired];
     });

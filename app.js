@@ -10,7 +10,7 @@ const config = require("./src/config.json");
 
 //init
 const host = config.app.host;
-const port = process.env.PORT || config.app.port;
+const port = config.app.port;
 var folder = config.data.folder;
 var maxAge = config.data.maxAge_min;
 app.get("/", (req, res) => res.send("Server is running!"));
