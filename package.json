@@ -25,7 +25,7 @@
     "eject": "react-scripts eject",
     "client": "npm start",
     "server": "node app.js",
-    "serverdev": "node app.js",
+    "serverdev": "nodemon app.js",
     "dev": "concurrently \"npm run serverdev\" \"npm start\"",
     "test": "concurrently \"npm run server\" \"npm start\""
   },

@@ -10,7 +10,7 @@ const useStyles = makeStyles({
   },
 });
 
-export default function CenteredTabs() {
+export default function Header() {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
