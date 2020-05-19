@@ -152,13 +152,7 @@ class App extends Component {
           <div className={classes.root}>
             <NavBar />
             <Grid container spacing={0} justify="center">
-              <Grid item xs={10}>
-                <Typography variant="h5" gutterBottom>
-                  Plots
-                </Typography>
-                <Divider light={true} variant={"middle"} />
-              </Grid>
-              {graphs}
+      
               <Grid item xs={10}>
                 <Typography variant="h5" gutterBottom>
                   Table
@@ -168,6 +162,14 @@ class App extends Component {
               <Grid item xs={10}>
                 <Table />
               </Grid>
+
+              <Grid item xs={10}>
+                <Typography variant="h5" gutterBottom>
+                  Plots
+                </Typography>
+                <Divider light={true} variant={"middle"} />
+              </Grid>
+              {graphs}
             </Grid>
 
           </div>
