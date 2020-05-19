@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import socketIOClient from "socket.io-client";
-import Graphs from "./Graphs";
+import Plot from "./Plot";
 import NavBar from "./Header";
 import Backdrop from "./Backdrop";
+import Table from "./Table";
 import Typography from "@material-ui/core/Typography";
 import { Divider } from "@material-ui/core";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
-import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/styles";
 
 const styles = (theme) => ({
@@ -16,103 +15,136 @@ const styles = (theme) => ({
   },
 });
 
-class App extends React.Component {
+class App extends Component {
+  //constructor
   constructor(props) {
     super(props);
+
+    //init state
     this.state = {
       config: require("./../config.json"),
       timesLoaded: false,
       dataLoaded: false,
       times: [],
       data: [],
+      plots: [],
     };
+
+    //init plot element
+    const nrPlots = Object.keys(this.state.config["data.star"]).length - 1;
+    var temp = [];
+    for (var i = 0; i < nrPlots; i++) {
+      temp.push({
+        x: [],
+        y: [],
+        info: [],
+      });
+    }
+    this.state.plots = temp;
   }
 
+  //receive data
   componentDidMount() {
     const socket = socketIOClient(
       this.state.config.app.host + ":" + this.state.config.app.port
     );
 
-    //new times.star
     socket.on("newTimes", (item) => {
-      this.setState({
-        timesLoaded: true,
-        times: this.state.times.concat([item]),
+      this.setState((state) => {
+        return {
+          timesLoaded: true,
+          times: state.times.concat([item]),
+        };
       });
     });
 
-    //new data.star
     socket.on("newData", (item) => {
-      this.setState({
-        dataLoaded: true,
-        data: this.state.data.concat([item]),
+      this.setState((state) => {
+        return {
+          dataLoaded: true,
+          data: state.data.concat([item]),
+        };
       });
     });
   }
 
-  //filter data for graphs
-  getGraphData = (value) => {
-    //init
+  //update component data
+  updatePlot = (number) => {
     const { config, times, data } = this.state;
-    const key1 = config.files[Object.keys(config.files)[0]].value0;
-    const key2 = config.files[Object.keys(config.files)[1]].value0;
-    const dateAcquired = "_mmsdateAuqired_Value";
-    const valueNames = [];
-    const infoNames = [];
-    for (
-      var i = 1;
-      i < Object.values(Object.values(config.files)[1]).length - 1;
-      i = i + 2
-    ) {
-      valueNames.push(Object.values(Object.values(config.files)[1])[i]);
-      infoNames.push(Object.values(Object.values(config.files)[1])[i + 1]);
-    }
+    if (times.length > 0 && data.length > 0) {
+      //init
+      var mergedData = [];
+      var keyTimes = config["times.star"].key;
+      var keyData = config["data.star"].key;
 
-    //inner join by key
-    var mergedArray = [];
-    for (var a = 0; a < times.length; a++) {
-      for (var j = 0; j < data.length; j++) {
-        if (times[a][key1] === data[j][key2]) {
-          const mergedObj = { ...times[a], ...data[j] };
-          mergedArray.push(mergedObj);
+      //innerjoin data received
+      for (var a = 0; a < times.length; a++) {
+        for (var j = 0; j < data.length; j++) {
+          if (times[a][keyTimes] === data[j][keyData]) {
+            const mergedObj = { ...times[a], ...data[j] };
+            mergedData.push(mergedObj);
+          }
         }
       }
-    }
 
-    //filter
-    const x = mergedArray.map((elem) => {
-      return elem[dateAcquired];
-    });
-    const y = mergedArray.map((elem) => {
-      return elem[valueNames[value]];
-    });
-    const info = mergedArray.map((elem) => {
-      return elem[infoNames[value]];
-    });
-    var result = { x, y, info };
-    return result;
+      //move data to components
+      var tempPlot = JSON.parse(JSON.stringify(this.state.plots[number]));
+      const xName = config["times.star"]["1"];
+      const yName = config["data.star"][(number + 1).toString(10)].value;
+      const infoName = config["data.star"][(number + 1).toString(10)].info;
+
+      for (var c = 0; c < mergedData.length; c++) {
+        tempPlot.x.push(mergedData[c][xName]);
+        tempPlot.y.push(mergedData[c][yName]);
+        tempPlot.info.push(mergedData[c][infoName]);
+
+        //remove
+        //const keyName = config["times.star"].key;
+        // const key = mergedData[j][keyName];
+        // this.removeDataPoint(key, "times.star", "times")
+        // this.removeDataPoint(key, "data.star", "data")
+      }
+      return tempPlot;
+    }
   };
+
+  // removeDataPoint = (key, name, array) => {
+  //   const keyName = this.state.config[name].key;
+  //   var temp = [...this.state[array]];
+  //   console.log(keyName);
+
+  //   var index = temp.findIndex((x) => x[keyName] === key);
+
+  //   if (index !== -1) {
+  //     temp.splice(index, 1);
+  //     this.setState((state) => {
+  //       return {
+  //         times: temp,
+  //       };
+  //     });
+  //   }
+  // };
 
   render() {
     //init
     const { timesLoaded, dataLoaded, config } = this.state;
+    const { classes } = this.props;
+    const nrPlots = Object.keys(config["data.star"]).length - 1;
     var graphs = [];
-    for (var i = 0; i < Object.keys(config.plots).length; i++) {
+    //for (var i = 0; i < Object.keys(config.plots).length; i++) {
+    for (var i = 0; i < nrPlots; i++) {
       graphs.push(
-        <Grid item xs={12} lg={6}>
-          <Graphs
-            attr={this.getGraphData(i)}
-            key={i}
-            title={Object.values(config.plots)[i]}
+        <Grid item xs={11} lg={5} key={i}>
+          <Plot
+            attr={this.updatePlot(i)}
+            title={config["data.star"][(i + 1).toString(10)].name}
           />
         </Grid>
       );
     }
 
-    const { classes } = this.props;
-
     //return
-    if (!(timesLoaded && dataLoaded)) {
+    if (!(timesLoaded || dataLoaded)) {
       return <Backdrop />;
     } else {
       return (
@@ -120,16 +152,24 @@ class App extends React.Component {
           <div className={classes.root}>
             <NavBar />
             <Grid container spacing={0} justify="center">
-              <Grid item xs={11}>
+              <Grid item xs={10}>
                 <Typography variant="h5" gutterBottom>
-                  {" "}
-                  Graphs{" "}
+                  Plots
                 </Typography>
                 <Divider light={true} variant={"middle"} />
               </Grid>
               {graphs}
+              <Grid item xs={10}>
+                <Typography variant="h5" gutterBottom>
+                  Table
+                </Typography>
+                <Divider light={true} variant={"middle"} />
+              </Grid>
+              <Grid item xs={10}>
+                <Table />
+              </Grid>
             </Grid>
-            
+
           </div>
         </React.Fragment>
 
@@ -140,9 +180,5 @@ class App extends React.Component {
     }
   }
 }
-
-App.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(App);

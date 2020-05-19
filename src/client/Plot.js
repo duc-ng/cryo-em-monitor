@@ -9,16 +9,20 @@ export default class Graphs extends Component {
       revision: 0,
       response: true,
       line1: {
-        x: this.props.attr.x,
-        y: this.props.attr.y, 
+        x: [],
+        y: [],
         name: 'Line 1',
         mode: "markers",
         type: "scatter",
         hoverinfo: "text",
-        hovertext: this.props.attr.info,
+        hovertext: "",
       },
       layout: {
-        title: this.props.title,
+        title: {
+          text: "",
+          x: 0.06,
+          size: 16
+        },
         xaxis: {
           type: "date",
           //tickformat: '%H:%M'
@@ -27,7 +31,14 @@ export default class Graphs extends Component {
           range: [0,1]
         },
         autosize: true,
-        height: 350
+        height: 350,
+        margin: {
+          't': 80,
+          'd': 20,
+          'l': 50,
+          'r': 50,
+        },
+
       },
       config: {
         displayModeBar: false
@@ -51,8 +62,12 @@ export default class Graphs extends Component {
       temp.x = this.props.attr.x;
       temp.y = this.props.attr.y;
       temp.hovertext = this.props.attr.info;
+      var temp2 = this.state.layout;
+      temp2.title.text = this.props.title;
+
       this.setState({ 
-        line1: temp
+        line1: temp,
+        layout: temp2
       });
     }
     window.addEventListener('resize', this.updateDimensions);

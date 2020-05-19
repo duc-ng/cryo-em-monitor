@@ -14,7 +14,6 @@ export default function SimpleBackdrop() {
   const classes = useStyles();
   const [open] = React.useState(false);
 
-
   return (
     <div>   
       <Backdrop className={classes.backdrop} open={!open} >

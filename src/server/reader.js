@@ -46,7 +46,7 @@ async function readStarFile(file) {
       //dates
       if (
         i > valueCount &&
-        file.endsWith(Object.keys(config.files)[0]) &&
+        file.endsWith("times.star") &&
         substrings[i].length > 1
       ) {
         substrings[i] = substrings[i].replaceAt(10, " ");

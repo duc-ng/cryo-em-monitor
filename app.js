@@ -11,25 +11,26 @@ const config = require("./src/config.json");
 //init
 const host = config.app.host;
 const port = config.app.port;
-var folder = config.data.folder;
-var maxAge = config.data.maxAge_min;
+const folder = config.app.folder;
+const maxAge = config.app.maxAge_min;
 app.get("/", (req, res) => res.send("Server is running!"));
 
-//create websocket connection
+//websocket
 io.on("connection", function (socket) {
-  //start notification
-  console.log("a user connected");
 
-  //if new star file is added -> push to client
+  //init
+  console.log("a user connected");
   var watcher = chokidar.watch(folder, {
     ignored: /^\./,
     persistent: true,
   });
+  
+  //if new star file is added -> push to client
   watcher.on("add", function (file) {
 
-    //times.star
+    //read times
     if (
-      file.endsWith(Object.keys(config.files)[0]) &&
+      file.endsWith("times.star") &&
       reader.fileIsYoungerThan(file, maxAge)
     ) {
       reader.readStarFile(file).then((res) => {
@@ -37,9 +38,9 @@ io.on("connection", function (socket) {
       });
     }
 
-    //data.star
+    //read data
     if (
-      file.endsWith(Object.keys(config.files)[1]) &&
+      file.endsWith("data.star") &&
       reader.fileIsYoungerThan(file, maxAge)
     ) {
       reader.readStarFile(file).then((res) => {
@@ -73,7 +74,7 @@ io.on("connection", function (socket) {
     // }
   });
 
-  //end notification
+  //end 
   socket.on("disconnect", function () {
     console.log("user disconnected");
   });
