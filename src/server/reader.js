@@ -24,7 +24,6 @@ convert star-file to object
 assumption: first value is fixed (key)
 */
 async function readStarFile(file) {
-  try {
     //read file
     var data = await fspromises.readFile(file, "utf8");
     var substrings = data.split(/[\n,\t]+/);
@@ -65,11 +64,6 @@ async function readStarFile(file) {
 
     //Return
     return object;
-
-  } catch (err) {
-    console.log(err);
-    return;
-  }
 }
 
 //export functions

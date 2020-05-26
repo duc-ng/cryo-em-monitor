@@ -9,80 +9,53 @@ const chokidar = require("chokidar");
 const config = require("./src/config.json");
 
 //init
-const host = config.app.host;
-const port = config.app.port;
+const host = config.app.api_host;
+const port = config.app.api_port;
 const folder = config.app.folder;
 const maxAge = config.app.maxAge_min;
 app.get("/", (req, res) => res.send("Server is running!"));
+
 
 //websocket
 io.on("connection", function (socket) {
 
   //init
-  console.log("a user connected");
+  console.log("User connected");
   var watcher = chokidar.watch(folder, {
     ignored: /^\./,
     persistent: true,
   });
-  
-  //if new star file is added -> push to client
-  watcher.on("add", function (file) {
-
-    //read times
-    if (
-      file.endsWith("times.star") &&
-      reader.fileIsYoungerThan(file, maxAge)
-    ) {
-      reader.readStarFile(file).then((res) => {
-        socket.emit("newTimes", res);
-      });
-    }
-
-    //read data
-    if (
-      file.endsWith("data.star") &&
-      reader.fileIsYoungerThan(file, maxAge)
-    ) {
-      reader.readStarFile(file).then((res) => {
-        socket.emit("newData", res);
-      });
-    }
-
-    //images
-    // if (
-    //   file.endsWith(config.get("starFiles.names.file3")) &&
-    //   reader.fileIsYoungerThan(file, maxHours)
-    // ) {
-    //   reader.readStarFile(file).then((res) => {
-    //     var fixedValues = 1;
-    //     for (i = fixedValues; i < Object.keys(res).length; i = i + 2) {
-    //       var filePath = path.join(
-    //         __dirname,
-    //         path.dirname(file),
-    //         Object.values(res)[i]
-    //       );
-    //       fs.readFile(filePath, function (err, data) {
-    //         socket.emit(
-    //           "newImages",
-    //           "data:image/png;base64," + data.toString("base64")
-    //         );
-    //         console.log("Image sent");
-    //       });
-    //     }
-    //     socket.emit("newImageData", res);
-    //   });
-    // }
+  watcher.on("addDir", function (dirPath) {
+    readDir(dirPath);
   });
+
+  //read star files
+  async function readDir(dirPath) {
+    console.log("Directory read: "+dirPath);
+    if (reader.fileIsYoungerThan(dirPath, maxAge)) {
+      try {
+        var files = await Promise.all([
+          reader.readStarFile(path.join(dirPath,"data.star")),
+          reader.readStarFile(path.join(dirPath,"times.star"))
+        ]);
+      } catch (error){
+        return;
+      }
+      let merge = {...files[0], ...files[1]}; 
+      socket.emit("data", merge);
+    }
+  }
 
   //end 
   socket.on("disconnect", function () {
-    console.log("user disconnected");
+    console.log("User disconnected");
   });
+
 });
 
 //listen for incoming connections
 http.listen(port, () => {
-  console.log(`Server app listening at ${host}:${port}`);
+  console.log(`Server app listening at ${host}:${port} (API)`);
 });
 
 //exit handling

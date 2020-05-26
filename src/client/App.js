@@ -1,17 +1,20 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import socketIOClient from "socket.io-client";
 import Plot from "./Plot";
 import NavBar from "./Header";
 import Backdrop from "./Backdrop";
 import Table from "./Table";
+import Status from "./Status";
 import Typography from "@material-ui/core/Typography";
 import { Divider } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/styles";
+import { blueGrey} from "@material-ui/core/colors";
 
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
+    backgroundColor: blueGrey[50]
   },
 });
 
@@ -23,17 +26,25 @@ class App extends Component {
     //init state
     this.state = {
       config: require("./../config.json"),
-      timesLoaded: false,
-      dataLoaded: false,
-      times: [],
-      data: [],
+      itemsLoaded: false,
+      counter: 0,
+      items: [],
       plots: [],
+      table: [],
+      tableNames: [],
+      status: {
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0
+      }
     };
 
     //init plot element
-    const nrPlots = Object.keys(this.state.config["data.star"]).length - 1;
+    let nrPlots = Object.keys(this.state.config["data.star"]).length - 1;
     var temp = [];
-    for (var i = 0; i < nrPlots; i++) {
+    for (let i = 0; i < nrPlots; i++) {
       temp.push({
         x: [],
         y: [],
@@ -46,138 +57,134 @@ class App extends Component {
   //receive data
   componentDidMount() {
     const socket = socketIOClient(
-      this.state.config.app.host + ":" + this.state.config.app.port
+      this.state.config.app.api_host + ":" + this.state.config.app.api_port
     );
+    socket.on("data", (item) => {
+      //init
+      const { config, plots, status } = this.state;
+      const nrValues = Object.keys(this.state.config["data.star"]).length - 1;
 
-    socket.on("newTimes", (item) => {
+      //update plot data
+      let plotData = [...plots];
+      for (let i = 0; i < nrValues; i++) {
+        const xName = config["times.star"]["1"];
+        const yName = config["data.star"][(i + 1).toString(10)].value;
+        const infoName = config["data.star"][(i + 1).toString(10)].info;
+        plotData[i].x.push(item[xName]);
+        plotData[i].y.push(item[yName]);
+        plotData[i].info.push(item[infoName]);
+      }
+
+      //update table data
+      let tableValueNames = [];
+      let tableData = Object.assign({}, item); //may not work for more complex objects
+      tableValueNames.push(config["times.star"][1]);
+      for (let i = 1; i <= nrValues; i++) {
+        tableValueNames.push(config["data.star"]["" + i].value);
+      }
+      for (let prop in tableData) {
+        if (tableValueNames.indexOf(prop) === -1) {
+          delete tableData[prop];
+        }
+      }
+      for (let key in tableData) {
+        let obj = tableData[key];
+        if (Number(obj) === obj && obj % 1 !== 0) {
+          tableData[key] = obj.toFixed(2);
+        }
+      }
+
+      //update status data
+      let statusObject = Object.assign({}, status)
+      for (let i = 1; i < Object.keys(config["times.star"]).length; i++) {
+        let value = item[config["times.star"][i]]
+        if(value!==0 && value!== undefined){
+          statusObject[i] = statusObject[i] +1;
+        }
+      }
+
+      //set state
       this.setState((state) => {
         return {
-          timesLoaded: true,
-          times: state.times.concat([item]),
-        };
-      });
-    });
-
-    socket.on("newData", (item) => {
-      this.setState((state) => {
-        return {
-          dataLoaded: true,
-          data: state.data.concat([item]),
+          itemsLoaded: true,
+          items: state.items.concat([item]),
+          plots: plotData,
+          table: state.table.concat([tableData]),
+          tableNames: tableValueNames,
+          counter: state.counter + 1,
+          status: statusObject
         };
       });
     });
   }
 
-  //update component data
-  updatePlot = (number) => {
-    const { config, times, data } = this.state;
-    if (times.length > 0 && data.length > 0) {
-      //init
-      var mergedData = [];
-      var keyTimes = config["times.star"].key;
-      var keyData = config["data.star"].key;
-
-      //innerjoin data received
-      for (var a = 0; a < times.length; a++) {
-        for (var j = 0; j < data.length; j++) {
-          if (times[a][keyTimes] === data[j][keyData]) {
-            const mergedObj = { ...times[a], ...data[j] };
-            mergedData.push(mergedObj);
-          }
-        }
-      }
-
-      //move data to components
-      var tempPlot = JSON.parse(JSON.stringify(this.state.plots[number]));
-      const xName = config["times.star"]["1"];
-      const yName = config["data.star"][(number + 1).toString(10)].value;
-      const infoName = config["data.star"][(number + 1).toString(10)].info;
-
-      for (var c = 0; c < mergedData.length; c++) {
-        tempPlot.x.push(mergedData[c][xName]);
-        tempPlot.y.push(mergedData[c][yName]);
-        tempPlot.info.push(mergedData[c][infoName]);
-
-        //remove
-        //const keyName = config["times.star"].key;
-        // const key = mergedData[j][keyName];
-        // this.removeDataPoint(key, "times.star", "times")
-        // this.removeDataPoint(key, "data.star", "data")
-      }
-      return tempPlot;
-    }
-  };
-
-  // removeDataPoint = (key, name, array) => {
-  //   const keyName = this.state.config[name].key;
-  //   var temp = [...this.state[array]];
-  //   console.log(keyName);
-
-  //   var index = temp.findIndex((x) => x[keyName] === key);
-
-  //   if (index !== -1) {
-  //     temp.splice(index, 1);
-  //     this.setState((state) => {
-  //       return {
-  //         times: temp,
-  //       };
-  //     });
-  //   }
-  // };
-
   render() {
     //init
-    const { timesLoaded, dataLoaded, config } = this.state;
+    const { itemsLoaded, config, plots } = this.state;
     const { classes } = this.props;
     const nrPlots = Object.keys(config["data.star"]).length - 1;
     var graphs = [];
-    //for (var i = 0; i < Object.keys(config.plots).length; i++) {
-    for (var i = 0; i < nrPlots; i++) {
+
+    for (let i = 0; i < nrPlots; i++) {
       graphs.push(
         <Grid item xs={11} lg={5} key={i}>
           <Plot
-            attr={this.updatePlot(i)}
+            attr={plots[i]}
             title={config["data.star"][(i + 1).toString(10)].name}
+            counter={this.state.counter}
           />
         </Grid>
       );
     }
 
     //return
-    if (!(timesLoaded || dataLoaded)) {
+    if (!itemsLoaded) {
       return <Backdrop />;
     } else {
       return (
-        <React.Fragment>
-          <div className={classes.root}>
+        <div className={classes.root}>
+          <Fragment>
             <NavBar />
-            <Grid container spacing={0} justify="center">
-      
-              <Grid item xs={10}>
-                <Typography variant="h5" gutterBottom>
-                  Table
-                </Typography>
-                <Divider light={true} variant={"middle"} />
+            <div style={{ padding: 20 }}>
+              <Grid container spacing={4} justify="center">
+                <Grid item xs={10}>
+                  <Typography variant="h5" gutterBottom>
+                    Status
+                  </Typography>
+                  <Divider light={true} variant={"middle"} />
+                </Grid>
+                <Grid item xs={10}>
+                  <Grid
+                    container
+                    spacing={2}
+                    justify="center"
+                  >
+                    <Status values={this.state.status}/>
+                  </Grid>
+                </Grid>
+                <Grid item xs={10}>
+                  <Typography variant="h5" gutterBottom>
+                    Table
+                  </Typography>
+                  <Divider light={true} variant={"middle"} />
+                </Grid>
+                <Grid item xs={10}>
+                  <Table
+                    attr={this.state.table}
+                    valueNames={this.state.tableNames}
+                  />
+                </Grid>
+                <Grid item xs={10}>
+                  <Typography variant="h5" gutterBottom>
+                    Plots
+                  </Typography>
+                  <Divider light={true} variant={"middle"} />
+                </Grid>
+                {graphs}
               </Grid>
-              <Grid item xs={10}>
-                <Table />
-              </Grid>
-
-              <Grid item xs={10}>
-                <Typography variant="h5" gutterBottom>
-                  Plots
-                </Typography>
-                <Divider light={true} variant={"middle"} />
-              </Grid>
-              {graphs}
-            </Grid>
-
-          </div>
-        </React.Fragment>
-
-        //<Activity />
-        //<Table />
-        //<div>Hello!!!It is {times._mmsdateAuqired_Value} </div>
+            </div>
+          </Fragment>
+        </div>
       );
     }
   }

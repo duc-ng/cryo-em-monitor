@@ -1,7 +1,7 @@
 {
   "app": {
-    "host": "localhost",
-    "port": 5000,
+    "api_host": "localhost",
+    "api_port": 5000,
     "folder": "4Duc/data4Web/Titan1/",
     "maxAge_min": 144000,
     "refresh_ms": 1000
@@ -19,12 +19,12 @@
   "data.star": {
     "key": "_mmsImageKey_Value",
     "1": {
-      "name": "Mean Pixel Values",
+      "name": "Mean",
       "value": "_mmsmean_Value",
       "info":  "_mmsmean_Info"
     },
     "2": {
-      "name": "Total Sample Drift",
+      "name": "Drift",
       "value": "_mmsdrift_Value",
       "info": "_mmsdrift_Info"
     },
@@ -34,7 +34,7 @@
       "info": "_mmsiciness_Info"
     },
     "4": {
-      "name": "Defocus Fit",
+      "name": "Defocus",
       "value": "_mmsdefocus_Value",
       "info": "_mmsdefocus_Info"
     },
@@ -44,7 +44,7 @@
       "info": "_mmsresolution_Info"
     },
     "6": {
-      "name": "CC Value",
+      "name": "CCvalue",
       "value": "_mmsccOfCtfFit_Value",
       "info": "_mmsccOfCtfFit_Info"
     },
@@ -70,4 +70,5 @@
     "value11": "_mmsctfdiag_Name",
     "value12": "_mmsctfdiag_Info"
   }
+
 }

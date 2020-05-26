@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import Plot from "react-plotly.js";
+import Paper from '@material-ui/core/Paper';
 
 export default class Graphs extends Component {
     
@@ -31,22 +32,23 @@ export default class Graphs extends Component {
           range: [0,1]
         },
         autosize: true,
-        height: 350,
+        height: 320,
         margin: {
           't': 80,
-          'd': 20,
+          'b': 70,
           'l': 50,
-          'r': 50,
+          'r': 30,
         },
-
+        datarevision: 0,
       },
       config: {
         displayModeBar: false
       },
       style: { 
         width: "100%", 
-        //height: "100%"
       },
+      counter: 0,
+      
     };
   }
 
@@ -56,20 +58,30 @@ export default class Graphs extends Component {
     });
   };
 
-  componentDidUpdate(prevProps) {
-    if (this.props.attr !== prevProps.attr) {
+  updateData = () => {
       var temp = this.state.line1;
       temp.x = this.props.attr.x;
       temp.y = this.props.attr.y;
       temp.hovertext = this.props.attr.info;
       var temp2 = this.state.layout;
       temp2.title.text = this.props.title;
+      temp2.datarevision = this.state.revision + 1;
 
       this.setState({ 
         line1: temp,
-        layout: temp2
+        layout: temp2,
+        revision: this.state.revision+1,
       });
-    }
+  }
+
+  componentDidMount() {
+    this.updateData();
+  }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.counter !== prevProps.counter){
+      this.updateData();
+    } 
     window.addEventListener('resize', this.updateDimensions);
   }
 
@@ -81,6 +93,7 @@ export default class Graphs extends Component {
     return (
       <Fragment>
         {this.state.response ? (
+          <Paper>
           <Plot
             revision={this.state.revision}
             data={[this.state.line1]}
@@ -88,6 +101,8 @@ export default class Graphs extends Component {
             config={this.state.config}
             style={this.state.style}
           />
+          </Paper>
+        
         ) : (
           <p>Loading...</p>
         )}
