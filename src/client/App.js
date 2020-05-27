@@ -5,16 +5,17 @@ import NavBar from "./Header";
 import Backdrop from "./Backdrop";
 import Table from "./Table";
 import Status from "./Status";
+import Images from "./Images";
 import Typography from "@material-ui/core/Typography";
 import { Divider } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import { withStyles } from "@material-ui/styles";
-import { blueGrey} from "@material-ui/core/colors";
+import { blueGrey } from "@material-ui/core/colors";
 
 const styles = (theme) => ({
   root: {
     flexGrow: 1,
-    backgroundColor: blueGrey[50]
+    backgroundColor: blueGrey[50],
   },
 });
 
@@ -37,8 +38,8 @@ class App extends Component {
         2: 0,
         3: 0,
         4: 0,
-        5: 0
-      }
+        5: 0,
+      },
     };
 
     //init plot element
@@ -95,11 +96,11 @@ class App extends Component {
       }
 
       //update status data
-      let statusObject = Object.assign({}, status)
+      let statusObject = Object.assign({}, status);
       for (let i = 1; i < Object.keys(config["times.star"]).length; i++) {
-        let value = item[config["times.star"][i]]
-        if(value!==0 && value!== undefined){
-          statusObject[i] = statusObject[i] +1;
+        let value = item[config["times.star"][i]];
+        if (value !== 0 && value !== undefined) {
+          statusObject[i] = statusObject[i] + 1;
         }
       }
 
@@ -112,7 +113,7 @@ class App extends Component {
           table: state.table.concat([tableData]),
           tableNames: tableValueNames,
           counter: state.counter + 1,
-          status: statusObject
+          status: statusObject,
         };
       });
     });
@@ -147,24 +148,43 @@ class App extends Component {
             <NavBar />
             <div style={{ padding: 20 }}>
               <Grid container spacing={4} justify="center">
+                {/* Status */}
                 <Grid item xs={10}>
-                  <Typography variant="h5" gutterBottom>
+                  <Typography variant="subtitle1" gutterBottom>
                     Status
                   </Typography>
                   <Divider light={true} variant={"middle"} />
                 </Grid>
-                <Grid item xs={10}>
-                  <Grid
-                    container
-                    spacing={2}
-                    justify="center"
-                  >
-                    <Status values={this.state.status}/>
+                <Grid item xs={11}>
+                  <Grid container spacing={2} justify="center">
+                    <Status values={this.state.status} />
                   </Grid>
                 </Grid>
+
+                {/* Images */}
                 <Grid item xs={10}>
-                  <Typography variant="h5" gutterBottom>
-                    Table
+                  <Typography variant="subtitle1" gutterBottom>
+                    Images
+                  </Typography>
+                  <Divider light={true} variant={"middle"} />
+                </Grid>
+                <Grid item xs={10}>
+                  <Images />
+                </Grid>
+
+                {/* Plots */}
+                <Grid item xs={10}>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Plots
+                  </Typography>
+                  <Divider light={true} variant={"middle"} />
+                </Grid>
+                {graphs}
+
+                {/* Table */}
+                <Grid item xs={10}>
+                  <Typography variant="subtitle1" gutterBottom>
+                    Data
                   </Typography>
                   <Divider light={true} variant={"middle"} />
                 </Grid>
@@ -174,13 +194,6 @@ class App extends Component {
                     valueNames={this.state.tableNames}
                   />
                 </Grid>
-                <Grid item xs={10}>
-                  <Typography variant="h5" gutterBottom>
-                    Plots
-                  </Typography>
-                  <Divider light={true} variant={"middle"} />
-                </Grid>
-                {graphs}
               </Grid>
             </div>
           </Fragment>

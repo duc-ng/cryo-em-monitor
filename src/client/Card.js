@@ -15,6 +15,7 @@ import DataUsageIcon from '@material-ui/icons/DataUsage';
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
+    height: "100%"
   },
 
   avatar: {

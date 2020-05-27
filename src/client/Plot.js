@@ -22,8 +22,13 @@ export default class Graphs extends Component {
         title: {
           text: "",
           x: 0.06,
-          size: 16
         },
+        "titlefont": {
+          "size": 14,
+        },
+        // paper_bgcolor: 'rgba(0,0,0,0)',
+        // plot_bgcolor: 'rgba(0,0,0,0)',
+        
         xaxis: {
           type: "date",
           //tickformat: '%H:%M'

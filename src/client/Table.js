@@ -8,8 +8,8 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Box from '@material-ui/core/Box';
-import Paper from '@material-ui/core/Paper';
+// import Box from '@material-ui/core/Box';
+// import Paper from '@material-ui/core/Paper';
 
 
 function descendingComparator(a, b, orderBy) {
@@ -125,7 +125,7 @@ export default function EnhancedTable(props) {
   const [orderBy, setOrderBy] = React.useState(Object.values(props.valueNames)[0]);
   const [page, setPage] = React.useState(0);
   const [dense] = React.useState(true);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
 
   const rows = props.attr;
 
@@ -148,8 +148,7 @@ export default function EnhancedTable(props) {
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper}>
-        <Box className={classes.box} />
+        {/* <Box className={classes.box} /> */}
            <TableContainer>
           <Table
             className={classes.table}
@@ -207,7 +206,7 @@ export default function EnhancedTable(props) {
           </Table>
         </TableContainer>
         <TablePagination
-          rowsPerPageOptions={[10, 20]}
+          rowsPerPageOptions={[10, 20, 40]}
           component="div"
           count={rows.length}
           rowsPerPage={rowsPerPage}
@@ -215,7 +214,6 @@ export default function EnhancedTable(props) {
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
-      </Paper>
     </div>
   );
 }
