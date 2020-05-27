@@ -23,8 +23,7 @@ npm run test  #start server & client
 ```
 
 Links:
-- Server: http://localhost:3000
-- Client: http://localhost:5000
+- Client: http://localhost:3000
 
 
 
@@ -32,8 +31,9 @@ Links:
 
 * [React.js](https://reactjs.org/) - Frontend framework
 * [Node.js](https://nodejs.org/en/) - JavaScript runtime environemnt
-* [Express.js](https://expressjs.com/) - backend framework
+* [Express.js](https://expressjs.com/) - Backend framework
 * [Plot.ly](https://plotly.com/javascript/) - Interactive plots
+* [Material-UI](https://material-ui.com/) - UI component library 
 
 
 

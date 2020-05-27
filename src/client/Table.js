@@ -44,7 +44,7 @@ function getHeadCells (){
   var temp = []
   for (var i=0; i<configLength;i++){
     if (i===0){
-      temp.push({ id: config["times.star"][1], numeric: false, disablePadding: true, label: "Time"})
+      temp.push({ id: config["times.star"][1], numeric: false, disablePadding: true, label: "Data"})
     } else {
       temp.push({ id: config["data.star"][i]["value"], numeric: true, disablePadding: true, label: config["data.star"][(i).toString(10)].name},);
     }

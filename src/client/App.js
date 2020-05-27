@@ -183,9 +183,9 @@ class App extends Component {
 
                 {/* Table */}
                 <Grid item xs={10}>
-                  <Typography variant="subtitle1" gutterBottom>
+                  {/* <Typography variant="subtitle1" gutterBottom>
                     Data
-                  </Typography>
+                  </Typography> */}
                   <Divider light={true} variant={"middle"} />
                 </Grid>
                 <Grid item xs={10}>
