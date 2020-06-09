@@ -40,6 +40,9 @@ class App extends Component {
         4: 0,
         5: 0,
       },
+      imageData:[],
+      recentImages:[],
+      imagesChanged: false
     };
 
     //init plot element
@@ -60,6 +63,7 @@ class App extends Component {
     const socket = socketIOClient(
       this.state.config.app.api_host + ":" + this.state.config.app.api_port
     );
+
     socket.on("data", (item) => {
       //init
       const { config, plots, status } = this.state;
@@ -78,20 +82,23 @@ class App extends Component {
 
       //update table data
       let tableValueNames = [];
-      let tableData = Object.assign({}, item); //may not work for more complex objects
+      let tableData = {
+        data: Object.assign({}, item), //may not work for more complex objects
+        key: item[config["data.star"].key]
+      };
       tableValueNames.push(config["times.star"][1]);
       for (let i = 1; i <= nrValues; i++) {
         tableValueNames.push(config["data.star"]["" + i].value);
       }
-      for (let prop in tableData) {
+      for (let prop in tableData.data) {
         if (tableValueNames.indexOf(prop) === -1) {
-          delete tableData[prop];
+          delete tableData.data[prop];
         }
       }
-      for (let key in tableData) {
-        let obj = tableData[key];
+      for (let key in tableData.data) {
+        let obj = tableData.data[key];
         if (Number(obj) === obj && obj % 1 !== 0) {
-          tableData[key] = obj.toFixed(2);
+          tableData.data[key] = obj.toFixed(2);
         }
       }
 
@@ -117,6 +124,31 @@ class App extends Component {
         };
       });
     });
+
+    //receive images
+    socket.on("images", (item) => {
+      //set state
+      this.setState((state) => {
+        return {
+          imageData: state.imageData.concat([item]),
+          imagesChanged: true
+        };
+      });
+    })
+    this.interval = setInterval(() => this.updateImages(), 1000);
+  }
+
+  updateImages() {
+    if(this.state.imagesChanged){
+      this.setState(state => ({
+        recentImages: [...(this.state.imageData[this.state.imageData.length-1].images)],
+        imagesChanged: false
+      }));
+    }
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   render() {
@@ -128,7 +160,7 @@ class App extends Component {
 
     for (let i = 0; i < nrPlots; i++) {
       graphs.push(
-        <Grid item xs={11} lg={5} key={i}>
+        <Grid item xs={11} md={5} key={i}>
           <Plot
             attr={plots[i]}
             title={config["data.star"][(i + 1).toString(10)].name}
@@ -161,15 +193,25 @@ class App extends Component {
                   </Grid>
                 </Grid>
 
-                {/* Images */}
+                {/* Data */}
                 <Grid item xs={10}>
                   <Typography variant="subtitle1" gutterBottom>
-                    Images
+                    Data
                   </Typography>
                   <Divider light={true} variant={"middle"} />
                 </Grid>
                 <Grid item xs={10}>
-                  <Images />
+                  <Grid container spacing={2} justify="center">
+                     <Images attr={this.state.recentImages} xs={4} sm={3} md={2} />
+                  </Grid>
+                </Grid>
+                <Grid item xs={10}>
+                  <Table
+                    attr={this.state.table}
+                    img ={this.state.recentImages}
+                    images ={this.state.imageData}
+                    valueNames={this.state.tableNames}
+                  />
                 </Grid>
 
                 {/* Plots */}
@@ -181,19 +223,7 @@ class App extends Component {
                 </Grid>
                 {graphs}
 
-                {/* Table */}
-                <Grid item xs={10}>
-                  {/* <Typography variant="subtitle1" gutterBottom>
-                    Data
-                  </Typography> */}
-                  <Divider light={true} variant={"middle"} />
-                </Grid>
-                <Grid item xs={10}>
-                  <Table
-                    attr={this.state.table}
-                    valueNames={this.state.tableNames}
-                  />
-                </Grid>
+                
               </Grid>
             </div>
           </Fragment>

@@ -56,19 +56,36 @@
   },
 
   "images.star": {
-    "value0": "_mmsImageKey_Value",
-    "value1": "_mmsrawAvg_Name",
-    "value2": "_mmsrawAvg_Info",
-    "value3": "_mmspsRawAvg_Name",
-    "value4": "_mmspsRawAvg_Info",
-    "value5": "_mmsmotionCorrAvg_Name",
-    "value6": "_mmsmotionCorrAvg_Info",
-    "value7": "_mmspsMotionCorrAvg_Name",
-    "value8": "_mmspsMotionCorrAvg_Info",
-    "value9": "_mmsdriftplot_Name",
-    "value10": "_mmsdriftplot_Info",
-    "value11": "_mmsctfdiag_Name",
-    "value12": "_mmsctfdiag_Info"
+    "key": "_mmsImageKey_Value",
+    "data": {
+      "1": {
+        "file": "_mmsrawAvg_Name",
+        "info":  "_mmsrawAvg_Info"
+      },
+      "2": {
+        "file": "_mmspsRawAvg_Name",
+        "info":  "_mmspsRawAvg_Info"
+      },
+      "3": {
+        "file": "_mmsmotionCorrAvg_Name",
+        "info":  "_mmsmotionCorrAvg_Info"
+      },
+      "4": {
+        "file": "_mmspsMotionCorrAvg_Name",
+        "info":  "_mmspsMotionCorrAvg_Info"
+      },
+      "5": {
+        "file": "_mmsdriftplot_Name",
+        "info":  "_mmsdriftplot_Info"
+      },
+      "6": {
+        "file": "_mmsctfdiag_Name",
+        "info":  "_mmsctfdiag_Info"
+      },
+      "7": {
+        "file": "_mmspick_Name",
+        "info":  "_mmspick_Info:"
+      }
+    }
   }
-
 }

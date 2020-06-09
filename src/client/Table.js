@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Fragment } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,11 +8,22 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-// import Box from '@material-ui/core/Box';
-// import Paper from '@material-ui/core/Paper';
+import Collapse from '@material-ui/core/Collapse';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import Images from "./Images";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+
 
 
 function descendingComparator(a, b, orderBy) {
+  if (a && b){
+    a = a.data
+    b = b.data
+  }
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -29,7 +40,13 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
+
+  // let test = (array.length===0) ? array : array.map(obj => obj.data)
+  // let stabilizedTest = test.map((el, index) => [el, index]);
+
   const stabilizedThis = array.map((el, index) => [el, index]);
+  console.log(stabilizedThis)
+
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) return order;
@@ -44,7 +61,7 @@ function getHeadCells (){
   var temp = []
   for (var i=0; i<configLength;i++){
     if (i===0){
-      temp.push({ id: config["times.star"][1], numeric: false, disablePadding: true, label: "Data"})
+      temp.push({ id: config["times.star"][1], numeric: false, disablePadding: true, label: "Time"})
     } else {
       temp.push({ id: config["data.star"][i]["value"], numeric: true, disablePadding: true, label: config["data.star"][(i).toString(10)].name},);
     }
@@ -52,8 +69,6 @@ function getHeadCells (){
   return temp;
 }
 const headCells = getHeadCells()
-
-
 
 function EnhancedTableHead(props) {
   const { classes, order, orderBy, onRequestSort } = props;
@@ -64,12 +79,11 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-     
+        <TableCell />
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
-            padding="checkbox"
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -94,6 +108,9 @@ function EnhancedTableHead(props) {
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
+    '& > *': {
+      borderBottom: 'unset',
+    },
   },
   paper: {
     width: '100%',
@@ -118,6 +135,67 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+function Row(props) {
+  const key = props.valueNames[Object.keys(props.valueNames)[0]];
+  const nrPlots = Object.keys(props.valueNames).length
+  let tableCell = [];
+  const { row } = props;
+  const [open, setOpen] = React.useState(false);
+  const classes = useStyles();
+
+  for (let i = 0; i < nrPlots; i++) {
+    if(i===0) {   
+      tableCell.push(
+      <Fragment key={i}>
+        <TableCell>
+          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" id={props.index} scope="row"  key={i}>
+          {row[key]}
+        </TableCell>
+      </Fragment>)
+    } else {
+      tableCell.push(
+      <TableCell align="right" key={i}>
+        {row[props.valueNames[Object.keys(props.valueNames)[i]]]}
+      </TableCell>
+    );
+    }
+  }
+  
+  return (
+    <Fragment >
+      <TableRow
+        hover
+        role="checkbox"
+        tabIndex={-1}
+        key={row.key}
+        className={classes.root}
+      >{tableCell}
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+              <Typography variant="h6"  component="div">
+                <Grid container spacing={2} justify="flex-end">
+                  <Grid item xs={11}>
+                  <Box m={1}>
+                    <Grid container spacing={2} justify="flex-end">
+                        <Images attr={props.img} color="transparent" xs={2} sm={2} md={2}/>
+                    </Grid>
+                  </Box>
+                  </Grid>
+                </Grid>
+              </Typography>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </Fragment>
+
+  );
+}
 
 export default function EnhancedTable(props) {
   const classes = useStyles();
@@ -125,9 +203,9 @@ export default function EnhancedTable(props) {
   const [orderBy, setOrderBy] = React.useState(Object.values(props.valueNames)[0]);
   const [page, setPage] = React.useState(0);
   const [dense] = React.useState(true);
-  const [rowsPerPage, setRowsPerPage] = React.useState(20);
-
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const rows = props.attr;
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -144,8 +222,9 @@ export default function EnhancedTable(props) {
     setPage(0);
   };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
 
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  
   return (
     <div className={classes.root}>
         {/* <Box className={classes.box} /> */}
@@ -167,35 +246,17 @@ export default function EnhancedTable(props) {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
+                  const img = props.images
+                                  .filter(obj => obj.key === row.key)
+                                  .map(obj => obj.images)[0]
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  const key = props.valueNames[Object.keys(props.valueNames)[0]];
-                  const nrPlots = Object.keys(props.valueNames).length
-                  let tableCell = [];
-                  for (let i = 0; i < nrPlots; i++) {
-                    if(i===0) {   
-                      tableCell.push(
-                      <TableCell component="th" id={labelId} scope="row" padding="checkbox" key={i}>
-                         {row[key]}
-                      </TableCell>)
-                    } else {
-                      tableCell.push(
-                      <TableCell align="right" key={i}>
-                        {row[props.valueNames[Object.keys(props.valueNames)[i]]]}
-                      </TableCell>
-                    );
-                    }
-                  }
-                  
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={row[key]}
-                    >{tableCell}
-                
-                    </TableRow>
-                  );
+                  return <Row 
+                            key={row.key} 
+                            row={row.data} 
+                            index={labelId} 
+                            valueNames={props.valueNames} 
+                            img={img}  
+                            />
                 })}
               {emptyRows > 0 && (
                 <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>

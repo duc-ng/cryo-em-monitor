@@ -26,7 +26,7 @@ Links:
 
 ## Configure
 
-Add new data points and more:
+Add new data points and set API:
 ```bash
 ./src/config.json
 ```
@@ -34,7 +34,10 @@ Edit client host and port:
 ```bash
 ./.env
 ```
-
+## Problems to fix
+- Multiple clients: random ping timeouts + socket restart => wrong data count
+- Firefox: lag when loading images
+- Two config sources
 
 ## Built With
 
