@@ -18,7 +18,6 @@ import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 
 
-
 function descendingComparator(a, b, orderBy) {
   if (a && b){
     a = a.data
@@ -40,9 +39,6 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
-
-  // let test = (array.length===0) ? array : array.map(obj => obj.data)
-  // let stabilizedTest = test.map((el, index) => [el, index]);
 
   const stabilizedThis = array.map((el, index) => [el, index]);
   console.log(stabilizedThis)
@@ -182,8 +178,8 @@ function Row(props) {
                 <Grid container spacing={2} justify="flex-end">
                   <Grid item xs={11}>
                   <Box m={1}>
-                    <Grid container spacing={2} justify="flex-end">
-                        <Images attr={props.img} color="transparent" xs={2} sm={2} md={2}/>
+                    <Grid container spacing={2} justify="center">
+                        <Images attr={props.img} color="transparent" xs={2} sm={2} md={3}/>
                     </Grid>
                   </Box>
                   </Grid>

@@ -127,7 +127,6 @@ class App extends Component {
 
     //receive images
     socket.on("images", (item) => {
-      //set state
       this.setState((state) => {
         return {
           imageData: state.imageData.concat([item]),
@@ -202,7 +201,7 @@ class App extends Component {
                 </Grid>
                 <Grid item xs={10}>
                   <Grid container spacing={2} justify="center">
-                     <Images attr={this.state.recentImages} xs={4} sm={3} md={2} />
+                     <Images attr={this.state.recentImages} xs={4} sm={3} md={3} />
                   </Grid>
                 </Grid>
                 <Grid item xs={10}>

@@ -26,13 +26,14 @@ Links:
 
 ## Configure
 
-Add new data points and set API:
+Add new data points:
 ```bash
 ./src/config.json
 ```
-Edit client host and port:
+Edit host and port:
 ```bash
 ./.env
+./src/config.json
 ```
 ## Problems to fix
 - Multiple clients: random ping timeouts + socket restart => wrong data count
