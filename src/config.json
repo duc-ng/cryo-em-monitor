@@ -2,53 +2,53 @@
   "app": {
     "api_host": "localhost",
     "api_port": 5000,
-    "folder": "4Duc/data4Web/Titan1/",
-    "maxAge_min": 144000,
+    "rootDir": "4Duc/data4Web/Titan1/",
+    "rootDirDaysOld": 100,
     "refresh_ms": 1000
   },
 
+  "key": "_mmsImageKey_Value",
+
   "times.star": {
-    "key": "_mmsImageKey_Value",
-    "1": "_mmsdateAuqired_Value",
-    "2": "_mmsdateImported_Value",
-    "3": "_mmsdateProcessed_Value",
-    "4": "_mmsdateExported_Value",
-    "5": "_mmsdateError_Value"
+    "0": "_mmsdateAuqired_Value",
+    "1": "_mmsdateImported_Value",
+    "2": "_mmsdateProcessed_Value",
+    "3": "_mmsdateExported_Value",
+    "4": "_mmsdateError_Value"
   },
 
   "data.star": {
-    "key": "_mmsImageKey_Value",
-    "1": {
+    "0": {
       "name": "Mean",
       "value": "_mmsmean_Value",
-      "info":  "_mmsmean_Info"
+      "info": "_mmsmean_Info"
     },
-    "2": {
+    "1": {
       "name": "Drift",
       "value": "_mmsdrift_Value",
       "info": "_mmsdrift_Info"
     },
-    "3": {
+    "2": {
       "name": "Iciness",
       "value": "_mmsiciness_Value",
       "info": "_mmsiciness_Info"
     },
-    "4": {
+    "3": {
       "name": "Defocus",
       "value": "_mmsdefocus_Value",
       "info": "_mmsdefocus_Info"
     },
-    "5": {
+    "4": {
       "name": "Resolution",
       "value": "_mmsresolution_Value",
       "info": "_mmsresolution_Info"
     },
-    "6": {
+    "5": {
       "name": "CCvalue",
       "value": "_mmsccOfCtfFit_Value",
       "info": "_mmsccOfCtfFit_Info"
     },
-    "7": {
+    "6": {
       "name": "Astigmatism",
       "value": "_mmsastigmatism_Value",
       "info": "_mmsastigmatism_Info"
@@ -56,36 +56,33 @@
   },
 
   "images.star": {
-    "key": "_mmsImageKey_Value",
-    "data": {
-      "1": {
-        "file": "_mmsrawAvg_Name",
-        "info":  "_mmsrawAvg_Info"
-      },
-      "2": {
-        "file": "_mmspsRawAvg_Name",
-        "info":  "_mmspsRawAvg_Info"
-      },
-      "3": {
-        "file": "_mmsmotionCorrAvg_Name",
-        "info":  "_mmsmotionCorrAvg_Info"
-      },
-      "4": {
-        "file": "_mmspsMotionCorrAvg_Name",
-        "info":  "_mmspsMotionCorrAvg_Info"
-      },
-      "5": {
-        "file": "_mmsdriftplot_Name",
-        "info":  "_mmsdriftplot_Info"
-      },
-      "6": {
-        "file": "_mmsctfdiag_Name",
-        "info":  "_mmsctfdiag_Info"
-      },
-      "7": {
-        "file": "_mmspick_Name",
-        "info":  "_mmspick_Info"
-      }
+    "0": {
+      "file": "_mmsrawAvg_Name",
+      "info": "_mmsrawAvg_Info"
+    },
+    "1": {
+      "file": "_mmspsRawAvg_Name",
+      "info": "_mmspsRawAvg_Info"
+    },
+    "2": {
+      "file": "_mmsmotionCorrAvg_Name",
+      "info": "_mmsmotionCorrAvg_Info"
+    },
+    "3": {
+      "file": "_mmspsMotionCorrAvg_Name",
+      "info": "_mmspsMotionCorrAvg_Info"
+    },
+    "4": {
+      "file": "_mmsdriftplot_Name",
+      "info": "_mmsdriftplot_Info"
+    },
+    "5": {
+      "file": "_mmsctfdiag_Name",
+      "info": "_mmsctfdiag_Info"
+    },
+    "6": {
+      "file": "_mmspick_Name",
+      "info": "_mmspick_Info"
     }
   }
 }

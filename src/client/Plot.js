@@ -84,7 +84,8 @@ export default class Graphs extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if(this.props.counter !== prevProps.counter){
+    if(this.props.counter !== prevProps.counter ||
+      this.props.counter2 !== prevProps.counter2){
       this.updateData();
     } 
     window.addEventListener('resize', this.updateDimensions);

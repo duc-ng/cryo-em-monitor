@@ -9,7 +9,6 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { blueGrey } from "@material-ui/core/colors";
 
-
 // const Images = () => (
 //   <Fragment>
 
@@ -39,7 +38,7 @@ const useStyles = makeStyles({
 const transparentStyles = makeStyles({
   root: {
     maxWidth: 345,
-    boxShadow: 'none',
+    boxShadow: "none",
     borderRadius: 0,
   },
   media: {
@@ -52,24 +51,24 @@ const transparentStyles = makeStyles({
 
 export default function Images(props) {
   var classes = useStyles();
-  if(props.color==="transparent"){
+  if (props.color === "transparent") {
     classes = transparentStyles();
-  } 
+  }
   if (props.attr.length === 0) {
     return <div />;
   } else {
     return (
       <Fragment>
-        {props.attr.map((item) => (
-          <Grid item xs={props.xs} sm={props.sm} md={props.md} >
+        {props.attr.map((item, i) => (
+          <Grid item key={i} xs={props.xs} sm={props.sm} md={props.md}>
             <Card className={classes.root}>
               <CardMedia className={classes.content}>
-                <Zoom>
+                <Zoom zoomMargin={40}>
                   <img alt="that wanaka tree" src={item.data} width="100%" />
                 </Zoom>
               </CardMedia>
 
-              <CardContent className={classes.content} >
+              <CardContent className={classes.content}>
                 <Typography variant="body2" color="textSecondary" component="p">
                   {item.label}
                 </Typography>

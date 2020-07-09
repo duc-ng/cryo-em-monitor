@@ -3,133 +3,119 @@ const app = express();
 const http = require("http").createServer(app);
 const io = require("socket.io")(http);
 const path = require("path");
-const fs = require("fs");
-const reader = require("./src/server/reader");
+const Reader = require("./src/server/reader");
 const chokidar = require("chokidar");
 const config = require("./src/config.json");
 const fspromises = require("fs").promises;
-
+const cors = require('cors')
 
 //init
-const host = config.app.api_host;
-const port = config.app.api_port;
-const folder = config.app.folder;
-const maxAge = config.app.maxAge_min;
-app.get("/", (req, res) => res.send("Server is running!"));
+const { rootDir } = config.app;
+var data = [];
+var images = new Map();
+app.use(cors())
 
+//file watcher
+const watcher = chokidar.watch(rootDir, {
+  ignored: /^\./,
+  persistent: true,
+});
+watcher.on("addDir", async (dirPath) => {
+  //read data
+  const reader = new Reader();
+  try {
+    var files = await Promise.all([
+      reader.readStarFile(path.join(dirPath, "data.star")),
+      reader.readStarFile(path.join(dirPath, "times.star")),
+      reader.readStarFile(path.join(dirPath, "images.star")),
+    ]);
+  } catch (error) {
+    return;
+  }
+  let merge = { ...files[0], ...files[1], ...files[2] };
+  data.push(merge);
+  console.log(data.length);
 
-//websocket
-io.eio.pingTimeout = 120000
-io.on("connection", function (socket) {
-
-  //init
-  console.log("User connected");
-  var watcher = chokidar.watch(folder, {
-    ignored: /^\./,
-    persistent: true,
-  });
-  watcher.on("addDir", function (dirPath) {
-    readDir(dirPath);
-  });
-
-  //read star files
-  async function readDir(dirPath) {
-    //console.log("Directory read: "+dirPath);
-    if (reader.fileIsYoungerThan(dirPath, maxAge)) {
-
-      //send data
+  //read images
+  let key = data[data.length - 1][[config.key]];
+  let imageObjects = [];
+  for (const [k, v] of Object.entries(config["images.star"])) {
+    if (merge[v.file] != undefined && merge[v.info] != undefined) {
+      let filePath = path.join(dirPath, merge[v.file]);
       try {
-        var files = await Promise.all([
-          reader.readStarFile(path.join(dirPath,"data.star")),
-          reader.readStarFile(path.join(dirPath,"times.star")),
-          reader.readStarFile(path.join(dirPath,"images.star"))
-        ]);
-      } catch (error){
+        var image = await fspromises.readFile(filePath);
+      } catch (error) {
+        console.log("Error image: " + filePath);
         return;
       }
-      let merge = {...files[0], ...files[1], ...files[2]}; 
-      socket.emit("data", merge);
-
-      //send images
-      let imageObject = {
-        images: [],
-        key: files[2][config["images.star"].key]
+      if (image != undefined) {
+        imageObjects.push({
+          data: "data:image/jpeg;base64," + image.toString("base64"),
+          label: merge[v.info],
+          key: key
+        });
       }
-      for (let x in config["images.star"].data){
-        let imageName = config["images.star"].data[x].file;
-        let imageInfo = config["images.star"].data[x].info;
-        let imageFile = files[2][imageName];
-        let imageInfoContent= files[2][imageInfo];
-        if (imageFile != undefined && imageInfoContent != undefined) {
-          let imagePath = path.join(dirPath, imageFile)
-          try {
-            var image = await fspromises.readFile(imagePath);
-          } catch (error){
-            console.log("Image reading error");  
-            return; 
-          }
-          if (image != undefined) {
-            imageObject.images.push({
-              data: "data:image/jpeg;base64," + image.toString("base64"),
-              label: imageInfoContent,
-            })
-          }
-        }
-      }
-      socket.emit("images", imageObject);
     }
   }
+  images.set("" + key, imageObjects);
+});
 
-
-    //images
-    // if (
-    //   file.endsWith(config.get("starFiles.names.file3")) &&
-    //   reader.fileIsYoungerThan(file, maxHours)
-    // ) {
-    //   reader.readStarFile(file).then((res) => {
-    //     var fixedValues = 1;
-    //     for (i = fixedValues; i < Object.keys(res).length; i = i + 2) {
-    //       var filePath = path.join(
-    //         __dirname,
-    //         path.dirname(file),
-    //         Object.values(res)[i]
-    //       );
-    //       fs.readFile(filePath, function (err, data) {
-    //         socket.emit(
-    //           "newImages",
-    //           "data:image/png;base64," + data.toString("base64")
-    //         );
-    //         console.log("Image sent");
-    //       });
-    //     }
-    //     socket.emit("newImageData", res);
-    //   });
-    // }
-
-
-
-
-
-  //end 
-  socket.on("disconnect", function (reason) {
-    console.log("User disconnected: "+reason);
+//send data continously
+io.on("connection", (socket) => {
+  //init
+  console.log("User connected");
+  let lastDate = undefined;
+  socket.emit("initLastDate", 1);
+  socket.on("lastDate", (item) => {
+    lastDate = item;
   });
 
+  //sync data with client
+  let interval = setInterval(() => {
+    if (lastDate != undefined) {
+      let filtered = data.filter((x) => {
+        let delta = Date.now() - new Date(x._mmsdateAuqired_Value);
+        return lastDate - delta > 0;
+      });
+      if (filtered.length != 0) {
+        lastDate = undefined; //lock
+        socket.emit("data", filtered);
+        console.log("data sent: " + filtered.length);
+      }
+    }
+  }, 1000);
+
+  //end
+  socket.on("disconnect", function (reason) {
+    clearInterval(interval);
+    console.log("User disconnected: " + reason);
+  });
+});
+
+//send images, when requested
+app.get("/imagesAPI", function (req, res) {
+  if (images.has(req.query.key)) {
+    res.send(images.get(req.query.key));
+  } else {
+    res.send([]);
+  }
 });
 
 //listen for incoming connections
-http.listen(port, () => {
-  console.log(`Server app listening at ${host}:${port} (API)`);
+const { api_host, api_port } = config.app;
+app.get("/", (req, res) => res.send("API is working!"));
+http.listen(api_port, () => {
+  console.log(`Server app listening at ${api_host}:${api_port} (API)`);
 });
 
 //exit handling
 process.stdin.resume();
 function exitHandler(options, exitCode) {
-    if (exitCode || exitCode === 0) console.log(0);
-    if (options.exit) process.exit();
+  if (exitCode || exitCode === 0) process.exit();
+  if (options.exit) process.exit();
 }
-process.on('exit', exitHandler.bind(null,{cleanup:true}));
-process.on('SIGINT', exitHandler.bind(null, {exit:true}));
-process.on('SIGUSR1', exitHandler.bind(null, {exit:true}));
-process.on('SIGUSR2', exitHandler.bind(null, {exit:true}));
-process.on('uncaughtException', exitHandler.bind(null, {exit:true}));
+process.on("exit", exitHandler.bind(null, { cleanup: true }));
+process.on("SIGINT", exitHandler.bind(null, { exit: true }));
+process.on("SIGUSR1", exitHandler.bind(null, { exit: true }));
+process.on("SIGUSR2", exitHandler.bind(null, { exit: true }));
+process.on("uncaughtException", exitHandler.bind(null, { exit: true }));
