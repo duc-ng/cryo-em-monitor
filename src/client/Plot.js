@@ -27,7 +27,7 @@ export default class Graphs extends Component {
           "size": 14,
         },
         // paper_bgcolor: 'rgba(0,0,0,0)',
-        // plot_bgcolor: 'rgba(0,0,0,0)',
+        //plot_bgcolor: 'rgba(0,0,0,0)',
         
         xaxis: {
           type: "date",

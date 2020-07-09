@@ -264,11 +264,7 @@ export default function EnhancedTable(props) {
             {stableSort(rows, getComparator(order, orderBy))
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => {
-                {
-                  /* const img = props.images
-                  .filter((obj) => obj.key === row.key)
-                  .map((obj) => obj.images)[0]; */
-                }
+              
                 const labelId = `enhanced-table-checkbox-${index}`;
                 return (
                   <Row
@@ -277,7 +273,6 @@ export default function EnhancedTable(props) {
                     row={row.data}
                     index={labelId}
                     valueNames={props.valueNames}
-                    // img={img}
                   />
                 );
               })}

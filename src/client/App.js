@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import socketIOClient from "socket.io-client";
 import NavBar from "./Header";
 import Backdrop from "./Backdrop";
+import Footer from "./Footer";
 import PlotContainer from "./PlotContainer";
 import DataContainer from "./DataContainer";
 import Status from "./Status";
@@ -10,15 +11,8 @@ import { withStyles } from "@material-ui/styles";
 import { blueGrey } from "@material-ui/core/colors";
 import config from "./../config.json";
 
-const styles = (theme) => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: blueGrey[50],
-  },
-});
-
+//main class
 class App extends Component {
-  //constructor
   constructor(props) {
     super(props);
 
@@ -75,32 +69,6 @@ class App extends Component {
         };
       });
     });
-
-    //receive images
-    // socket.on("images", (item) => {
-    //   this.setState((state) => {
-    //     return {
-    //       imageData: state.imageData.concat([item]),
-    //       imagesChanged: true,
-    //     };
-    //   });
-    // });
-    // this.interval = setInterval(() => this.updateImages(), 1000);
-  }
-
-  // updateImages() {
-  //   if (this.state.imagesChanged) {
-  //     this.setState((state) => ({
-  //       recentImages: [
-  //         ...this.state.imageData[this.state.imageData.length - 1].images,
-  //       ],
-  //       imagesChanged: false,
-  //     }));
-  //   }
-  // }
-
-  componentWillUnmount() {
-    //clearInterval(this.interval);
   }
 
   //return
@@ -126,11 +94,19 @@ class App extends Component {
                 </Grid>
               </Grid>
             </div>
+            <Footer/>
           </Fragment>
         </div>
       );
     }
   }
 }
+
+const styles = (theme) => ({
+  root: {
+    flexGrow: 1,
+    backgroundColor: blueGrey[50],
+  },
+});
 
 export default withStyles(styles)(App);

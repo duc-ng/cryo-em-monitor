@@ -34,7 +34,7 @@ watcher.on("addDir", async (dirPath) => {
   }
   let merge = { ...files[0], ...files[1], ...files[2] };
   data.push(merge);
-  console.log(data.length);
+  console.log("File read: "+data.length);
 
   //read images
   let key = data[data.length - 1][[config.key]];
@@ -68,6 +68,7 @@ io.on("connection", (socket) => {
   socket.emit("initLastDate", 1);
   socket.on("lastDate", (item) => {
     lastDate = item;
+    console.log("lastDate: "+lastDate)
   });
 
   //sync data with client
@@ -77,13 +78,14 @@ io.on("connection", (socket) => {
         let delta = Date.now() - new Date(x._mmsdateAuqired_Value);
         return lastDate - delta > 0;
       });
+
       if (filtered.length != 0) {
         lastDate = undefined; //lock
         socket.emit("data", filtered);
         console.log("data sent: " + filtered.length);
       }
     }
-  }, 1000);
+  }, config.app.refreshNewDataInMs);
 
   //end
   socket.on("disconnect", function (reason) {

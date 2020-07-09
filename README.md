@@ -1,6 +1,6 @@
 # Cryo EM web monitor 
 
-Web application for cryo-em data of the MPIB.
+Web monitor for cryo-em data of the MPIB.
 
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
@@ -36,8 +36,6 @@ Edit host and port:
 ./src/config.json
 ```
 ## Problems to fix
-- Multiple clients: random ping timeouts + socket restart => wrong data count
-- Firefox: lag when loading images
 - Two config sources
 
 ## Built With

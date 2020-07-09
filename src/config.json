@@ -4,7 +4,7 @@
     "api_port": 5000,
     "rootDir": "4Duc/data4Web/Titan1/",
     "rootDirDaysOld": 100,
-    "refresh_ms": 1000
+    "refreshNewDataInMs": 1000
   },
 
   "key": "_mmsImageKey_Value",

@@ -87,8 +87,16 @@ export default function DataContainer(props) {
       </Typography>
       <Divider light={true} variant={"middle"} />
       <Box pt={3} pb={2}>
+      <Grid container spacing={2} justify="center">
+
+      <Grid item xs={11}>
         <Grid container spacing={2} justify="center">
+           
+
           <Images attr={recentImages} xs={4} sm={3} md={3} />
+          </Grid>
+          </Grid>
+
         </Grid>
       </Box>
     </Fragment>

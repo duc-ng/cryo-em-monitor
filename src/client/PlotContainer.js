@@ -7,6 +7,7 @@ import Box from "@material-ui/core/Box";
 import Typography from "@material-ui/core/Typography";
 import { Divider } from "@material-ui/core";
 import FilterListIcon from "@material-ui/icons/FilterList";
+import { blue } from "@material-ui/core/colors";
 
 export default function Plots(props) {
   //data
@@ -126,7 +127,7 @@ export default function Plots(props) {
         <Grid container direction="row" justify="center">
           <Grid item xs={1}>
             <Grid container justify="center">
-              <FilterListIcon color="primary" />
+              <FilterListIcon  style={{ color: blue[800] }} />
             </Grid>
           </Grid>
           <Grid item xs={10} sm={8} lg={5}>
@@ -140,6 +141,7 @@ export default function Plots(props) {
               min={1}
               max={9}
               onChange={handleSliderChange}
+              style={{ color: blue[800] }}
             />
           </Grid>
         </Grid>

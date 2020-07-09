@@ -9,7 +9,6 @@ import Box from "@material-ui/core/Box";
 import config from "./../config.json";
 
 export default function Activity(props) {
-
   //data
   const calculateData = (index) => {
     let label = config["times.star"][index];
@@ -25,15 +24,14 @@ export default function Activity(props) {
 
   const ageIsValid = (objDate) => {
     let delta = new Date() - objDate;
-    if (hours[1]===2) return true //TODO: remove this line
+    if (hours[1] === 2) return true; //TODO: remove this line
     return (
-      delta > hours[0] * 60 * 60 * 1000 &&
-      delta < hours[1] * 60 * 60 * 1000
+      delta > hours[0] * 60 * 60 * 1000 && delta < hours[1] * 60 * 60 * 1000
     );
   };
 
   //slider
-  const [hours, setHours] = React.useState([0,2]);
+  const [hours, setHours] = React.useState([0, 2]);
 
   const handleSliderChange = (event, newValue) => {
     setHours(newValue);
@@ -130,6 +128,7 @@ export default function Activity(props) {
               min={0}
               max={4}
               onChange={handleSliderChange}
+              style={{ color: blue[800] }}
             />
           </Grid>
         </Grid>
