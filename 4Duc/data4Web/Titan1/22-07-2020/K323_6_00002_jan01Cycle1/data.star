@@ -18,5 +18,5 @@ _mmsccOfCtfFit_Info
 _mmsastigmatism_Value
 _mmsastigmatism_Info
 
- 1595420358263625 	 0.159465133879 	"infomation for mean" 	0.543120756891 	"infomation for drift" 	0.768418766635 	"infomation for iciness" 	0.931643174721 	"infomation for defocus" 	0.784433507688 	"infomation for resolution" 	0.697308565715 	"infomation for ccOfCtfFit" 	0.868080330061 	"infomation for astigmatism" 	
+ 1595426039425702 	 0.0295198016002 	"infomation for mean" 	0.863422007595 	"infomation for drift" 	0.0567128854744 	"infomation for iciness" 	0.997685573234 	"infomation for defocus" 	0.928534371021 	"infomation for resolution" 	0.323907182197 	"infomation for ccOfCtfFit" 	0.189446789198 	"infomation for astigmatism" 	
  

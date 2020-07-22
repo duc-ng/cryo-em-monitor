@@ -15,4 +15,4 @@ _mmsdriftplot_Name
 _mmsdriftplot_Info
 _mmsctfdiag_Name
 _mmsctfdiag_Info
-1595420314577968 	 rawAvg.png 	 "infomation for rawAvg" 	psRawAvg.png 	 "infomation for psRawAvg" 	motionCorrAvg.png 	 "infomation for motionCorrAvg" 	psMotionCorrAvg.png 	 "infomation for psMotionCorrAvg" 	driftplot.png 	 "infomation for driftplot" 	ctfdiag.png 	 "infomation for ctfdiag" 	
+1595425992043014 	 rawAvg.png 	 "infomation for rawAvg" 	psRawAvg.png 	 "infomation for psRawAvg" 	motionCorrAvg.png 	 "infomation for motionCorrAvg" 	psMotionCorrAvg.png 	 "infomation for psMotionCorrAvg" 	driftplot.png 	 "infomation for driftplot" 	ctfdiag.png 	 "infomation for ctfdiag" 	

@@ -16,5 +16,5 @@ _mmsresolution_Info
 _mmsccOfCtfFit_Value
 _mmsccOfCtfFit_Info
 
- 1595420314577968 	 0.383785419739 	"infomation for mean" 	0.955046555368 	"infomation for drift" 	0.909670548491 	"infomation for iciness" 	0.919251055447 	"infomation for defocus" 	0.659752057174 	"infomation for resolution" 	0.254921509026 	"infomation for ccOfCtfFit" 	
+ 1595425992043014 	 0.864047259053 	"infomation for mean" 	0.214247044495 	"infomation for drift" 	0.914714214814 	"infomation for iciness" 	0.489814549416 	"infomation for defocus" 	0.424989400235 	"infomation for resolution" 	0.59511078052 	"infomation for ccOfCtfFit" 	
  

@@ -17,4 +17,4 @@ _mmsctfdiag_Name
 _mmsctfdiag_Info
 _mmspick_Name
 _mmspick_Info
-1595420340940568 	 rawAvg.png 	 "infomation for rawAvg" 	psRawAvg.png 	 "infomation for psRawAvg" 	motionCorrAvg.png 	 "infomation for motionCorrAvg" 	psMotionCorrAvg.png 	 "infomation for psMotionCorrAvg" 	driftplot.png 	 "infomation for driftplot" 	ctfdiag.png 	 "infomation for ctfdiag" 	pick.png 	 "infomation for pick" 	
+1595426021694638 	 rawAvg.png 	 "infomation for rawAvg" 	psRawAvg.png 	 "infomation for psRawAvg" 	motionCorrAvg.png 	 "infomation for motionCorrAvg" 	psMotionCorrAvg.png 	 "infomation for psMotionCorrAvg" 	driftplot.png 	 "infomation for driftplot" 	ctfdiag.png 	 "infomation for ctfdiag" 	pick.png 	 "infomation for pick" 	

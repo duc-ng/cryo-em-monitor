@@ -12,6 +12,7 @@ export default function DataContainer(props) {
   const [recentImages, setRecentImages] = useState([]);
   const [data, setData] = useState([]);
   const [header, setHeader] = useState([]);
+  const [imageKeys, setImageKeys] = useState([]);
 
   useEffect(() => {
     //format table data
@@ -60,6 +61,12 @@ export default function DataContainer(props) {
     fetch("http://localhost:5000/imagesAPI?key=" + key)
       .then((response) => response.json())
       .then((res) => setRecentImages(res));
+
+    //calc last 20 keys
+    setImageKeys(props.data
+      .slice(Math.max(props.data.length - 20, 0))
+      .map((x)=> {return {"key": x[config.key],"data":[]}}))
+
   }, [props.data]);
 
   //render
@@ -87,7 +94,7 @@ export default function DataContainer(props) {
         <Grid container spacing={2} justify="center">
           <Grid item xs={11}>
             <Grid container spacing={2} justify="center">
-              <Images attr={recentImages} xs={4} sm={3} md={3} />
+              <Images attr={recentImages} imgKeys={imageKeys} xs={4} sm={3} md={3} />
             </Grid>
           </Grid>
         </Grid>
