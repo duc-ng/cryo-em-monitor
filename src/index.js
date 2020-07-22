@@ -4,12 +4,12 @@ import './index.css';
 import App from './client/App';
 
 ReactDOM.render(
-  <React.StrictMode>
+  <React.Fragment>
 
     {/* Main component */}
     <App />
     
-  </React.StrictMode>,
+  </React.Fragment>,
   document.getElementById('root')
 );
 

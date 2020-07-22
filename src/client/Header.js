@@ -1,5 +1,5 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useEffect } from "react";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import { blue } from "@material-ui/core/colors";
@@ -8,9 +8,10 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
-import logo from "./logo.jpeg";
+import logo from "./../logo.jpeg";
 import Tooltip from "@material-ui/core/Tooltip";
 import SettingsBrightnessIcon from "@material-ui/icons/SettingsBrightness";
+import Badge from "@material-ui/core/Badge";
 
 const useStyles = makeStyles({
   root: {
@@ -28,9 +29,25 @@ const useStyles = makeStyles({
   },
 });
 
-export default function Header() {
+const StyledBadge = withStyles((theme) => ({
+  badge: {
+    backgroundColor: "#d50000",
+    top: 2,
+    right: -12,
+  },
+}))(Badge);
+
+const RedTooltip = withStyles((theme) => ({
+  tooltip: {
+    backgroundColor: "#d50000",
+    color: "#fff",
+  },
+}))(Tooltip);
+
+export default function Header(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  const [invisible, setInvisible] = React.useState(true);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -39,6 +56,21 @@ export default function Header() {
   const refreshPage = () => {
     window.location.reload(false);
   };
+
+  //notification, when no data has arrived for x min
+  useEffect(() => {
+    let interval = setInterval(() => {
+      let d = Date.now();
+      if (d - new Date(props.lastItemDate) > 10000) {
+        setInvisible(false);
+      } else {
+        setInvisible(true);
+      }
+    }, 1000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, [props.lastItemDate]);
 
   return (
     <React.Fragment>
@@ -62,7 +94,23 @@ export default function Header() {
                 onChange={handleChange}
                 centered
               >
-                <Tab classes={{ label: classes.label }} label="Titan 1" />
+                <Tab
+                  classes={{ label: classes.label }}
+                  label={
+                    <RedTooltip
+                      title={
+                        invisible
+                          ? ""
+                          : "Data has not arrived for more than 10 seconds."
+                      }
+                      color="error"
+                    >
+                      <StyledBadge invisible={invisible} badgeContent={"!"}>
+                        Titan 1
+                      </StyledBadge>
+                    </RedTooltip>
+                  }
+                />
                 <Tab classes={{ label: classes.label }} label="Titan 2" />
                 <Tab classes={{ label: classes.label }} label="Titan 3" />
               </Tabs>
@@ -71,7 +119,7 @@ export default function Header() {
               <Grid container alignItems="center" justify="flex-end">
                 <Tooltip title="Toggle light/dark theme">
                   <Button className={classes.button}>
-                    <SettingsBrightnessIcon style={{ color: "white" }}  />
+                    <SettingsBrightnessIcon style={{ color: "white" }} />
                   </Button>
                 </Tooltip>
               </Grid>

@@ -2,9 +2,10 @@
   "app": {
     "api_host": "localhost",
     "api_port": 5000,
-    "rootDir": "4Duc/data4Web/Titan1/",
+    "rootDir": "4Duc/data4Web/Titan1",
     "rootDirDaysOld": 100,
-    "refreshNewDataInMs": 1000
+    "refreshNewDataInMs": 1000,
+    "waitTimeFileCreationInMs": 4000
   },
 
   "key": "_mmsImageKey_Value",
@@ -21,37 +22,65 @@
     "0": {
       "name": "Mean",
       "value": "_mmsmean_Value",
-      "info": "_mmsmean_Info"
+      "info": "_mmsmean_Info",
+      "plot": {
+        "maxOptimum": 0.6,
+        "minOptimum": 0.2
+      }
     },
     "1": {
       "name": "Drift",
       "value": "_mmsdrift_Value",
-      "info": "_mmsdrift_Info"
+      "info": "_mmsdrift_Info",
+      "plot": {
+        "maxOptimum": 0.6,
+        "minOptimum": 0.2
+      }
     },
     "2": {
       "name": "Iciness",
       "value": "_mmsiciness_Value",
-      "info": "_mmsiciness_Info"
+      "info": "_mmsiciness_Info",
+      "plot": {
+        "maxOptimum": 0.9,
+        "minOptimum": 0.1
+      }
     },
     "3": {
       "name": "Defocus",
       "value": "_mmsdefocus_Value",
-      "info": "_mmsdefocus_Info"
+      "info": "_mmsdefocus_Info",
+      "plot": {
+        "maxOptimum": 0.0,
+        "minOptimum": 0.0
+      }
     },
     "4": {
       "name": "Resolution",
       "value": "_mmsresolution_Value",
-      "info": "_mmsresolution_Info"
+      "info": "_mmsresolution_Info",
+      "plot": {
+        "maxOptimum": 0.5,
+        "minOptimum": 0.4
+      }
     },
     "5": {
       "name": "CCvalue",
       "value": "_mmsccOfCtfFit_Value",
-      "info": "_mmsccOfCtfFit_Info"
+      "info": "_mmsccOfCtfFit_Info",
+      "plot": {
+        "maxOptimum": 0.7,
+        "minOptimum": 0.3
+      }
     },
     "6": {
       "name": "Astigmatism",
       "value": "_mmsastigmatism_Value",
-      "info": "_mmsastigmatism_Info"
+      "info": "_mmsastigmatism_Info",
+      "plot": {
+        "maxOptimum": 0.9,
+        "minOptimum": 0.0
+      }
     }
   },
 

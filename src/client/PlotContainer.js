@@ -8,6 +8,21 @@ import Typography from "@material-ui/core/Typography";
 import { Divider } from "@material-ui/core";
 import FilterListIcon from "@material-ui/icons/FilterList";
 import { blue } from "@material-ui/core/colors";
+import Dialog from "@material-ui/core/Dialog";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import FullscreenIcon from "@material-ui/icons/Fullscreen";
+import { makeStyles } from "@material-ui/core/styles";
+import Hidden from "@material-ui/core/Hidden";
+
+const useStyles = makeStyles((theme) => ({
+  appBar: {
+    position: "relative",
+    boxShadow: "none",
+  },
+}));
 
 export default function Plots(props) {
   //data
@@ -15,7 +30,8 @@ export default function Plots(props) {
     return {
       x: filterValues(config["times.star"][0]),
       y: filterValues(config["data.star"][index].value),
-      info: filterValues(config["data.star"][index].info),
+      //info: filterValues(config["data.star"][index].info),
+      info: filterValues(config["data.star"][index].value),
     };
   };
 
@@ -38,7 +54,7 @@ export default function Plots(props) {
   };
 
   //slider
-  const [time, setTime] = React.useState([1, 5]);
+  const [time, setTime] = React.useState([1, 8]);
   const [revision, setRevision] = React.useState(0);
 
   const handleValueLabel = (x) => {
@@ -63,7 +79,7 @@ export default function Plots(props) {
       case 4:
         return 12;
       case 5:
-        return 238183212; //TODO: change to correct number
+        return 24;
       case 6:
         return 48;
       case 7:
@@ -116,18 +132,85 @@ export default function Plots(props) {
     },
   ];
 
+  //fullscreen
+  const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   //render
   return (
     <Fragment>
-      <Typography variant="subtitle1" gutterBottom>
-        Plots
-      </Typography>
+      {/* title */}
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+      >
+        <Grid item xs={1}>
+          <Typography variant="subtitle1" gutterBottom>
+            Plots
+          </Typography>
+        </Grid>
+        <Grid item xs={1}>
+          {/* fullscreen */}
+          <Hidden mdDown>
+            <IconButton
+              onClick={handleClickOpen}
+              color="primary"
+            >
+              <FullscreenIcon fontSize="large" />
+            </IconButton>
+            <Dialog fullScreen open={open} onClose={handleClose} >
+              <AppBar style={{ background: "#fff" }} className={classes.appBar}>
+                <Toolbar boxShadow={0}>
+                  <IconButton
+                    edge="start"
+                    style={{ color: blue[800] }}
+                    onClick={handleClose}
+                    aria-label="close"
+                  >
+                    <CloseIcon />
+                  </IconButton>
+                </Toolbar>
+              </AppBar>
+              <Grid container justify="center">
+                <Grid item xs={11}>
+                  <Grid container justify="center" spacing={1}>
+                    {Object.keys(config["data.star"]).map((key) => {
+                      return (
+                        <Grid item xs={3} key={key}>
+                          <Plot
+                            attr={calculateData(key)}
+                            title={config["data.star"][key].name}
+                            counter={props.counter}
+                            counter2={revision}
+                            color={config["data.star"][key].plot}
+                          />
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Dialog>
+          </Hidden>
+        </Grid>
+      </Grid>
       <Divider light={true} variant={"middle"} />
+
+      {/* slider */}
       <Box p={3}>
         <Grid container direction="row" justify="center">
           <Grid item xs={1}>
             <Grid container justify="center">
-              <FilterListIcon  style={{ color: blue[800] }} />
+              <FilterListIcon style={{ color: blue[800] }} />
             </Grid>
           </Grid>
           <Grid item xs={10} sm={8} lg={5}>
@@ -147,6 +230,7 @@ export default function Plots(props) {
         </Grid>
       </Box>
 
+      {/* plots */}
       <Grid container justify="center" spacing={2}>
         {Object.keys(config["data.star"]).map((key) => {
           return (
@@ -156,6 +240,7 @@ export default function Plots(props) {
                 title={config["data.star"][key].name}
                 counter={props.counter}
                 counter2={revision}
+                color={config["data.star"][key].plot}
               />
             </Grid>
           );

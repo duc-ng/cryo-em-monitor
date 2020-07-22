@@ -7,82 +7,90 @@ const Reader = require("./src/server/reader");
 const chokidar = require("chokidar");
 const config = require("./src/config.json");
 const fspromises = require("fs").promises;
-const cors = require('cors')
+const cors = require("cors");
 
 //init
 const { rootDir } = config.app;
+const reader = new Reader();
 var data = [];
 var images = new Map();
-app.use(cors())
+app.use(cors());
 
 //file watcher
-const watcher = chokidar.watch(rootDir, {
+const watcher = chokidar.watch(path.join(rootDir, "*", "*"), {
   ignored: /^\./,
   persistent: true,
 });
-watcher.on("addDir", async (dirPath) => {
-  //read data
-  const reader = new Reader();
-  try {
-    var files = await Promise.all([
-      reader.readStarFile(path.join(dirPath, "data.star")),
-      reader.readStarFile(path.join(dirPath, "times.star")),
-      reader.readStarFile(path.join(dirPath, "images.star")),
-    ]);
-  } catch (error) {
-    return;
-  }
-  let merge = { ...files[0], ...files[1], ...files[2] };
-  data.push(merge);
-  console.log("File read: "+data.length);
 
-  //read images
-  let key = data[data.length - 1][[config.key]];
-  let imageObjects = [];
-  for (const [k, v] of Object.entries(config["images.star"])) {
-    if (merge[v.file] != undefined && merge[v.info] != undefined) {
-      let filePath = path.join(dirPath, merge[v.file]);
-      try {
-        var image = await fspromises.readFile(filePath);
-      } catch (error) {
-        console.log("Error image: " + filePath);
-        return;
-      }
-      if (image != undefined) {
-        imageObjects.push({
-          data: "data:image/jpeg;base64," + image.toString("base64"),
-          label: merge[v.info],
-          key: key
-        });
-      }
+//sorted insertion
+function insertInOrder(obj) {
+  let i = getIndexToInsert(new Date(obj._mmsdateAuqired_Value));
+  data.splice(i, 0, obj);
+}
+
+function getIndexToInsert(date) {
+  let i = 0;
+  for (i = data.length - 1; i >= 0; i--) {
+    let a = new Date(data[i]._mmsdateAuqired_Value);
+    if (date - a >= 0) {
+      break;
     }
   }
-  images.set("" + key, imageObjects);
+  return i + 1;
+}
+
+//reader
+let nrOfErrors = 0;
+watcher.on("addDir", async (dirPath) => {
+  setTimeout(async () => {
+    //read data
+    try {
+      var files = await Promise.all([
+        reader.readStarFile(path.join(dirPath, "data.star")),
+        reader.readStarFile(path.join(dirPath, "times.star")),
+        reader.readStarFile(path.join(dirPath, "images.star")),
+      ]);
+    } catch (error) {
+      nrOfErrors++;
+      //console.log("Please increase >waitTimeFileCreationInMs< in config.app");
+      console.log(nrOfErrors + " File reading errors:");
+      return;
+    }
+
+    //save data
+    let merge = { ...files[0], ...files[1], ...files[2] };
+    insertInOrder(merge);
+    console.log(data.length + ". File read: " + merge["_mmsdateAuqired_Value"]);
+
+    //save image path + index
+    let key = merge[config.key];
+    images.set("" + key, { path: dirPath, data: merge });
+  }, config.app.waitTimeFileCreationInMs);
 });
 
 //send data continously
+var userCounter = 0;
 io.on("connection", (socket) => {
   //init
-  console.log("User connected");
+  let userID = ++userCounter;
+  console.log("Client " + userID + ": connected");
+
+  //get last date of clients data
   let lastDate = undefined;
   socket.emit("initLastDate", 1);
   socket.on("lastDate", (item) => {
     lastDate = item;
-    console.log("lastDate: "+lastDate)
   });
 
   //sync data with client
   let interval = setInterval(() => {
     if (lastDate != undefined) {
-      let filtered = data.filter((x) => {
-        let delta = Date.now() - new Date(x._mmsdateAuqired_Value);
-        return lastDate - delta > 0;
-      });
-
+      let index = getIndexToInsert(new Date(lastDate));
+      let filtered = data.slice(index);
       if (filtered.length != 0) {
-        lastDate = undefined; //lock
+        lastDate = undefined;
         socket.emit("data", filtered);
-        console.log("data sent: " + filtered.length);
+        console.log("Client " + userID + ": items sent: " + filtered.length);
       }
     }
   }, config.app.refreshNewDataInMs);
@@ -90,14 +98,35 @@ io.on("connection", (socket) => {
   //end
   socket.on("disconnect", function (reason) {
     clearInterval(interval);
-    console.log("User disconnected: " + reason);
+    console.log("Client " + userID + ": disconnected – " + reason);
   });
 });
 
-//send images, when requested
-app.get("/imagesAPI", function (req, res) {
+//handle images requests
+app.get("/imagesAPI", async (req, res) => {
   if (images.has(req.query.key)) {
-    res.send(images.get(req.query.key));
+    let imageObjects = [];
+    let merge = images.get(req.query.key).data;
+    for (const [k, v] of Object.entries(config["images.star"])) {
+      if (merge[v.file] != undefined && merge[v.info] != undefined) {
+        let filePath = path.join(images.get(req.query.key).path, merge[v.file]);
+        let image = undefined;
+        try {
+          image = await fspromises.readFile(filePath);
+        } catch (error) {
+          console.log("Error reading image: " + filePath);
+        }
+        if (image != undefined) {
+          imageObjects.push({
+            data: "data:image/jpeg;base64," + image.toString("base64"),
+            label: merge[v.info],
+            key: req.query.key,
+          });
+        }
+      }
+    }
+    res.send(imageObjects);
+    //console.log("Fetched " + imageObjects.length + " images.");
   } else {
     res.send([]);
   }

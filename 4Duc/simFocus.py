@@ -4,17 +4,20 @@
 outputFolder='data4Web/'
 MicName='Titan1'
 pathToSimData='simData/'
+numOfCycles=4
+
 #const
 imgProp=['rawAvg','psRawAvg','motionCorrAvg','psMotionCorrAvg','driftplot','ctfdiag']
 dataProp=['mean','drift','iciness','defocus','resolution','ccOfCtfFit']
 from collections import namedtuple
 Apause = namedtuple("ImgToIMg", "ImgToIMg b4Import b4Process b4Export")
-Apause = Apause(ImgToIMg=2, b4Import=1, b4Process=1,b4Export=1)
+#Apause = Apause(ImgToIMg=1, b4Import=1, b4Process=1,b4Export=1)
+Apause = Apause(ImgToIMg=0.5, b4Import=0.5, b4Process=0.5,b4Export=0.5)
 
-imgErrorIdx=1
-imgNotExportedIdx=3
-additionalDataField=4
-additionalImgField=5
+
+simErr={'imgErrorIdx':1,'imgNotExportedIdx':3}
+simFields={'additionalDataField':4,'additionalImgField':5}
+
 
 from datetime import date
 import datetime
@@ -37,7 +40,7 @@ def getImgNamesFromFolder(wk):
   
   return allNames
 
-def appendTime(fieldName,fieldValue):
+def appendTime(fieldName,fieldValue,actRoot):
     os.system('echo ' +  fieldName + ' >> ' + actRoot + '/ProcTimes.head')
     if (fieldValue==0):
         fieldValue = str(0)
@@ -46,7 +49,7 @@ def appendTime(fieldName,fieldValue):
     os.system('printf "%s \t " "' + fieldValue + '" >> '  + actRoot + '/ProcTimes.dat')
 
 
-def genImageStar(actRoot,pathToSimData,imgProp,key):
+def genImageStar(actRoot,actName,pathToSimData,imgProp,key):
     os.system('echo "data_image" > ' + actRoot + '/Img.head')
     os.system('echo "" >> ' + actRoot + '/Img.head')
     os.system('echo "loop_" >> ' + actRoot + '/Img.head')
@@ -75,11 +78,11 @@ def writeProcessingStar(actRoot,key,AcquTime,ImpTime,ProcTime,ExpTime,ErrorTime)
     os.system('echo ' + '_mmsImageKey_Value >> ' + actRoot + '/ProcTimes.head')
     os.system('printf "%d \t " ' + key + ' >> '  + actRoot + '/ProcTimes.dat')
     
-    appendTime('_mmsdateAuqired_Value',AcquTime)
-    appendTime('_mmsdateImported_Value',ImpTime)
-    appendTime('_mmsdateProcessed_Value',ProcTime)
-    appendTime('_mmsdateExported_Value',ExpTime)
-    appendTime('_mmsdateError_Value',ErrorTime)
+    appendTime('_mmsdateAuqired_Value',AcquTime,actRoot)
+    appendTime('_mmsdateImported_Value',ImpTime,actRoot)
+    appendTime('_mmsdateProcessed_Value',ProcTime,actRoot)
+    appendTime('_mmsdateExported_Value',ExpTime,actRoot)
+    appendTime('_mmsdateError_Value',ErrorTime,actRoot)
     
     os.system('cat ' + actRoot + '/ProcTimes.head ' + actRoot + '/ProcTimes.dat' + ' > ' +  actRoot + '/times.star')
 
@@ -105,57 +108,72 @@ def genDataStar(actRoot,dataProp,key):
     os.system('cat ' + actRoot + '/Data.head ' + actRoot + '/Data.dat' + ' > ' +  actRoot + '/data.star')
 
 
-#Main
-basepath=outputFolder + MicName  + '/' + date.today().strftime("%d-%m-%Y")
-os.system('mkdir -p ' + basepath )
-imgNames=getImgNamesFromFolder(pathToSimData + '/rawAvg/*.png')
 
-counter=1
-for actName in imgNames:
-    print("processing: " + actName + " " + str(counter) + ' of ' + str(len(imgNames)) )
+def processSimCycle(basepath,simErr,simFields,CycNr):
+
+ os.system('mkdir -p ' + basepath )
+ imgNames=getImgNamesFromFolder(pathToSimData + '/rawAvg/*.png')
+
+ counter=1
+ for actName in imgNames:
     
-    actRoot=basepath + '/' + actName
+    
+    actRoot=basepath + '/' + actName + 'Cycle' + str(CycNr)
+    print("processing: " + actName + " ==> " + actRoot + " " + str(counter) + ' of ' + str(len(imgNames)) )
     os.system('mkdir -p ' + actRoot)
     
-    if (counter==additionalDataField):
+    if (counter==simFields['additionalDataField']):
         print("  ==>data field added")
         dataProp.append('astigmatism')
-    
-    if (counter==additionalImgField):
+        
+    if (counter==simFields['additionalImgField']):
         print("  ==>image field added")
         imgProp.append('pick')
-   
+            
     #Acquision
     acqTime=time.time();
     key=str(int(round(acqTime*1000000)))
     writeProcessingStar(actRoot,key,acqTime,0,0,0,0)
-    
+            
     #Import 
     time.sleep(Apause.b4Import)
     impTime=time.time()
     writeProcessingStar(actRoot,key,acqTime,impTime,0,0,0)
-    
+            
     #Processing
-    genImageStar(actRoot,pathToSimData,imgProp,key)
+    genImageStar(actRoot,actName,pathToSimData,imgProp,key)
     genDataStar(actRoot,dataProp,key)
     time.sleep(Apause.b4Process)
     procTime=time.time()
     writeProcessingStar(actRoot,key,acqTime,impTime,procTime,0,0)
-    
+            
     #Export
     time.sleep(Apause.b4Export)
     expTime=time.time()
-    if counter==imgErrorIdx:
+    if counter==simErr['imgErrorIdx']:
         print("  ==>simulated error")
         writeProcessingStar(actRoot,key,acqTime,impTime,procTime,0,expTime)
     else:
-        if counter==imgNotExportedIdx:
-           print("  ==>simulated no export")
-           writeProcessingStar(actRoot,key,acqTime,impTime,procTime,0,0)
+        if counter==simErr['imgNotExportedIdx']:
+                print("  ==>simulated no export")
+                writeProcessingStar(actRoot,key,acqTime,impTime,procTime,0,0)
         else:         
-           writeProcessingStar(actRoot,key,acqTime,impTime,procTime,expTime,0)
+                writeProcessingStar(actRoot,key,acqTime,impTime,procTime,expTime,0)
+                os.system('rm ' + actRoot + '/*.dat')
+                os.system('rm ' + actRoot + '/*.head')
+                time.sleep(Apause.ImgToIMg)
     
-    os.system('rm ' + actRoot + '/*.dat')
-    os.system('rm ' + actRoot + '/*.head')
-    time.sleep(Apause.ImgToIMg)
     counter=counter+1
+                            
+
+
+
+
+#Main
+basepath=outputFolder + MicName  + '/' + date.today().strftime("%d-%m-%Y")
+
+for iCy in range(1,numOfCycles+1):
+  print "  "
+  print "cycle Nr: " + str(iCy)
+  processSimCycle(basepath,simErr,simFields,iCy)
+  print " "  

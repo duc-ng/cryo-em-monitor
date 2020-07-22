@@ -21,8 +21,15 @@ class Reader {
       substrings.shift();
       substrings.pop();
 
-      //init variables
-      var valueCount = Math.floor(substrings.length / 2);
+      //get number of properties
+      var valueCount = 0
+      for (i = 0; i < substrings.length; i++) {
+        if (substrings[i][0]=="_"){
+          valueCount++;
+        } else {
+          break;
+        }
+      }
 
       //clean data
       for (i = 0; i < substrings.length; i++) {

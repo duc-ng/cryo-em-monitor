@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from "react";
 import socketIOClient from "socket.io-client";
-import NavBar from "./Header";
+import Header from "./Header";
 import Backdrop from "./Backdrop";
 import Footer from "./Footer";
 import PlotContainer from "./PlotContainer";
@@ -24,41 +24,25 @@ class App extends Component {
       imageData: [],
       recentImages: [],
       imagesChanged: false,
-      lastDate: config.app.rootDirDaysOld * 24 * 60 * 60 * 1000
     };
   }
 
   componentDidMount() {
-
     //init
     const socket = socketIOClient(
-      "ws://" +
-        config.app.api_host +
-        ":" +
-        config.app.api_port
+      "ws://" + config.app.api_host + ":" + config.app.api_port
     );
     socket.on("initLastDate", () => {
-      socket.emit("lastDate", this.state.lastDate);
+      socket.emit(
+        "lastDate",
+        Date.now() - config.app.rootDirDaysOld * 24 * 60 * 60 * 1000
+      );
     });
 
     //receiving data
     socket.on("data", (item) => {
-      
-      //send and save last Date
-      console.log("Data received:");
-      console.log(item);
-      var maxDate = new Date(Math.max.apply(null, item.map((x) => {
-        return new Date(x._mmsdateAuqired_Value);
-      })));
-      if (maxDate !== null) {
-        let currentDate = Date.now() - maxDate;
-        socket.emit("lastDate", currentDate);
-        this.setState((state) => {
-          return {
-            lastDate: currentDate,
-          };
-        });
-      }
+      //send last Date
+      socket.emit("lastDate", item[item.length - 1]._mmsdateAuqired_Value);
 
       //set state
       this.setState((state) => {
@@ -74,6 +58,7 @@ class App extends Component {
   //return
   render() {
     const { classes } = this.props;
+    const { items } = this.state;
 
     if (!this.state.itemsLoaded) {
       return <Backdrop />;
@@ -81,7 +66,9 @@ class App extends Component {
       return (
         <div className={classes.root}>
           <Fragment>
-            <NavBar />
+            <Header
+              lastItemDate={items[items.length - 1]._mmsdateAuqired_Value}
+            />
             <div style={{ padding: 20 }}>
               <Grid container justify="center">
                 <Grid item xs={10}>
@@ -94,7 +81,7 @@ class App extends Component {
                 </Grid>
               </Grid>
             </div>
-            <Footer/>
+            <Footer />
           </Fragment>
         </div>
       );
