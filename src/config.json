@@ -2,7 +2,7 @@
   "app": {
     "api_host": "localhost",
     "api_port": 5000,
-    "rootDir": "4Duc/data4Web/Titan1",
+    "rootDir": "data_test/data4Web/Titan1",
     "rootDirDaysOld": 100,
     "refreshNewDataInMs": 1000,
     "waitTimeFileCreationInMs": 4000
@@ -11,7 +11,7 @@
   "key": "_mmsImageKey_Value",
 
   "times.star": {
-    "0": "_mmsdateAuqired_Value",
+    "main": "_mmsdateAuqired_Value",
     "1": "_mmsdateImported_Value",
     "2": "_mmsdateProcessed_Value",
     "3": "_mmsdateExported_Value",
