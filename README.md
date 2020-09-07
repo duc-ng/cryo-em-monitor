@@ -47,7 +47,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Run
 
-`cd` to root folder and run:
+Run the following commands:
 
 ```bash
 git clone https://github.com/duc-ng/web-monitoring.git
