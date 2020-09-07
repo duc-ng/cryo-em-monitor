@@ -17,9 +17,9 @@ export default function Data(props) {
   const [dataLastImages, setLastImages] = React.useState([]);
   const [counter, setCounter] = React.useState(0);
   const [datesLast4, setDatesLast4] = React.useState([]);
+  const dateName = config["times.star"].main;
   const [dateFrom, setDateFrom] = React.useState(undefined);
   const [dateTo, setDateTo] = React.useState(undefined);
-  const dateName = config["times.star"].main;
 
   //API: store data
   React.useEffect(() => {
@@ -101,7 +101,9 @@ export default function Data(props) {
         incCounter: incCounter,
         dataLastImages: dataLastImages,
         setDateFrom: setDateFrom,
+        dateFrom: dateFrom,
         setDateTo: setDateTo,
+        dateTo: dateTo,
         datesLast4: datesLast4,
         fetchImages: fetchImages,
       }}

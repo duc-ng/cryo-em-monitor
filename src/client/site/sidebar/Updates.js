@@ -14,6 +14,9 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: 5,
     paddingLeft: 10,
   },
+  icon: {
+    color: theme.palette.warning.main
+  }
 }));
 
 export default function Updates() {
@@ -30,28 +33,6 @@ export default function Updates() {
       >
         Last update
       </Typography>
-      {/* <Timeline className={classes.timeline}>
-        {dataContext.datesLast4.map((item, i) => (
-          <div>
-            <TimelineSeparator>
-              <TimelineDot
-                variant="outlined"
-                color={i === 0 ? "primary" : "grey"}
-              />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent>
-              <Typography
-                color={i === 0 ? "initial" : "textSecondary"}
-                variant="body2"
-                noWrap
-              >
-                {item}
-              </Typography>
-            </TimelineContent>
-          </div>
-        ))}
-      </Timeline> */}
       <Stepper
         orientation="vertical"
         className={classes.timeline}
@@ -61,7 +42,7 @@ export default function Updates() {
             <StepLabel
               StepIconComponent={() => {
                 return i === 0 ? (
-                  <AddCircleIcon color="action" fontSize="small" />
+                  <AddCircleIcon className={classes.icon} fontSize="small" />
                 ) : (
                   <FiberManualRecordIcon fontSize="small" color="disabled" />
                 );

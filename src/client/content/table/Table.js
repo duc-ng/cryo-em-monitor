@@ -60,7 +60,7 @@ export default function TableEnhanced(props) {
   const [orderBy, setOrderBy] = React.useState(config["times.star"].main);
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense] = React.useState(true);
+  const [dense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleRequestSort = (event, property) => {

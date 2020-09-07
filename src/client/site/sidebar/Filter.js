@@ -4,10 +4,14 @@ import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import { DataContext } from "./../../global/Data";
+import { DateTimePicker } from "@material-ui/pickers";
+import MomentUtils from "@date-io/moment";
+import { MuiPickersUtilsProvider } from "@material-ui/pickers";
+import config from "./../../../config.json";
 
 const marks = [
   {
-    value: undefined,
+    value: null,
     label: "All",
   },
   {
@@ -41,8 +45,9 @@ const marks = [
 ];
 
 export default function Filter() {
-  const [value, setValue] = React.useState(undefined);
+  const [value, setValue] = React.useState(null);
   const dataContext = React.useContext(DataContext);
+  const [selectedDate, handleDateChange] = React.useState();
 
   return (
     <React.Fragment>
@@ -56,28 +61,71 @@ export default function Filter() {
           Filter
         </Typography>
       </Box>
-      <Grid container spacing={1}>
-        {marks.map((item, i) => (
-          <Grid item xs={6} key={i}>
-            <Button
-              fullWidth
-              disableElevation
-              variant={item.value === value ? "contained" : "outlined"}
-              color={item.value === value ? "primary" : "default"}
-              onClick={() => {
-                setValue(item.value);
-                dataContext.setDateFrom(
-                  item.value === undefined
-                    ? undefined
-                    : new Date(Date.now() - item.value * 60 * 60 * 1000)
-                );
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <Grid container spacing={1}>
+          {/* Date picker */}
+          <Grid item xs={6}>
+            <DateTimePicker
+              ampm={false}
+              inputVariant="filled"
+              disableFuture
+              value={dataContext.dateFrom}
+              initialFocusedDate={
+                dataContext.data.length > 0
+                  ? new Date(dataContext.data[0][config["times.star"].main])
+                  : null
+              }
+              onChange={(date) => {
+                setValue(undefined);
+                dataContext.setDateFrom(date);
               }}
-            >
-              {item.label}
-            </Button>
+              label="From"
+              format="MMM Do"
+              PopoverProps={{
+                anchorOrigin: { horizontal: "center", vertical: "bottom" },
+                transformOrigin: { horizontal: "center", vertical: "bottom" },
+              }}
+            />
           </Grid>
-        ))}
-      </Grid>
+          <Grid item xs={6}>
+            <DateTimePicker
+              ampm={false}
+              inputVariant="filled"
+              disableFuture
+              value={dataContext.dateTo}
+              onChange={(date) => {
+                setValue(undefined);
+                dataContext.setDateTo(date);
+              }}
+              label="To"
+              format="MMM Do"
+            />
+          </Grid>
+
+          {/* Filter */}
+          {marks.map((item, i) => (
+            <Grid item xs={6} key={i}>
+              <Button
+                fullWidth
+                disableElevation
+                variant={item.value === value ? "contained" : "outlined"}
+                color={item.value === value ? "primary" : "default"}
+                onClick={() => {
+                  setValue(item.value);
+                  dataContext.setDateFrom(
+                    item.value === null
+                      ? undefined
+                      : new Date(Date.now() - item.value * 60 * 60 * 1000)
+                  );
+                  dataContext.setDateTo(undefined);
+                }}
+              >
+                <Typography variant="button">{item.label}</Typography>
+              </Button>
+            </Grid>
+          ))}
+        </Grid>
+      </MuiPickersUtilsProvider>
     </React.Fragment>
   );
 }

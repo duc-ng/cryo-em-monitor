@@ -11,7 +11,7 @@ These instructions will get you a copy of the project up and running on your loc
   - global theming + darkmode
   - overall speed improvements (less rendering)
   - added sidebar
-  - improved filter
+  - improved filter + datepicker
   - code splitting + clean src structure
   - image preview in one row + extension possible
   - image gallery (lazy load) + play button

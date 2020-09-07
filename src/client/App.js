@@ -47,7 +47,6 @@ export default function App() {
             <ImageContainer />
             <TableContainer />
 
-            
             <PlotContainer />
             <Footer />
           </Grid>
