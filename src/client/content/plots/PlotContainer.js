@@ -11,12 +11,32 @@ export default function Plots(props) {
 
   //clean data
   const calculateData = (index) => {
+    const yName = config["data.star"][index].value;
+    const { minOptimum, maxOptimum } = config["data.star"][index].plot;
+
+    const filterValues = (isTrace1, isX) => {
+      return dataContext.data
+        .filter((item) => {
+          return item[yName] !== undefined;
+        })
+        .filter((item) => {
+          const cond = item[yName] >= minOptimum && item[yName] <= maxOptimum;
+          return isTrace1 ? cond : !cond;
+        })
+        .map((item) => {
+          return isX ? item[config["times.star"].main] : item[yName];
+        });
+    };
+
     return {
-      x: dataContext.data.map((item) => item[config["times.star"].main]),
-      y: dataContext.data.map((item) => item[config["data.star"][index].value]),
-      info: dataContext.data.map(
-        (item) => item[config["data.star"][index].value]
-      ),
+      trace1: {
+        x: filterValues(true, true),
+        y: filterValues(true, false),
+      },
+      trace2: {
+        x: filterValues(false, true),
+        y: filterValues(false, false),
+      },
     };
   };
 
@@ -25,6 +45,7 @@ export default function Plots(props) {
     <React.Fragment>
       <PlotsFullscreen calculateData={calculateData} />
       <Grid container justify="center" spacing={2}>
+        <div id="section_3" />
         {Object.keys(config["data.star"]).map((key) => {
           return (
             <Grid item xs={12} sm={6} key={key}>
@@ -32,7 +53,6 @@ export default function Plots(props) {
                 attr={calculateData(key)}
                 title={config["data.star"][key].name}
                 counter={dataContext.counter}
-                color={config["data.star"][key].plot}
               />
             </Grid>
           );

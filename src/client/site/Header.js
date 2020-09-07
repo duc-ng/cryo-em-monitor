@@ -147,7 +147,7 @@ export default function Header(props) {
   //Button Github
   function GithubButton() {
     return (
-      <Tooltip title="Official Github project">
+      <Tooltip title="Project on Github">
         <IconButton href="https://github.com/duc-ng/web-monitoring">
           <GitHubIcon fontSize="small" />
         </IconButton>
@@ -156,6 +156,7 @@ export default function Header(props) {
   }
 
   //render
+  console.log("Updated: header");
   return (
     <HideOnScroll {...props}>
       <AppBar color="inherit" className={classes.appbar}>

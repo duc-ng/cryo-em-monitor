@@ -96,13 +96,13 @@ io.on("connection", (socket) => {
   }, config.app.refreshNewDataInMs);
 
   //end
-  socket.on("disconnect", function (reason) {
+  socket.on("disconnect", function(reason) {
     clearInterval(interval);
     console.log("Client " + userID + ": disconnected – " + reason);
   });
 });
 
-//handle images requests
+//send images by key
 app.get("/imagesAPI", async (req, res) => {
   if (images.has(req.query.key)) {
     let imageObjects = [];
@@ -120,13 +120,30 @@ app.get("/imagesAPI", async (req, res) => {
           imageObjects.push({
             data: "data:image/jpeg;base64," + image.toString("base64"),
             label: merge[v.info],
+            name: merge[v.file],
             key: req.query.key,
           });
         }
       }
     }
     res.send(imageObjects);
-    //console.log("Fetched " + imageObjects.length + " images.");
+    // console.log("Fetched " + imageObjects.length + " images.");
+  } else {
+    res.send([]);
+  }
+});
+
+//send images by key + type
+app.get("/imageSingleAPI", async (req, res) => {
+  if (images.has(req.query.key)) {
+    let filePath = path.join(images.get(req.query.key).path, req.query.filename);
+    try {
+      var image = await fspromises.readFile(filePath);
+      res.setHeader("Content-Type", "image/png");
+      res.send(image);
+    } catch (error) {
+      console.log("Error reading image: " + filePath);
+    }
   } else {
     res.send([]);
   }

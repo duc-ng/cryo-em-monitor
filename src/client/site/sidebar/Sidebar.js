@@ -1,20 +1,17 @@
 import React from "react";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
-import MailIcon from "@material-ui/icons/Mail";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
-import Button from "@material-ui/core/Button";
-import Avatar from "@material-ui/core/Avatar";
 import logo from "./../../assets/logo.jpeg";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
 import { ThemeContext } from "../../global/Theme";
+import Filter from "./Filter";
+import Navigation from "./Navigation";
+import Updates from "./Updates";
 
 const drawerWidth = 240;
 
@@ -32,6 +29,10 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.primary,
     border: 0,
   },
+  button: {
+    backgroundColor: "transparent",
+    padding: 0,
+  },
 }));
 
 export default function Sidebar(props) {
@@ -45,41 +46,37 @@ export default function Sidebar(props) {
 
   //sidebar
   const drawer = (
-    <div>
-      <List className={classes.toolbar}>
-        <ListItem>
-          <ListItemIcon>
-            <Tooltip title="Homepage">
-              <Button onClick={refreshPage}>
-                <Avatar variant="square">
-                  <img alt="logo" src={logo} width="100%" />
-                </Avatar>
-              </Button>
-            </Tooltip>
-          </ListItemIcon>
-          <ListItemText>
-            <Typography variant="subtitle1">
-              <Box fontWeight="fontWeightBold" m={1}>
-                Cryo-EM Monitor
-              </Box>
-            </Typography>
-          </ListItemText>
-        </ListItem>
-      </List>
-      <List>
-        {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-    </div>
+    <Box m={2}>
+      <Grid container alignItems="flex-end">
+        <Grid item xs={4}>
+          <Tooltip title="Homepage">
+            <IconButton
+              aria-label="delete"
+              className={classes.button}
+              disableRipple
+              onClick={refreshPage}
+            >
+              <img alt="logo" src={logo} width={50} />
+            </IconButton>
+          </Tooltip>
+        </Grid>
+        <Grid item xs={8}>
+          <Typography variant="subtitle1">
+            <Box fontWeight="fontWeightBold">Cryo-EM Monitor</Box>
+          </Typography>
+          <Typography variant="caption">
+            <Box fontSize={11}>MPI of Biochemistry</Box>
+          </Typography>
+        </Grid>
+      </Grid>
+      <Navigation />
+      <Filter />
+      <Updates />
+    </Box>
   );
 
   //render mobile and desktop
+  console.log("Updated: sidebar");
   return (
     <nav className={classes.drawer}>
       <Hidden mdUp implementation="css">

@@ -23,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
   container: {
     backgroundColor: theme.palette.background.default,
   },
+  button: {
+    color: theme.palette.text.secondary
+  }
 }));
 
 export default function PlotsFullscreen(props) {
@@ -39,19 +42,19 @@ export default function PlotsFullscreen(props) {
       {/* Fullscreen Button */}
       <Grid container justify="flex-end" alignItems="flex-start">
         <Button
-          startIcon={<FullscreenIcon />}
+          className={classes.button}
+          endIcon={<FullscreenIcon />}
           onClick={handleClick}
-          color="primary"
           edge="end"
+          size="small"
         >
           Fullscreen
         </Button>
       </Grid>
-
       {/* Fullscreen Content */}
       <Dialog fullScreen open={open} onClose={handleClick}>
-        <AppBar className={classes.appBar} variant="dense">
-          <Toolbar>
+        <AppBar className={classes.appBar}>
+          <Toolbar variant="dense">
             <IconButton edge="start" color="primary" onClick={handleClick}>
               <CloseIcon />
             </IconButton>
@@ -61,12 +64,11 @@ export default function PlotsFullscreen(props) {
           {Object.keys(config["data.star"]).map((key) => {
             return (
               <Grid item xs={4} key={key}>
-                <Box m={1} >
+                <Box m={1}>
                   <Plot
                     attr={props.calculateData(key)}
                     title={config["data.star"][key].name}
                     counter={dataContext.counter}
-                    color={config["data.star"][key].plot}
                   />
                 </Box>
               </Grid>

@@ -1,16 +1,15 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import Plot from "react-plotly.js";
 import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-
-const styles = (theme) => ({});
+import { DataContext } from "./../../global/Data";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Grid from "@material-ui/core/Grid";
 
 class Graphs extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      revision: 0,
       response: true,
       trace1: {
         x: [],
@@ -46,16 +45,31 @@ class Graphs extends Component {
       layout: {
         title: {
           text: "",
-          x: 0.06,
+          x: 0.03,
+          // y: 0.93,
         },
         font: {
           family: props.theme.typography.fontFamily,
-          color: props.theme.palette.text.primary,
+          color: {},
         },
         titlefont: {
-          size: 14,
+          size: 15,
           color: props.theme.palette.warning.main,
         },
+        // annotations: [
+        //   {
+        //     text: "Cras mattis consectetur purus sit amet fermentum.",
+        //     font: {
+        //       size: 14,
+        //       color: props.theme.palette.text.secondary,
+        //     },
+        //     showarrow: false,
+        //     x: -0.031,
+        //     y: 1.22,
+        //     xref: "paper",
+        //     yref: "paper",
+        //   },
+        // ],
         hovermode: "closest",
         updatemenus: [
           {
@@ -96,12 +110,14 @@ class Graphs extends Component {
           type: "date",
           //tickformat: '%H:%M'
           zeroline: true,
-          gridcolor: props.theme.palette.text.secondary,
-          linecolor: props.theme.palette.text.secondary,
+          gridcolor: {},
+          linecolor: {},
+          rangemode: "tozero",
         },
         yaxis: {
           rangemode: "tozero",
-          gridcolor: props.theme.palette.text.secondary,
+          gridcolor: {},
+          linecolor: {},
         },
         autosize: true,
         height: 320,
@@ -111,7 +127,6 @@ class Graphs extends Component {
           l: 40,
           r: 0,
         },
-        datarevision: 0,
       },
       config: {
         displayModeBar: false,
@@ -119,94 +134,76 @@ class Graphs extends Component {
       style: {
         width: "100%",
       },
-      counter: 0,
     };
   }
 
-  //update dimensions
-  updateDimensions = () => {
-    this.setState({
-      revision: this.state.revision + 1,
-    });
-  };
-
-  updateData = () => {
-    //split data
-    const { minOptimum, maxOptimum } = this.props.color;
-    var trace1 = this.state.trace1;
-    var trace2 = this.state.trace2;
-    trace1.x = [];
-    trace2.x = [];
-    trace1.y = [];
-    trace2.y = [];
-    for (let i = 0; i < this.props.attr.x.length; i++) {
-      let value = this.props.attr.y[i];
-      if (value >= minOptimum && value <= maxOptimum) {
-        trace1.x.push(this.props.attr.x[i]);
-        trace1.y.push(value);
-      } else {
-        trace2.x.push(this.props.attr.x[i]);
-        trace2.y.push(value);
-      }
-    }
-
-    //update plot info
-    var temp2 = this.state.layout;
-    temp2.title.text = this.props.title;
-    temp2.datarevision = this.state.revision + 1;
-
-    //update scatter and histogram
-    temp2.updatemenus[0].buttons[0].args[0].x = [trace1.x, trace2.x];
-    temp2.updatemenus[0].buttons[1].args[0].x = [trace1.y, trace2.y];
-
-    //set state
-    this.setState({
-      trace1: trace1,
-      trace2: trace2,
-      layout: temp2,
-      revision: this.state.revision + 1,
-    });
-  };
-
+  //resizing window
+  static contextType = DataContext;
   componentDidMount() {
-    this.updateData();
+    window.addEventListener("resize", () => this.handleResize());
   }
-
-  componentDidUpdate(prevProps) {
-    if (
-      this.props.counter !== prevProps.counter ||
-      this.props.counter2 !== prevProps.counter2
-    ) {
-      this.updateData();
-    }
-    window.addEventListener("resize", this.updateDimensions);
-  }
-
   componentWillUnmount() {
-    window.removeEventListener("resize", this.updateDimensions);
+    window.removeEventListener("resize", () => this.handleResize());
   }
+  debounce = (time) => {
+    let timer;
+    return (_) => {
+      clearTimeout(timer);
+      timer = setTimeout((_) => {
+        timer = null;
+        this.context.incCounter();
+      }, time);
+    };
+  };
+  handleResize = this.debounce(400);
 
+  //render
   render() {
-    console.log("Updated: " + this.props.title);
+    var trace1 = this.state.trace1;
+    trace1.x = this.props.attr.trace1.x;
+    trace1.y = this.props.attr.trace1.y;
 
+    var trace2 = this.state.trace2;
+    trace2.x = this.props.attr.trace2.x;
+    trace2.y = this.props.attr.trace2.y;
+
+    var layout = this.state.layout;
+    layout.title.text = this.props.title;
+    layout.font.color = this.props.theme.palette.text.primary;
+    layout.xaxis.gridcolor = this.props.theme.palette.divider;
+    layout.xaxis.linecolor = this.props.theme.palette.divider;
+    layout.yaxis.gridcolor = this.props.theme.palette.divider;
+    layout.yaxis.linecolor = this.props.theme.palette.divider;
+    layout.updatemenus[0].buttons[0].args[0].x = [trace1.x, trace2.x];
+    layout.updatemenus[0].buttons[1].args[0].x = [trace1.y, trace2.y];
+
+    console.log("Updated: Plots");
     return (
-      <Fragment>
-        {this.state.response ? (
+      <React.Fragment>
+        {trace1.x.length !== 0 || trace2.x.length !== 0 ? (
           <Paper>
             <Plot
-              revision={this.state.revision}
-              data={[this.state.trace1, this.state.trace2]}
-              layout={this.state.layout}
+              data={[trace1, trace2]}
+              layout={layout}
               config={this.state.config}
               style={this.state.style}
             />
           </Paper>
         ) : (
-          <p>Loading...</p>
+          <Paper style={{ height: layout.height }}>
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+              style={{ height: "100%" }}
+            >
+              <CircularProgress color="primary" />
+            </Grid>
+          </Paper>
         )}
-      </Fragment>
+      </React.Fragment>
     );
   }
 }
 
-export default withStyles(styles, { withTheme: true })(Graphs);
+export default withStyles({}, { withTheme: true })(Graphs);

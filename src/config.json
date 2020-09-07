@@ -73,6 +73,7 @@
         "minOptimum": 0.3
       }
     },
+
     "6": {
       "name": "Astigmatism",
       "value": "_mmsastigmatism_Value",
@@ -86,30 +87,37 @@
 
   "images.star": {
     "0": {
+      "name": "mmsrawAvg",
       "file": "_mmsrawAvg_Name",
       "info": "_mmsrawAvg_Info"
     },
     "1": {
+      "name": "mmspsRawAvg",
       "file": "_mmspsRawAvg_Name",
       "info": "_mmspsRawAvg_Info"
     },
     "2": {
+      "name": "mmsmotionCorrAvg",
       "file": "_mmsmotionCorrAvg_Name",
       "info": "_mmsmotionCorrAvg_Info"
     },
     "3": {
+      "name": "mmspsMotionCorrAvg",
       "file": "_mmspsMotionCorrAvg_Name",
       "info": "_mmspsMotionCorrAvg_Info"
     },
     "4": {
+      "name": "mmsdriftplot",
       "file": "_mmsdriftplot_Name",
       "info": "_mmsdriftplot_Info"
     },
     "5": {
+      "name": "mmsctfdiag",
       "file": "_mmsctfdiag_Name",
       "info": "_mmsctfdiag_Info"
     },
     "6": {
+      "name": "mmspick",
       "file": "_mmspick_Name",
       "info": "_mmspick_Info"
     }

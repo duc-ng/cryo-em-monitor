@@ -7,7 +7,7 @@ import Link from "@material-ui/core/Link";
 export default function Footer() {
   return (
     <Grid container justify="center">
-      <Box py={2}>
+      <Box pt={2} pb={5}>
         <Typography variant="body2" color="textSecondary" component="p">
           {"@2020 "}
           <Link href="https://www.biochem.mpg.de/cryoem" color="inherit">

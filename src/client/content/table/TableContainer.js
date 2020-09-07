@@ -1,16 +1,13 @@
 import React from "react";
-import { useTheme } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import Table from "./Table";
 import config from "./../../../config.json";
 import { DataContext } from "./../../global/Data";
 import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
+import Box from "@material-ui/core/Box";
 import SmallDivider from "./../../utils/SmallDivider";
 
 export default function TableContainer() {
   const dataContext = React.useContext(DataContext);
-  const theme = useTheme();
 
   //get table header values
   const headerValues = () => {
@@ -23,17 +20,15 @@ export default function TableContainer() {
 
   //clean data for table
   const getCleanedData = () => {
-    //format 
-    let tableData = JSON.parse(JSON.stringify(dataContext.data)); //deep copy
-    tableData = tableData.map((item) => {
+    let cleanedData = JSON.parse(JSON.stringify(dataContext.data)); //deep copy
+    cleanedData = cleanedData.map((item) => {
       return {
         data: item,
         key: item[config.key],
       };
     });
 
-    //remove data, that is not displayed
-    tableData.forEach((elem) => {
+    cleanedData.forEach((elem) => {
       for (let prop in elem.data) {
         if (headerValues().indexOf(prop) === -1) {
           delete elem.data[prop];
@@ -41,40 +36,18 @@ export default function TableContainer() {
       }
     });
 
-    //round data
-    tableData.forEach((elem) => {
-      for (let key in elem.data) {
-        let obj = elem.data[key];
-        if (Number(obj) === obj && obj % 1 !== 0) {
-          elem.data[key] = obj.toFixed(2);
-        }
-      }
-    });
-
-    return tableData;
+    return cleanedData;
   };
 
   //render
   return (
     <React.Fragment>
-      <Card>
-        <CardContent>
-          <Typography
-            variant="body1"
-            style={{ color: theme.palette.warning.main }}
-          >
-            Data
-          </Typography>
-          <Typography
-            variant="body2"
-            gutterBottom
-            color="textSecondary"
-            paragraph={true}
-          >
-            Cras mattis consectetur purus sit amet fermentum.
-          </Typography>
-          <Table attr={getCleanedData()} valueNames={headerValues()} />
-        </CardContent>
+      <Card id="section_2">
+        <Box py={2}>
+          <Table
+            rows={getCleanedData()}
+          />
+        </Box>
       </Card>
       <SmallDivider />
     </React.Fragment>

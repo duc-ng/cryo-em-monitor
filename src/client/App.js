@@ -2,9 +2,9 @@ import React from "react";
 import Header from "./site/Header";
 import Footer from "./site/Footer";
 import PlotContainer from "./content/plots/PlotContainer";
-// import DataContainer from "./DataContainer";
+import ImageContainer from "./content/images/ImageContainer";
 import Data from "./global/Data";
-import Status from "./content/Status";
+import Status from "./content/status/Status";
 import Theme from "./global/Theme";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -18,25 +18,20 @@ const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
   },
-  toolbar: theme.mixins.toolbar, //content below header
   content: {
-    // flexGrow: 1,
     padding: theme.spacing(2),
   },
 }));
 
 //main class
 export default function App() {
-  // const [imageData, setImageData] = React.useState([]);
-  // const [recentImages, setRecentImages] = React.useState([]);
-  // const [imagesChanged, setImagesChanged] = React.useState(false);
   const classes = useStyles();
 
   //render
   return (
-    <Theme>
-      <CssBaseline />
-      <Data>
+    <Data>
+      <Theme>
+        <CssBaseline />
         <div className={classes.root}>
           <Header />
           <Sidebar />
@@ -49,12 +44,15 @@ export default function App() {
           >
             <Toolbar />
             <Status />
+            <ImageContainer />
             <TableContainer />
+
+            
             <PlotContainer />
             <Footer />
           </Grid>
         </div>
-      </Data>
-    </Theme>
+      </Theme>
+    </Data>
   );
 }

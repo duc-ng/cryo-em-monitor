@@ -1,11 +1,26 @@
 # Cryo-EM data monitor 
 
-Web monitor for cryo-em data of the MPIB.
-
+Monitor for Cryo-EM data of the Max Planck Institute of Biochemistry.
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
 ## Latest update
+- 7.9.20
+  - header: scrollable Tabs, hides on scroll, github button
+  - global state management (React context API)
+  - global theming + darkmode
+  - overall speed improvements (less rendering)
+  - added sidebar
+  - improved filter
+  - code splitting + clean src structure
+  - image preview in one row + extension possible
+  - image gallery (lazy load) + play button
+  - navigation in sidebar
+  - update on latest entries in sidebar
+  - export (selected) data to .xlsx files
+  - display date format in text
+
+
 - 22.7.20
   - load test: added sorted array
   - realtime update fixed
@@ -35,30 +50,55 @@ These instructions will get you a copy of the project up and running on your loc
 `cd` to root folder and run:
 
 ```bash
-npm install   #install node modules
+git clone https://github.com/duc-ng/web-monitoring.git
+cd web-monitoring
+npm install   #update node modules
 npm run test  #start server & client
+open http://localhost:3000
 ```
-- Client: http://localhost:3000
 
-## Structure
+## App structure
     ├── app.js                  #server
     │   └── Reader.js         
     │                      
     └── App.js                  #client
-        ├── #content
-        │   ├── Status.js        
-        │   ├── DataContainer.js 
-        │   │   ├── Images.js
-        │   │   └── Table.js
-        │   └── PlotContainer.js     
-        │       └── Plot.js           
-        └── #more 
-            ├── Header.js 
-            ├── Footer.js   
-            ├── Backdrop.js 
-            ├── Card.js   
-            └── TableOfContent.js
-
+        ├── site
+        │   ├── Header.js        
+        │   ├── Footer.js 
+        │   └── Sidebar.js   
+        │       ├── Navigation.js
+        │       ├── Filter.js
+        │       └── Updates.js    
+        │       
+        ├── global 
+        │   ├── Data.js 
+        │   └── Theme.js  
+        │ 
+        ├── content
+        │   ├── status        
+        │   │   └── Status.js
+        │   │        
+        │   ├── images
+        │   │   └── ImageContainer.js
+        │   │       └── ImageSelector.js
+        │   │           └── imageGallery.css     
+        │   ├── table   
+        │   │   └── TableContainer.js
+        │   │       └── Table.js
+        │   │           ├── TableToolbar.js 
+        │   │           │   └── TableExport.js     
+        │   │           ├── TableHeader.js  
+        │   │           └── TableRowSingle.js  
+        │   └── plots   
+        │       └── PlotContainer.js
+        │           ├── PlotsFullscreen.js
+        │           └── Plot.js
+        │
+        ├── utils
+        │   └── SmallDivider.js
+        │
+        └── assets
+            └── logo.jpeg
 ## Configure
 
 Main configuration file:
