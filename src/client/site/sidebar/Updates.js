@@ -31,7 +31,7 @@ export default function Updates() {
         color="textSecondary"
         paragraph={true}
       >
-        Last update
+        Latest update
       </Typography>
       <Stepper
         orientation="vertical"

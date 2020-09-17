@@ -5,6 +5,15 @@ Monitor for Cryo-EM data of the Max Planck Institute of Biochemistry.
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
 
 ## Latest update
+- 17.9.20
+  - added plot: images/hour
+  - added zoom in/out in miniplots
+  - seperate Memory class + dynamic heap allocation + FIFO
+  - seperate Filewatcher class
+  - robust reader + syncing
+  - Test: 10.000 files ✓
+
+
 - 7.9.20
   - header: scrollable Tabs, hides on scroll, github button
   - global state management (React context API)
@@ -36,7 +45,6 @@ These instructions will get you a copy of the project up and running on your loc
   - Two config sources
   - race condition at client when receiving high volume of datapoints
   - reading delay when folder is added is unsafe
-  - live-update does not work on histograms
   - ping time-out -> wrong count
 
 
@@ -113,12 +121,9 @@ Edit host and port:
 
 ## Built With
 
-Frontend
 * [React.js](https://reactjs.org/) - Frontend framework
 * [Material-UI](https://material-ui.com/) - UI component library 
 * [Plot.ly](https://plotly.com/javascript/) - Interactive plots
-
-Backend
 * [Node.js](https://nodejs.org/en/) - JavaScript runtime environemnt
 * [Express.js](https://expressjs.com/) - Backend framework
 

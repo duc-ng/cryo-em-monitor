@@ -4,8 +4,8 @@
     "api_port": 5000,
     "rootDir": "data_test/data4Web/Titan1",
     "rootDirDaysOld": 100,
-    "refreshNewDataInMs": 1000,
-    "waitTimeFileCreationInMs": 4000
+    "refreshDataMs": 10000,
+    "heapAllocation": "auto"
   },
 
   "key": "_mmsImageKey_Value",

@@ -47,7 +47,6 @@ const marks = [
 export default function Filter() {
   const [value, setValue] = React.useState(null);
   const dataContext = React.useContext(DataContext);
-  const [selectedDate, handleDateChange] = React.useState();
 
   return (
     <React.Fragment>
@@ -81,10 +80,6 @@ export default function Filter() {
               }}
               label="From"
               format="MMM Do"
-              PopoverProps={{
-                anchorOrigin: { horizontal: "center", vertical: "bottom" },
-                transformOrigin: { horizontal: "center", vertical: "bottom" },
-              }}
             />
           </Grid>
           <Grid item xs={6}>

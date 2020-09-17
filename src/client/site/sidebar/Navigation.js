@@ -21,12 +21,16 @@ export default function Navigation() {
       href: "/",
     },
     {
-      name: "Images",
-      href: "#section_1",
+      name: "Volume",
+      href: "#section_volume",
     },
     {
       name: "Data",
       href: "#section_2",
+    },
+    {
+      name: "Images",
+      href: "#section_1",
     },
     {
       name: "Plots",
@@ -48,7 +52,7 @@ export default function Navigation() {
       </Box>
       <ScrollspyNav
         scrollTargetIds={navigation.map((item) => item.href)}
-        offset={60}
+        offset={80}
         activeNavClass="is-active"
         scrollDuration="150"
         headerBackground="true"

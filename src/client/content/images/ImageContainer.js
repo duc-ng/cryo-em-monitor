@@ -53,8 +53,7 @@ const useStyles = makeStyles((theme) => ({
 //image button
 const ImageButton = ({ handleCarousel, i }) => {
   const classes = useStyles();
-  const dataContext = React.useContext(DataContext);
-  const { dataLastImages } = dataContext;
+  const { dataLastImages } = React.useContext(DataContext);
 
   return (
     <Tooltip title={config["images.star"][i].name}>

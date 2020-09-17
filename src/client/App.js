@@ -1,7 +1,8 @@
 import React from "react";
 import Header from "./site/Header";
 import Footer from "./site/Footer";
-import PlotContainer from "./content/plots/PlotContainer";
+import PlotContainer from "./content/plotsMini/PlotContainer";
+import PlotMain from "./content/plotMain/PlotMain";
 import ImageContainer from "./content/images/ImageContainer";
 import Data from "./global/Data";
 import Status from "./content/status/Status";
@@ -44,9 +45,9 @@ export default function App() {
           >
             <Toolbar />
             <Status />
-            <ImageContainer />
+            <PlotMain />
             <TableContainer />
-
+            <ImageContainer />
             <PlotContainer />
             <Footer />
           </Grid>

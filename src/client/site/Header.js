@@ -122,6 +122,8 @@ export default function Header(props) {
         <Tab label="Titan 3" />
         <Tab label="Titan 4" />
         <Tab label="Titan 5" />
+        <Tab label="Titan 6" />
+        <Tab label="Titan 7" />
       </Tabs>
     );
   }

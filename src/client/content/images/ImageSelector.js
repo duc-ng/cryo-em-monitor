@@ -14,7 +14,6 @@ import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import PauseIcon from "@material-ui/icons/Pause";
 import moment from "moment";
-import 'moment/locale/en-gb'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -30,7 +29,6 @@ export default function ImageSelector(props) {
   const classes = useStyles();
   const [ref, setRef] = React.useState(undefined);
   const [currentIndex, setCurrentIndex] = React.useState(0);
-  moment.locale() //24hours instead of AM/PM
 
   const renderLeftNav = (onClick, disabled) => {
     return (
