@@ -30,7 +30,7 @@ const getImageAPI = (key) => {
     config.app.api_host +
     ":" +
     config.app.api_port +
-    "imagesAPI?key=" +
+    "/imagesAPI?key=" +
     key
   );
 };

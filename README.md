@@ -80,7 +80,7 @@ Run the following commands:
 git clone https://github.com/duc-ng/web-monitoring.git
 cd web-monitoring
 npm install   #update node modules
-npm run test  #start server & client
+node app.js  #start server
 open http://localhost:5000
 ```
 
