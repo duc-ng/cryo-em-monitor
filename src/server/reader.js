@@ -4,7 +4,7 @@ const config = require("./../config.json");
 
 /*
   convert star-file to object
-  assumption: first value is fixed (key)
+  assumption: first value is fixed (key) 
 */
 class Reader {
   async readStarFile(file) {
