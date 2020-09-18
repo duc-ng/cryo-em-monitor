@@ -1,11 +1,13 @@
-# Cryo-EM data monitor 
+# Cryo-EM data monitor
 
 Monitor for Cryo-EM data of the Max Planck Institute of Biochemistry.
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. 
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ## Latest update
+
 - 17.9.20
+
   - added plot: images/hour
   - added zoom in/out in miniplots
   - seperate Memory class + dynamic heap allocation + FIFO
@@ -13,8 +15,8 @@ These instructions will get you a copy of the project up and running on your loc
   - robust reader + syncing
   - Test: 10.000 files ✓
 
-
 - 7.9.20
+
   - header: scrollable Tabs, hides on scroll, github button
   - global state management (React context API)
   - global theming + darkmode
@@ -29,8 +31,8 @@ These instructions will get you a copy of the project up and running on your loc
   - export (selected) data to .xlsx files
   - display date format in text
 
-
 - 22.7.20
+
   - load test: added sorted array
   - realtime update fixed
   - config: color plots by value
@@ -41,17 +43,34 @@ These instructions will get you a copy of the project up and running on your loc
   - images not in memory anymore => read with fetch request
   - fix: reading problems with star files
 
-- Problems 
+- Problems
   - Two config sources
   - race condition at client when receiving high volume of datapoints
   - reading delay when folder is added is unsafe
   - ping time-out -> wrong count
 
-
 ## Requirements
 
-- **[Node.js](https://nodejs.org/en/download/)**
+To run this application, you will have to install **[Node.js](https://nodejs.org/en/download/)**
 
+- E.g. Linux/ Ubuntu:
+
+```bash
+#install node and package manager
+sudo apt-get install nodejs
+sudo apt-get install npm
+
+#update node to latest version (restart shell first)
+sudo npm cache clean -f
+sudo npm install -g n
+sudo n stable
+```
+
+- E.g. Mac:
+
+```bash
+brew install node
+```
 
 ## Run
 
@@ -62,42 +81,58 @@ git clone https://github.com/duc-ng/web-monitoring.git
 cd web-monitoring
 npm install   #update node modules
 npm run test  #start server & client
-open http://localhost:3000
+open http://localhost:5000
+```
+
+## Configure
+
+Edit host, port, etc:
+
+```bash
+./src/config.json
+./.env
+```
+
+After modifications, run:
+
+```bash
+npm run build
 ```
 
 ## App structure
+
     ├── app.js                  #server
-    │   └── Reader.js         
-    │                      
+    │   └── Reader.js
+    │
     └── App.js                  #client
         ├── site
-        │   ├── Header.js        
-        │   ├── Footer.js 
-        │   └── Sidebar.js   
+        │   ├── Header.js
+        │   ├── Footer.js
+        │   └── Sidebar.js
         │       ├── Navigation.js
         │       ├── Filter.js
-        │       └── Updates.js    
-        │       
-        ├── global 
-        │   ├── Data.js 
-        │   └── Theme.js  
-        │ 
+        │       └── Updates.js
+        │
+        ├── global
+        │   ├── Data.js
+        │   └── Theme.js
+        │
         ├── content
-        │   ├── status        
+        │   ├── status
         │   │   └── Status.js
-        │   │        
+        │   │
         │   ├── images
         │   │   └── ImageContainer.js
         │   │       └── ImageSelector.js
-        │   │           └── imageGallery.css     
-        │   ├── table   
+        │   │           └── imageGallery.css
+        │   ├── table
         │   │   └── TableContainer.js
         │   │       └── Table.js
-        │   │           ├── TableToolbar.js 
-        │   │           │   └── TableExport.js     
-        │   │           ├── TableHeader.js  
-        │   │           └── TableRowSingle.js  
-        │   └── plots   
+        │   │           ├── TableToolbar.js
+        │   │           │   └── TableExport.js
+        │   │           ├── TableHeader.js
+        │   │           └── TableRowSingle.js
+        │   └── plots
         │       └── PlotContainer.js
         │           ├── PlotsFullscreen.js
         │           └── Plot.js
@@ -107,32 +142,15 @@ open http://localhost:3000
         │
         └── assets
             └── logo.jpeg
-## Configure
-
-Main configuration file:
-```bash
-./src/config.json
-```
-Edit host and port:
-```bash
-./.env
-./src/config.json
-```
 
 ## Built With
 
-* [React.js](https://reactjs.org/) - Frontend framework
-* [Material-UI](https://material-ui.com/) - UI component library 
-* [Plot.ly](https://plotly.com/javascript/) - Interactive plots
-* [Node.js](https://nodejs.org/en/) - JavaScript runtime environemnt
-* [Express.js](https://expressjs.com/) - Backend framework
-
-
-
+- [React.js](https://reactjs.org/) - Frontend framework
+- [Material-UI](https://material-ui.com/) - UI component library
+- [Plot.ly](https://plotly.com/javascript/) - Interactive plots
+- [Node.js](https://nodejs.org/en/) - JavaScript runtime environemnt
+- [Express.js](https://expressjs.com/) - Backend framework
 
 ## Author
 
-* **[Duc Nguyen](https://github.com/duc-ng)**
-
-
-
+- **[Duc Nguyen](https://github.com/duc-ng)**

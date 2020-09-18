@@ -14,6 +14,7 @@ import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import PauseIcon from "@material-ui/icons/Pause";
 import moment from "moment";
+import path from "path";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -79,7 +80,13 @@ export default function ImageSelector(props) {
   };
 
   //get image urls
-  const baseurl = "http://localhost:5000/imageSingleAPI";
+  const baseurl =
+    "http://" +
+    config.app.api_host +
+    ":" +
+    config.app.api_port +
+    "/imageSingleAPI";
+
   var images = dataContext.data
     .map((item) => ({
       original:

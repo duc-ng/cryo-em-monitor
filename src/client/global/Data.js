@@ -8,14 +8,32 @@ const socket = socketIOClient(
   "ws://" + config.app.api_host + ":" + config.app.api_port
 );
 
-const imageAPI = "http://localhost:5000/imagesAPI?key=";
+var dataAll = [];
+var fetchID = 0;
 
-var dataAll = []
-var fetchID = 0
+const getDataAPI = (key, id) => {
+  return (
+    "http://" +
+    config.app.api_host +
+    ":" +
+    config.app.api_port +
+    "/data?lastKey=" +
+    key +
+    "&id=" +
+    id
+  );
+};
 
-const getDataAPI = (key,id) => {
-  return "http://localhost:5000/data?lastKey="+key+"&id="+id
-}
+const getImageAPI = (key) => {
+  return (
+    "http://" +
+    config.app.api_host +
+    ":" +
+    config.app.api_port +
+    "imagesAPI?key=" +
+    key
+  );
+};
 
 //24hours instead of AM/PM + format
 moment.locale("en", {
@@ -69,12 +87,12 @@ export default function Data(props) {
       dataAll.length === 0 ? "ALL" : dataAll[dataAll.length - 1][config.key];
 
     const interval = setInterval(() => {
-      fetch(getDataAPI(key,fetchID))
+      fetch(getDataAPI(key, fetchID))
         .then((response) => response.json())
         .then((res) => {
           if (res.data === "RESTART") {
             window.location.reload(false);
-          } else if (res.data !== null && res.id==fetchID) {
+          } else if (res.data !== null && res.id == fetchID) {
             console.log(res);
             fetchID++;
             dataAll = dataAll.concat(res.data);
@@ -100,7 +118,7 @@ export default function Data(props) {
 
   //API: fetch images by key
   const fetchImages = (key, cb) => {
-    fetch(imageAPI + key)
+    fetch(getImageAPI(key))
       .then((response) => response.json())
       .then((res) => cb(res));
   };

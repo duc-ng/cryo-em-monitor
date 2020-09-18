@@ -8,13 +8,17 @@ const FileWatcher = require("./src/server/FileWatcher");
 const chokidar = require("chokidar");
 const config = require("./src/config.json");
 const fspromises = require("fs").promises;
-const cors = require("cors");
 
 //init
 const memory = new Memory();
 const fileWatcher = new FileWatcher(memory);
 fileWatcher.start();
-app.use(cors());
+app.use(express.static(path.join(__dirname, "build")));
+
+//API: home
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 //API: user counter + force client page reload
 var userCounter = 0;
@@ -39,7 +43,7 @@ app.get("/data", (req, res) => {
     if (data.length === 0) {
       res.send({ data: null });
     } else {
-      res.send({ data: data, id: req.query.id  });
+      res.send({ data: data, id: req.query.id });
       console.log("Items sent: " + data.length);
     }
   } else if (!memory.has(key)) {
@@ -48,7 +52,7 @@ app.get("/data", (req, res) => {
     res.send({ data: null });
   } else {
     const newData = memory.getDataNewerThan(key.toString());
-    res.send({ data: newData, id: req.query.id  });
+    res.send({ data: newData, id: req.query.id });
     console.log("Items sent: " + newData.length);
   }
 });
@@ -86,10 +90,7 @@ app.get("/imagesAPI", async (req, res) => {
 //API: images by key + type
 app.get("/imageSingleAPI", async (req, res) => {
   if (memory.has(req.query.key)) {
-    let filePath = path.join(
-      memory.getPath(req.query.key),
-      req.query.filename
-    );
+    let filePath = path.join(memory.getPath(req.query.key), req.query.filename);
     try {
       var image = await fspromises.readFile(filePath);
       res.setHeader("Content-Type", "image/png");
@@ -103,10 +104,10 @@ app.get("/imageSingleAPI", async (req, res) => {
 });
 
 //listen for incoming connections
-const { api_host, api_port } = config.app;
-app.get("/", (req, res) => res.send("API is working!"));
-http.listen(api_port, () => {
-  console.log(`Server app listening at ${api_host}:${api_port} (API)`);
+http.listen(config.app.api_port, config.app.api_host, () => {
+  console.log(
+    `Server app listening at ${config.app.api_host}:${config.app.api_port} (API)`
+  );
 });
 
 //exit handling
