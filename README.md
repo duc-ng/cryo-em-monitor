@@ -80,6 +80,7 @@ Run the following commands:
 git clone https://github.com/duc-ng/web-monitoring.git
 cd web-monitoring
 npm install   #update node modules
+npm run build #build app
 node app.js  #start server
 open http://localhost:5000
 ```
@@ -91,12 +92,6 @@ Edit host, port, etc:
 ```bash
 ./src/config.json
 ./.env
-```
-
-After modifications, run:
-
-```bash
-npm run build
 ```
 
 ## App structure

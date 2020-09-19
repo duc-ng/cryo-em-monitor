@@ -104,7 +104,7 @@ app.get("/imageSingleAPI", async (req, res) => {
 });
 
 //listen for incoming connections
-app.listen(config.app.api_port, config.app.api_host, () => {
+app.listen(config.app.api_port, () => {
   console.log(
     `Server app listening at ${config.app.api_host}:${config.app.api_port} (API)`
   );
