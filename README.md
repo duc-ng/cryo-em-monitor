@@ -57,8 +57,8 @@ To run this application, you will have to install **[Node.js](https://nodejs.org
 
 ```bash
 #install node and package manager
-sudo apt-get install nodejs
-sudo apt-get install npm
+sudo apt install nodejs
+sudo apt install npm
 
 #update node to latest version (restart shell first)
 sudo npm cache clean -f
@@ -79,9 +79,9 @@ Run the following commands:
 ```bash
 git clone https://github.com/duc-ng/web-monitoring.git
 cd web-monitoring
-npm install   #update node modules
-npm run build #build app
-node app.js  #start server
+npm install                   #update node modules
+npm run build                 #build app
+node app.js                   #start server
 open http://localhost:5000
 ```
 
