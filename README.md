@@ -91,7 +91,6 @@ Edit host, port, etc:
 
 ```bash
 ./src/config.json
-./.env
 ```
 
 ## App structure
