@@ -23,7 +23,6 @@
     "react-plotly.js": "^2.4.0",
     "react-scripts": "^3.4.3",
     "react-scrollspy-nav": "^1.2.4",
-    "socket.io": "^2.3.0",
     "xlsx": "^0.16.6"
   },
   "scripts": {

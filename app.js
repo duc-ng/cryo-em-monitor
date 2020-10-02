@@ -1,11 +1,8 @@
 const express = require("express");
 const app = express();
-const http = require("http").createServer(app);
-const io = require("socket.io")(http);
 const path = require("path");
 const Memory = require("./src/server/Memory");
 const FileWatcher = require("./src/server/FileWatcher");
-const chokidar = require("chokidar");
 const config = require("./src/config.json");
 const fspromises = require("fs").promises;
 
@@ -18,21 +15,6 @@ app.use(express.static(path.join(__dirname, "build")));
 //API: home
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
-});
-
-//API: user counter + force client page reload
-var userCounter = 0;
-var restart = true;
-io.on("connection", (socket) => {
-  const userID = ++userCounter;
-  console.log("Client " + userID + ": connected");
-  if (restart) {
-    socket.emit("restart", 1);
-    restart = false;
-  }
-  socket.on("disconnect", (reason) => {
-    console.log("Client " + userID + ": disconnected – " + reason);
-  });
 });
 
 //API: sync data

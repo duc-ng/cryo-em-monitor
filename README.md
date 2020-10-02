@@ -51,7 +51,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Requirements
 
-To run this application, you will have to install **[Node.js](https://nodejs.org/en/download/)**
+To run this application, you have to install **[Node.js](https://nodejs.org/en/download/)**.
 
 - E.g. Linux/ Ubuntu:
 
@@ -74,7 +74,7 @@ brew install node
 
 ## Run
 
-Run the following commands:
+Get, build and run:
 
 ```bash
 git clone https://github.com/duc-ng/web-monitoring.git
@@ -82,8 +82,8 @@ cd web-monitoring
 npm install                   #update node modules
 npm run build                 #build app
 node app.js                   #start server
-open http://localhost:5000
 ```
+The application can be opened at: http://localhost:5000
 
 ## Configure
 

@@ -1,12 +1,7 @@
 import React from "react";
-import socketIOClient from "socket.io-client";
 import config from "./../../config.json";
 import moment from "moment";
 import "moment/locale/en-gb";
-
-const socket = socketIOClient(
-  "ws://" + config.app.api_host + ":" + config.app.api_port
-);
 
 var dataAll = [];
 var fetchID = 0;
@@ -38,7 +33,7 @@ const getImageAPI = (key) => {
 //24hours instead of AM/PM + format
 moment.locale("en", {
   longDateFormat: {
-    LT: "h:mm:ss", //add :ss
+    LT: "h:mm:ss", //added :ss
     L: "MM/DD/YYYY",
     l: "M/D/YYYY",
     LL: "MMMM Do YYYY",

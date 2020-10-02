@@ -4,7 +4,7 @@
     "api_port": 5000,
     "rootDir": "data_test/data4Web/Titan1",
     "rootDirDaysOld": 100,
-    "refreshDataMs": 10000,
+    "refreshDataMs": 30000,
     "heapAllocation": "auto"
   },
 

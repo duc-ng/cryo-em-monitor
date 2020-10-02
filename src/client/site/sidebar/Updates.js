@@ -50,7 +50,7 @@ export default function Updates() {
             >
               <Typography
                 color={i === 0 ? "initial" : "textSecondary"}
-                variant={i === 0 ? "body1" : "body2"}
+                variant="body2"
                 noWrap
               >
                 {item}
