@@ -14,7 +14,6 @@ import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import PauseIcon from "@material-ui/icons/Pause";
 import moment from "moment";
-import path from "path";
 
 const useStyles = makeStyles((theme) => ({
   container: {

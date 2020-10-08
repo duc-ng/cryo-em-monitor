@@ -8,14 +8,12 @@ class FileWatcher {
     this.memory = memory;
     this.reader = new Reader();
     this.errorCount = 0;
-    this.watcher = chokidar.watch(
-      path.join(config.app.rootDir, "*", "*", "*.star"),
-      {
-        ignored: /^\./,
-        persistent: true,
-        awaitWriteFinish: true,
-      }
-    );
+    this.directory = path.join(config.app.rootDir, "*", "*", "*.star");
+    this.watcher = chokidar.watch(this.directory, {
+      ignored: /^\./,
+      persistent: true,
+      awaitWriteFinish: true,
+    });
   }
 
   start = () => {
@@ -31,7 +29,7 @@ class FileWatcher {
         this.memory.add(merge, dirPath);
       } catch (error) {
         this.errorCount++;
-        console.log(this.errorCount + ". File reading error "+dirPath);
+        console.log(this.errorCount + ". File reading error " + dirPath);
       }
     });
   };

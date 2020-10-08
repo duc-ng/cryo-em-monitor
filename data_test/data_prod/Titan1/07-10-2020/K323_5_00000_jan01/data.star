@@ -1,0 +1,23 @@
+ 
+data_measure 
+ 
+loop_
+_mmsImageKey_Value
+_mmsmean_Value
+_mmsmean_Info
+_mmsdrift_Value
+_mmsdrift_Info
+_mmsiciness_Value
+_mmsiciness_Info
+_mmsdefocus_Value
+_mmsdefocus_Info
+_mmsresolution_Value
+_mmsresolution_Info
+_mmsccOfCtfFit_Value
+_mmsccOfCtfFit_Info
+_mmsastigmatism_Value
+_mmsastigmatism_Info
+_mmnumberOfParticles_Value
+_mmnumberOfParticles_Info
+ 
+1602082611477841595	1.14	"Mean Pixel Values [counts/px]"	10.8586182101	"Total Sample Drift[Angstroms]"	0.861176	"Iciness [a.u.]"	2.66355516069	"Resolution of CTF Fit [Angstroms]"	0.164634	"CC Value of CTF Fit [a.u.]"	.039	"Amount of Astigmatism [Micrometer]"	79	"Number of Particles"

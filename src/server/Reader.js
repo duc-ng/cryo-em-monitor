@@ -16,10 +16,11 @@ class Reader {
       var data = await fspromises.readFile(file, "utf8");
       var substrings = data.split(/[\n,\t]+/);
 
-      //remove first two and last line
+      //remove empty strings and first two lines
+      substrings = substrings.map((e)=>e.trim())
+      substrings = substrings.filter(Boolean)
       substrings.shift();
       substrings.shift();
-      substrings.pop();
 
       //get number of properties
       var valueCount = 0
@@ -33,7 +34,7 @@ class Reader {
 
       //clean data
       for (i = 0; i < substrings.length; i++) {
-        substrings[i] = substrings[i].trim();
+        // substrings[i] = substrings[i].trim();
         substrings[i] = substrings[i].replace('"', "");
         substrings[i] = substrings[i].replace('"', "");
 
