@@ -15,6 +15,7 @@ import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import Switch from "@material-ui/core/Switch";
 import Box from "@material-ui/core/Box";
+import config from "./../../config.json";
 import { DataContext } from "../global/Data";
 import { ThemeContext } from "../global/Theme";
 
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up("sm")]: {
+    [theme.breakpoints.up("md")]: {
       display: "none",
     },
   },
@@ -98,7 +99,7 @@ export default function Header(props) {
     );
   }
 
-  //Tabs, displaying TEMS
+  //Tabs
   function TabSwitch() {
     const label = (
       <StyledTooltip title={invisible ? "" : "No data for 10 seconds."}>
@@ -107,23 +108,24 @@ export default function Header(props) {
         </StyledBadge>
       </StyledTooltip>
     );
+
     return (
       <Tabs
         value={tabValue}
-        onChange={(event, newValue) => setTabValue(newValue)}
+        onChange={(event, newValue) => {
+          dataContext.switchMicroscope(newValue);
+          setTabValue(newValue);
+        }}
         variant="scrollable"
         scrollButtons="on"
         indicatorColor="primary"
         textColor="primary"
         className={classes.tabs}
       >
-        <Tab label={label} />
-        <Tab label="Titan 2" />
-        <Tab label="Titan 3" />
-        <Tab label="Titan 4" />
-        <Tab label="Titan 5" />
-        <Tab label="Titan 6" />
-        <Tab label="Titan 7" />
+        {config.microscopes.map((x, i) => (
+          <Tab label={x.label} key={i} />
+        ))}
+        {/* <Tab label={label} /> */}
       </Tabs>
     );
   }

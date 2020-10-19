@@ -1,14 +1,16 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
+import Hidden from "@material-ui/core/Hidden";
 import Typography from "@material-ui/core/Typography";
-import ScrollspyNav from "react-scrollspy-nav";
-import Link from "@material-ui/core/Link";
+import { Link } from "react-scroll";
 
 const useStyles = makeStyles((theme) => ({
   link: {
     "&:hover": {
       color: theme.palette.warning.main,
+      backgroundColor: "transparent",
+      cursor: "pointer",
     },
   },
 }));
@@ -18,28 +20,28 @@ export default function Navigation() {
   const navigation = [
     {
       name: "Status",
-      href: "/",
+      id: "section_status",
     },
     {
       name: "Volume",
-      href: "#section_volume",
+      id: "section_volume",
     },
     {
       name: "Data",
-      href: "#section_2",
+      id: "section_data",
     },
     {
       name: "Images",
-      href: "#section_1",
+      id: "section_images",
     },
     {
       name: "Plots",
-      href: "#section_3",
+      id: "section_plots",
     },
   ];
 
   return (
-    <React.Fragment>
+    <Hidden mdDown>
       <Box mt={4}>
         <Typography
           variant="body2"
@@ -50,28 +52,28 @@ export default function Navigation() {
           Navigation
         </Typography>
       </Box>
-      <ScrollspyNav
-        scrollTargetIds={navigation.map((item) => item.href)}
-        offset={80}
-        activeNavClass="is-active"
-        scrollDuration="150"
-        headerBackground="true"
-      >
-        <Box pl={2}>
-          {navigation.map((item, i) => (
-            <Typography variant="button" display="block" gutterBottom key={i}>
-              <Link
-                underline="none"
-                color="textPrimary"
-                href={item.href}
-                className={classes.link}
-              >
-                {item.name}
-              </Link>
+      <Box pl={2}>
+        {navigation.map((item, i) => (
+          <Link
+            to={item.id}
+            spy={true}
+            smooth={true}
+            duration={150}
+            key={i}
+            offset={-55}
+          >
+            <Typography
+              variant="button"
+              color="textPrimary"
+              className={classes.link}
+              display="block"
+              gutterBottom
+            >
+              {item.name}
             </Typography>
-          ))}
-        </Box>
-      </ScrollspyNav>
-    </React.Fragment>
+          </Link>
+        ))}
+      </Box>
+    </Hidden>
   );
 }

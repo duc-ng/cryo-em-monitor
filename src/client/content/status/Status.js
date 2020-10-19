@@ -72,6 +72,7 @@ export default function Status(props) {
   console.log("Updated: status");
   return (
     <React.Fragment>
+      <div id="section_status" />
       <Grid container spacing={2} justify="center">
         {statusCards.map(([index, name, label, icon, color]) => {
           return (

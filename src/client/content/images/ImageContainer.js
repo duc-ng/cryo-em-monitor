@@ -40,9 +40,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: "none",
   },
   dialog: {
-    backgroundColor: Color(theme.palette.grey[900])
-      .alpha(0.9)
-      .string(),
+    backgroundColor: Color(theme.palette.grey[900]).alpha(0.9).string(),
   },
   skeleton: {
     paddingTop: "40%",
@@ -122,7 +120,8 @@ export default function ImageContainer(props) {
   return (
     <React.Fragment>
       <Grid container justify="center">
-        <Paper className={classes.paper} id="section_1">
+        <div id="section_images" />
+        <Paper className={classes.paper}>
           <Box m={2}>
             <Typography
               variant="body1"

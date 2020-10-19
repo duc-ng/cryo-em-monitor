@@ -5,6 +5,13 @@ Monitor for Cryo-EM data of the Max Planck Institute of Biochemistry.
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ## Latest update
+- 11.10.20
+ - removed websockets
+ - replaced react-scrollspy-nav with react-scroll
+ - added: API.js 
+ - reader improved
+ - added microscope switching
+
 
 - 17.9.20
 

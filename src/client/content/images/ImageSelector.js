@@ -86,6 +86,7 @@ export default function ImageSelector(props) {
     config.app.api_port +
     "/imageSingleAPI";
 
+
   var images = dataContext.data
     .map((item) => ({
       original:
@@ -93,7 +94,9 @@ export default function ImageSelector(props) {
         "?key=" +
         item[config.key] +
         "&filename=" +
-        item[config["images.star"][props.i].file],
+        item[config["images.star"][props.i].file] +
+        "&microscope=" +
+        dataContext.microscope,
       text: item[config["times.star"].main], //own usage
     }))
     .reverse();

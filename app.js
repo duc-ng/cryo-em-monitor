@@ -1,16 +1,18 @@
 const express = require("express");
 const app = express();
 const path = require("path");
-const Memory = require("./src/server/Memory");
 const FileWatcher = require("./src/server/FileWatcher");
 const config = require("./src/config.json");
 const fspromises = require("fs").promises;
+const cors = require("cors");
 
-//init
-const memory = new Memory();
-const fileWatcher = new FileWatcher(memory);
-fileWatcher.start();
+//init app
+app.use(cors());
 app.use(express.static(path.join(__dirname, "build")));
+
+//init file watchers
+const mics = config.microscopes;
+const fw = mics.map((x) => new FileWatcher(x.folder));
 
 //API: home
 app.get("/", (req, res) => {
@@ -18,61 +20,62 @@ app.get("/", (req, res) => {
 });
 
 //API: sync data
-app.get("/data", (req, res) => {
+app.get("/data", async (req, res) => {
   const key = req.query.lastKey;
-  if (key == "ALL") {
-    const data = memory.getDataAll();
-    if (data.length === 0) {
-      res.send({ data: null });
-    } else {
-      res.send({ data: data, id: req.query.id });
-      console.log("Items sent: " + data.length);
-    }
-  } else if (!memory.has(key)) {
-    res.send({ data: "RESTART" });
-  } else if (key === memory.getLastKey()) {
+  const mic = req.query.microscope;
+  const memory = fw[mic].memory;
+  const newData =
+    key == "ALL"
+      ? memory.getDataAll()
+      : memory.getDataNewerThan(parseFloat(key));
+
+  if (key === memory.getLastKey() || newData.length === 0) {
     res.send({ data: null });
   } else {
-    const newData = memory.getDataNewerThan(key.toString());
-    res.send({ data: newData, id: req.query.id });
+    const imgs = await getImages(newData[newData.length - 1], memory);
+    res.send({
+      data: newData,
+      id: req.query.id,
+      images: imgs,
+    });
     console.log("Items sent: " + newData.length);
   }
 });
 
-//API: images by key
-app.get("/imagesAPI", async (req, res) => {
-  if (memory.has(req.query.key)) {
-    let imageObjects = [];
-    let merge = memory.getData(req.query.key);
-    for (const [k, v] of Object.entries(config["images.star"])) {
-      if (merge[v.file] != undefined && merge[v.info] != undefined) {
-        let filePath = path.join(memory.getPath(req.query.key), merge[v.file]);
-        let image = undefined;
-        try {
-          image = await fspromises.readFile(filePath);
-        } catch (error) {
-          console.log("Error reading image: " + filePath);
-        }
-        if (image != undefined) {
-          imageObjects.push({
-            data: "data:image/jpeg;base64," + image.toString("base64"),
-            label: merge[v.info],
-            name: merge[v.file],
-            key: req.query.key,
-          });
-        }
+//get images of last item
+const getImages = async (merge, memory) => {
+  let images = [];
+  for (const [k, v] of Object.entries(config["images.star"])) {
+    if (merge[v.file] != undefined && merge[v.info] != undefined) {
+      try {
+        var filePath = path.join(
+          memory.getPath(merge[config.key]),
+          merge[v.file]
+        );
+        var image = await fspromises.readFile(filePath);
+      } catch (error) {
+        console.log("Error reading image: " + filePath);
+      }
+      if (image != undefined) {
+        images.push({
+          data: "data:image/jpeg;base64," + image.toString("base64"),
+          label: merge[v.info],
+          name: merge[v.file],
+          key: merge[config.key],
+        });
       }
     }
-    res.send(imageObjects);
-  } else {
-    res.send([]);
   }
-});
+  return images;
+};
 
 //API: images by key + type
 app.get("/imageSingleAPI", async (req, res) => {
-  if (memory.has(req.query.key)) {
-    let filePath = path.join(memory.getPath(req.query.key), req.query.filename);
+  const memory = fw[req.query.microscope].memory;
+  const key = parseFloat(req.query.key);
+
+  if (memory.has(key)) {
+    let filePath = path.join(memory.getPath(key), req.query.filename);
     try {
       var image = await fspromises.readFile(filePath);
       res.setHeader("Content-Type", "image/png");

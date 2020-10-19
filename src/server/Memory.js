@@ -3,9 +3,10 @@ const v8 = require("v8");
 
 class Memory {
   constructor() {
+    this.microscopesNr = Object.keys(config.microscopes).length;
     this.maxHeapSize = //in Byte
       config.app.heapAllocation === "auto"
-        ? v8.getHeapStatistics().total_available_size / 2
+        ? v8.getHeapStatistics().total_available_size / 2 / this.microscopesNr
         : config.app.heapAllocation;
     this.avgDataPointSize = 1400; //in Byte
     this.maxArrSize = this.maxHeapSize / this.avgDataPointSize;
@@ -14,8 +15,8 @@ class Memory {
   }
 
   getData = (key) => {
-    // console.log(this.dataValues.get(key))
-    return this.dataValues.get(key).data;
+    const val = this.dataValues.get(key);
+    return val !== undefined ? val.data : val;
   };
 
   getDataAll = () => {
@@ -52,8 +53,8 @@ class Memory {
     }
   };
 
-  add = (obj, dirPath) => {
-    const key = obj[config.key].toString();
+  add = (obj, dirPath, subfolder) => {
+    const key = obj[config.key];
     const date = obj[config["times.star"].main];
 
     if (!this.dataValues.has(key)) {
@@ -67,10 +68,9 @@ class Memory {
         this.dataValues.delete(this.keysSorted.shift());
       }
 
-      console.log(this.keysSorted.length + ". File added: " + date);
-      // this.keysSorted.map((key) =>
-      //   console.log(this.getData(key)[config.key])
-      // );
+      console.log(
+        this.keysSorted.length + ". added: " + date + " (" + subfolder + ")"
+      );
     }
   };
 

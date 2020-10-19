@@ -2,11 +2,17 @@
   "app": {
     "api_host": "localhost",
     "api_port": 5000,
-    "rootDir": "/Users/duc/Desktop/data_test/data4Web/Titan1",
+    "rootDir": "data_test/data4Web",
     "rootDirDaysOld": 100,
     "refreshDataMs": 30000,
     "heapAllocation": "auto"
   },
+
+  "microscopes": [
+    { "label": "Titan 1", "folder": "Titan1" },
+    { "label": "Titan 2", "folder": "Titan2" },
+    { "label": "Titan 3", "folder": "Titan3" }
+  ],
 
   "key": "_mmsImageKey_Value",
 

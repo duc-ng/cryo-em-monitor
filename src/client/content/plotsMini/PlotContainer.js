@@ -45,7 +45,7 @@ export default function PlotContainer(props) {
     <React.Fragment>
       <PlotsFullscreen calculateData={calculateData} />
       <Grid container justify="center" spacing={2}>
-        <div id="section_3" />
+        <div id="section_plots" />
         {Object.keys(config["data.star"]).map((key) => {
           return (
             <Grid item xs={12} sm={6} key={key}>

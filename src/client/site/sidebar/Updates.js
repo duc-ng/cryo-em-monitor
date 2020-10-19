@@ -8,6 +8,8 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import config from "./../../../config.json";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   timeline: {
@@ -15,13 +17,25 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 10,
   },
   icon: {
-    color: theme.palette.warning.main
-  }
+    color: theme.palette.warning.main,
+  },
 }));
 
 export default function Updates() {
   const dataContext = React.useContext(DataContext);
   const classes = useStyles();
+  const [datesLast4, setDatesLast4] = React.useState([]);
+
+  React.useEffect(() => {
+    var dates = [];
+    for (var i = 0; i < 4; i++) {
+      if (dataContext.data.length - i > 0) {
+        const date = dataContext.data[dataContext.data.length - i - 1][config["times.star"].main];
+        dates.push(moment(date).calendar());
+      }
+    }
+    setDatesLast4(dates);
+  }, [dataContext.data]);
 
   return (
     <Box mt={4}>
@@ -33,11 +47,8 @@ export default function Updates() {
       >
         Latest update
       </Typography>
-      <Stepper
-        orientation="vertical"
-        className={classes.timeline}
-      >
-        {dataContext.datesLast4.map((item, i) => (
+      <Stepper orientation="vertical" className={classes.timeline}>
+        {datesLast4.map((item, i) => (
           <Step key={i}>
             <StepLabel
               StepIconComponent={() => {

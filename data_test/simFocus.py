@@ -12,7 +12,7 @@ dataProp=['mean','drift','iciness','defocus','resolution','ccOfCtfFit']
 from collections import namedtuple
 Apause = namedtuple("ImgToIMg", "ImgToIMg b4Import b4Process b4Export")
 #Apause = Apause(ImgToIMg=1, b4Import=1, b4Process=1,b4Export=1)
-Apause = Apause(ImgToIMg=0.05, b4Import=0.05, b4Process=0.05,b4Export=0.05)
+Apause = Apause(ImgToIMg=0.5, b4Import=0.5, b4Process=0.5,b4Export=0.5)
 
 
 simErr={'imgErrorIdx':1,'imgNotExportedIdx':3}
