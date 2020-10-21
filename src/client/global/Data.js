@@ -23,67 +23,88 @@ export const DataContext = React.createContext({});
 export default function Data(props) {
   const [dataAll, setDataAll] = React.useState([]);
   const [dataFiltered, setDataFiltered] = React.useState([]);
-  const [dataLastImages, setLastImages] = React.useState([]);
+  const [imagesAll, setImagesAll] = React.useState([]);
+  const [imagesFiltered, setImagesFiltered] = React.useState([]);
   const [counter, setCounter] = React.useState(0);
   const [dateFrom, setDateFrom] = React.useState(undefined);
   const [dateTo, setDateTo] = React.useState(undefined);
   const [microscope, setMicroscope] = React.useState(0);
 
-  //image url
-  const getImageAPI = (key) => {
-    return (
-      "http://" +
-      config.app.api_host +
-      ":" +
-      config.app.api_port +
-      "/imagesAPI?key=" +
-      key +
-      "&microscope=" +
-      microscope
-    );
-  };
-
   //reset microscope
   const switchMicroscope = (val) => {
     setDataAll([]);
     setDataFiltered([]);
-    setLastImages([]);
+    setImagesAll([]);
+    setImagesFiltered([]);
     setCounter(0);
     setDateFrom(undefined);
     setDateTo(undefined);
     setMicroscope(val);
   };
 
-  //set fetched data
-  const setFetchedData = (data,images) => {
-    setLastImages(images);
-    setDataAll(...dataAll, data);
-  }
+  //fetch images
+  const fetchImages = React.useCallback(
+    (key, cb) => {
+      const imageURL =
+        "http://" +
+        config.app.api_host +
+        ":" +
+        config.app.api_port +
+        "/images?key=" +
+        key +
+        "&microscope=" +
+        microscope;
 
-  //calc filtered Data
+      fetch(imageURL)
+        .then((response) => response.json())
+        .then((res) => cb(res));
+    },
+    [microscope]
+  );
+
+  //set fetched data
+  const setFetchedData = (data, images) => {
+    setImagesAll(images);
+    setDataAll([...dataAll, ...data]);
+  };
+
+  //last date
+  const lastDate =
+    dataFiltered.length === 0
+      ? 0
+      : dataFiltered[dataFiltered.length - 1][config["times.star"].main];
+
+  //get last key
+  const getLastKey = (arr) => {
+    return arr.length === 0 ? undefined : arr[arr.length - 1][config.key];
+  };
+
+  //filter
   React.useEffect(() => {
+    //filter data
     const filteredData = dataAll.filter((item) => {
       const date = new Date(item[config["times.star"].main]);
       const cond1 = dateFrom === undefined ? true : date - dateFrom > 0;
       const cond2 = dateTo === undefined ? true : dateTo - date > 0;
       return date !== 0 && date !== undefined && cond1 && cond2;
     });
-    // if (filteredData.length === 0) {
-    //   setLastImages([]);
-    // }
     setDataFiltered(filteredData);
-  }, [dateFrom, dateTo, dataAll]);
+
+    //filter images
+    const imageKey = imagesAll.length === 0 ? undefined : imagesAll[0].key;
+    const lastDataKey = getLastKey(filteredData);
+    if (filteredData.length === 0) {
+      setImagesFiltered([]);
+    } else if (lastDataKey !== imageKey) {
+      fetchImages(lastDataKey, setImagesFiltered);
+    } else {
+      setImagesFiltered(imagesAll);
+    }
+  }, [dateFrom, dateTo, dataAll, imagesAll, fetchImages]);
 
   //increase Counter +1
   const incCounter = () => {
     setCounter(counter + 1);
-  };
-
-  //get date of last item
-  const getLastDate = () => {
-    return dataFiltered.length === 0
-      ? 0
-      : dataFiltered[dataFiltered.length - 1][config["times.star"].main];
   };
 
   //render
@@ -91,11 +112,12 @@ export default function Data(props) {
     <DataContext.Provider
       value={{
         data: dataFiltered,
-        lastItemDate: getLastDate(),
+        images: imagesFiltered,
         counter: dataFiltered.length + counter,
         incCounter: incCounter,
-        dataLastImages: dataLastImages,
+        lastDate: lastDate,
         setFetchedData: setFetchedData,
+        fetchImages: fetchImages,
         setDateFrom: setDateFrom,
         dateFrom: dateFrom,
         setDateTo: setDateTo,

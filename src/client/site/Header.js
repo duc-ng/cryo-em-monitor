@@ -60,19 +60,7 @@ export default function Header(props) {
   const classes = useStyles();
   const dataContext = React.useContext(DataContext);
   const themeContext = React.useContext(ThemeContext);
-  const [invisible, setInvisible] = React.useState(true);
   const [tabValue, setTabValue] = React.useState(0);
-
-  //notification, when no data has arrived for x min
-  React.useEffect(() => {
-    let interval = setInterval(() => {
-      const isOld = Date.now() - new Date(dataContext.lastItemDate) > 10000;
-      isOld ? setInvisible(false) : setInvisible(true);
-    }, 1000);
-    return () => {
-      clearInterval(interval);
-    };
-  }, [dataContext]);
 
   //hide header when scrolling down
   function HideOnScroll(props) {
@@ -99,16 +87,35 @@ export default function Header(props) {
     );
   }
 
-  //Tabs
-  function TabSwitch() {
-    const label = (
-      <StyledTooltip title={invisible ? "" : "No data for 10 seconds."}>
+  //Tab + notification, if no data has arrived
+  function EnhancedLabel(props) {
+    const [invisible, setInvisible] = React.useState(true);
+
+    React.useEffect(() => {
+      let interval = setInterval(() => {
+        setInvisible(
+          !(
+            Date.now() - new Date(dataContext.lastDate) >
+              config.app.noData.ms && props.val === tabValue
+          )
+        );
+      }, 1000);
+      return () => {
+        clearInterval(interval);
+      };
+    }, [props.val]);
+
+    return (
+      <StyledTooltip title={invisible ? "" : config.app.noData.message}>
         <StyledBadge invisible={invisible} variant="dot">
-          Titan 1
+          {props.label}
         </StyledBadge>
       </StyledTooltip>
     );
+  }
 
+  //Tabs
+  function TabSwitch() {
     return (
       <Tabs
         value={tabValue}
@@ -123,9 +130,8 @@ export default function Header(props) {
         className={classes.tabs}
       >
         {config.microscopes.map((x, i) => (
-          <Tab label={x.label} key={i} />
+          <Tab label={<EnhancedLabel label={x.label} val={i} />} key={i} />
         ))}
-        {/* <Tab label={label} /> */}
       </Tabs>
     );
   }

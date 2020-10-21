@@ -9,32 +9,31 @@ export default function API(props) {
   var fetchID = React.useRef(0); //avoiding multiple equal packages
   var intervalTime = React.useRef(300);
 
-  //set intervalTime (lower waiting period at start)
+  //lower waiting period at start
   intervalTime.current =
     dataContext.dataAll.length === 0 ? 300 : config.app.refreshDataMs;
 
+  //API: pull data + polling
   React.useEffect(() => {
-    //get data url
-    const getDataAPI = () => {
-      const data = dataContext.dataAll;
-      const key = data.length === 0 ? "ALL" : data[data.length - 1][config.key];
-      return (
-        "http://" +
-        config.app.api_host +
-        ":" +
-        config.app.api_port +
-        "/data?lastKey=" +
-        key +
-        "&id=" +
-        fetchID.current +
-        "&microscope=" +
-        dataContext.microscope
-      );
-    };
+    const key =
+      dataContext.dataAll.length === 0
+        ? "ALL"
+        : dataContext.dataAll[dataContext.dataAll.length - 1][config.key];
 
-    //API: pull data
+    const dataURL =
+      "http://" +
+      config.app.api_host +
+      ":" +
+      config.app.api_port +
+      "/data?lastKey=" +
+      key +
+      "&id=" +
+      fetchID.current +
+      "&microscope=" +
+      dataContext.microscope;
+
     const fetchData = () => {
-      fetch(getDataAPI())
+      fetch(dataURL)
         .then((response) => response.json())
         .then((res) => {
           if (res.data !== null && parseFloat(res.id) === fetchID.current) {
@@ -45,7 +44,6 @@ export default function API(props) {
         });
     };
 
-    //polling
     const interval = setInterval(() => {
       fetchData();
     }, intervalTime.current);
@@ -53,5 +51,5 @@ export default function API(props) {
   }, [dataContext]);
 
   console.log("API updated");
-  return <APIContext.Provider value={{}}>{props.children}</APIContext.Provider>;
+  return <APIContext.Provider>{props.children}</APIContext.Provider>;
 }

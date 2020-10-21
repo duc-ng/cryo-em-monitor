@@ -5,6 +5,7 @@
 .pnp.js
 /.vscode
 /node_modules
+/data_test/data4Web
 
 # testing
 /coverage

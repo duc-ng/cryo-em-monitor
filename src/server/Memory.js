@@ -24,7 +24,6 @@ class Memory {
   };
 
   getPath = (key) => {
-    // console.log(this.dataValues.get(key))
     return this.dataValues.get(key).path;
   };
 
@@ -35,9 +34,7 @@ class Memory {
   getDataNewerThan = (key) => {
     const data = this.getData(key);
     if (data !== undefined) {
-      let index = this.getIndexToInsert(
-        new Date(data[config["times.star"].main])
-      );
+      let index = this.getIndex(key)
       return this.getDataAll().slice(index);
     } else {
       return [];
@@ -72,6 +69,15 @@ class Memory {
         this.keysSorted.length + ". added: " + date + " (" + subfolder + ")"
       );
     }
+  };
+
+  getIndex = (key) => {
+    for (var i = this.keysSorted.length - 1; i >= 0; i--) {
+      if (this.keysSorted[i] === key) {
+        break;
+      }
+    }
+    return i + 1;
   };
 
   getIndexToInsert = (date) => {

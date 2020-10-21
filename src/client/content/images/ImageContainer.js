@@ -51,19 +51,19 @@ const useStyles = makeStyles((theme) => ({
 //image button
 const ImageButton = ({ handleCarousel, i }) => {
   const classes = useStyles();
-  const { dataLastImages } = React.useContext(DataContext);
+  const { images } = React.useContext(DataContext);
 
   return (
     <Tooltip title={config["images.star"][i].name}>
       <Button onClick={handleCarousel} className={classes.button}>
-        {dataLastImages[i] === undefined ? (
+        {images[i] === undefined ? (
           <Box className={classes.skeleton}>
             <CircularProgress color="primary" />
           </Box>
         ) : (
           <img
-            src={dataLastImages[i].data}
-            alt={dataLastImages[i].label}
+            src={images[i].data}
+            alt={images[i].label}
             className={classes.img}
           />
         )}

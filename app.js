@@ -22,8 +22,7 @@ app.get("/", (req, res) => {
 //API: sync data
 app.get("/data", async (req, res) => {
   const key = req.query.lastKey;
-  const mic = req.query.microscope;
-  const memory = fw[mic].memory;
+  const memory = fw[req.query.microscope].memory;
   const newData =
     key == "ALL"
       ? memory.getDataAll()
@@ -32,7 +31,8 @@ app.get("/data", async (req, res) => {
   if (key === memory.getLastKey() || newData.length === 0) {
     res.send({ data: null });
   } else {
-    const imgs = await getImages(newData[newData.length - 1], memory);
+    const keyImage = newData[newData.length - 1][config.key];
+    const imgs = await getImages(keyImage, memory);
     res.send({
       data: newData,
       id: req.query.id,
@@ -42,15 +42,16 @@ app.get("/data", async (req, res) => {
   }
 });
 
-//get images of last item
-const getImages = async (merge, memory) => {
+//get images of item
+const getImages = async (key, memory) => {
   let images = [];
+  let obj = memory.getData(key);
   for (const [k, v] of Object.entries(config["images.star"])) {
-    if (merge[v.file] != undefined && merge[v.info] != undefined) {
+    if (obj[v.file] != undefined && obj[v.info] != undefined) {
       try {
         var filePath = path.join(
-          memory.getPath(merge[config.key]),
-          merge[v.file]
+          memory.getPath(obj[config.key]),
+          obj[v.file]
         );
         var image = await fspromises.readFile(filePath);
       } catch (error) {
@@ -59,9 +60,9 @@ const getImages = async (merge, memory) => {
       if (image != undefined) {
         images.push({
           data: "data:image/jpeg;base64," + image.toString("base64"),
-          label: merge[v.info],
-          name: merge[v.file],
-          key: merge[config.key],
+          label: obj[v.info],
+          name: obj[v.file],
+          key: obj[config.key],
         });
       }
     }
@@ -69,11 +70,18 @@ const getImages = async (merge, memory) => {
   return images;
 };
 
-//API: images by key + type
-app.get("/imageSingleAPI", async (req, res) => {
+//API: images by key
+app.get("/images", async (req, res) => {
+  const key = parseFloat(req.query.key);
+  const memory = fw[req.query.microscope].memory;
+  const imgs = await getImages(key, memory);
+  res.send(imgs);
+});
+
+//API: image by key + type
+app.get("/image", async (req, res) => {
   const memory = fw[req.query.microscope].memory;
   const key = parseFloat(req.query.key);
-
   if (memory.has(key)) {
     let filePath = path.join(memory.getPath(key), req.query.filename);
     try {

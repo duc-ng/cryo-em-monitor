@@ -43,7 +43,8 @@ export default function Chart() {
 
   useEffect(() => {
     if (chartContainer && chartContainer.current) {
-      const newChartInstance = new Chartjs(chartContainer.current, chartConfig);
+      new Chartjs(chartContainer.current, chartConfig);
+      // const newChartInstance = new Chartjs(chartContainer.current, chartConfig);
     }
   }, [chartContainer]);
 

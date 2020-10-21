@@ -84,8 +84,7 @@ export default function ImageSelector(props) {
     config.app.api_host +
     ":" +
     config.app.api_port +
-    "/imageSingleAPI";
-
+    "/image";
 
   var images = dataContext.data
     .map((item) => ({
