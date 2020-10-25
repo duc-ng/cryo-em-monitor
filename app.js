@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const FileWatcher = require("./src/server/FileWatcher");
+const Logger = require("./src/server/Logger");
 const config = require("./src/config.json");
 const fspromises = require("fs").promises;
 const cors = require("cors");
@@ -9,10 +10,14 @@ const cors = require("cors");
 //init app
 app.use(cors());
 app.use(express.static(path.join(__dirname, "build")));
+app.listen(config.app.api_port, () => {
+  logger.log("info", "Server started");
+});
 
 //init file watchers
 const mics = config.microscopes;
 const fw = mics.map((x) => new FileWatcher(x.folder));
+const logger = new Logger();
 
 //API: home
 app.get("/", (req, res) => {
@@ -38,7 +43,7 @@ app.get("/data", async (req, res) => {
       id: req.query.id,
       images: imgs,
     });
-    console.log("Items sent: " + newData.length);
+    logger.log("info", "Items sent: " + newData.length);
   }
 });
 
@@ -47,24 +52,19 @@ const getImages = async (key, memory) => {
   let images = [];
   let obj = memory.getData(key);
   for (const [k, v] of Object.entries(config["images.star"])) {
-    if (obj[v.file] != undefined && obj[v.info] != undefined) {
-      try {
-        var filePath = path.join(
-          memory.getPath(obj[config.key]),
-          obj[v.file]
-        );
-        var image = await fspromises.readFile(filePath);
-      } catch (error) {
-        console.log("Error reading image: " + filePath);
-      }
-      if (image != undefined) {
-        images.push({
-          data: "data:image/jpeg;base64," + image.toString("base64"),
-          label: obj[v.info],
-          name: obj[v.file],
-          key: obj[config.key],
-        });
-      }
+    try {
+      var filePath = path.join(memory.getPath(obj[config.key]), obj[v.file]);
+      var image = await fspromises.readFile(filePath);
+    } catch (error) {
+      logger.log("error", "(Reading image) " + error);
+    }
+    if (image != undefined) {
+      images.push({
+        data: "data:image/jpeg;base64," + image.toString("base64"),
+        label: obj[v.info],
+        name: obj[v.file],
+        key: obj[config.key],
+      });
     }
   }
   return images;
@@ -89,18 +89,11 @@ app.get("/image", async (req, res) => {
       res.setHeader("Content-Type", "image/png");
       res.send(image);
     } catch (error) {
-      console.log("Error reading image: " + filePath);
+      logger.log("error", "(Reading image) " + error);
     }
   } else {
     res.send([]);
   }
-});
-
-//listen for incoming connections
-app.listen(config.app.api_port, () => {
-  console.log(
-    `Server app listening at ${config.app.api_host}:${config.app.api_port} (API)`
-  );
 });
 
 //exit handling

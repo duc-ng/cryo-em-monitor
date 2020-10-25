@@ -21,109 +21,133 @@ moment.locale("en", {
 export const DataContext = React.createContext({});
 
 export default function Data(props) {
-  const [dataAll, setDataAll] = React.useState([]);
-  const [dataFiltered, setDataFiltered] = React.useState([]);
-  const [imagesAll, setImagesAll] = React.useState([]);
-  const [imagesFiltered, setImagesFiltered] = React.useState([]);
-  const [counter, setCounter] = React.useState(0);
-  const [dateFrom, setDateFrom] = React.useState(undefined);
-  const [dateTo, setDateTo] = React.useState(undefined);
+  const [counter, setCounter] = React.useState(0); //force rerender
   const [microscope, setMicroscope] = React.useState(0);
+  const [data, setData] = React.useState({
+    dataAll: {
+      val: [],
+      img: [],
+    },
+    dataFiltered: {
+      val: [],
+      img: [],
+    },
+    from: new Date(Date.now() - 3 * 60 * 60 * 1000), //last 3h
+    to: undefined,
+  });
 
   //reset microscope
   const switchMicroscope = (val) => {
-    setDataAll([]);
-    setDataFiltered([]);
-    setImagesAll([]);
-    setImagesFiltered([]);
     setCounter(0);
-    setDateFrom(undefined);
-    setDateTo(undefined);
     setMicroscope(val);
+    setData({
+      dataAll: {
+        val: [],
+        img: [],
+      },
+      dataFiltered: {
+        val: [],
+        img: [],
+      },
+      from: undefined,
+      to: undefined,
+    });
   };
 
   //fetch images
-  const fetchImages = React.useCallback(
-    (key, cb) => {
-      const imageURL =
-        "http://" +
-        config.app.api_host +
-        ":" +
-        config.app.api_port +
-        "/images?key=" +
-        key +
-        "&microscope=" +
-        microscope;
-
-      fetch(imageURL)
-        .then((response) => response.json())
-        .then((res) => cb(res));
-    },
-    [microscope]
-  );
-
-  //set fetched data
-  const setFetchedData = (data, images) => {
-    setImagesAll(images);
-    setDataAll([...dataAll, ...data]);
+  const fetchImages = async (key) => {
+    const imageURL =
+      "http://" +
+      config.app.api_host +
+      ":" +
+      config.app.api_port +
+      "/images?key=" +
+      key +
+      "&microscope=" +
+      microscope;
+    const res = await fetch(imageURL);
+    return res.json();
   };
-
-  //last date
-  const lastDate =
-    dataFiltered.length === 0
-      ? 0
-      : dataFiltered[dataFiltered.length - 1][config["times.star"].main];
-
-  //get last key
-  const getLastKey = (arr) => {
-    return arr.length === 0 ? undefined : arr[arr.length - 1][config.key];
-  };
-
-  //filter
-  React.useEffect(() => {
-    //filter data
-    const filteredData = dataAll.filter((item) => {
-      const date = new Date(item[config["times.star"].main]);
-      const cond1 = dateFrom === undefined ? true : date - dateFrom > 0;
-      const cond2 = dateTo === undefined ? true : dateTo - date > 0;
-      return date !== 0 && date !== undefined && cond1 && cond2;
-    });
-    setDataFiltered(filteredData);
-
-    //filter images
-    const imageKey = imagesAll.length === 0 ? undefined : imagesAll[0].key;
-    const lastDataKey = getLastKey(filteredData);
-    if (filteredData.length === 0) {
-      setImagesFiltered([]);
-    } else if (lastDataKey !== imageKey) {
-      fetchImages(lastDataKey, setImagesFiltered);
-    } else {
-      setImagesFiltered(imagesAll);
-    }
-  }, [dateFrom, dateTo, dataAll, imagesAll, fetchImages]);
 
   //increase Counter +1
   const incCounter = () => {
     setCounter(counter + 1);
   };
 
+  //get last date
+  const getLastDate = () => {
+    const arr = data.dataFiltered.val;
+    return arr.length === 0
+      ? 0
+      : arr[arr.length - 1][config["times.star"].main];
+  };
+
+  //get last key
+  const getLastKey = (arr) => {
+    return arr.length === 0 ? undefined : arr[arr.length - 1][config.key];
+  };
+
+  //set fetched data
+  const setFetchedData = async (newData, images) => {
+    const all = [...data.dataAll.val, ...newData];
+    setData({
+      ...data,
+      dataAll: {
+        val: all,
+        img: images,
+      },
+      dataFiltered: await updateData(all, data.from, data.to),
+    });
+  };
+
+  //set filter: from - to
+  const setFromTo = async (from, to) => {
+    setData({
+      ...data,
+      dataFiltered: await updateData(data.dataAll.val, from, to),
+      from: from,
+      to: to,
+    });
+  };
+
+  //update: data + images
+  const updateData = async (arr, from, to) => {
+    const filteredData = arr.filter((item) => {
+      const date = new Date(item[config["times.star"].main]);
+      const cond1 = from === undefined ? true : date - from > 0;
+      const cond2 = to === undefined ? true : to - date > 0;
+      return date !== 0 && date !== undefined && cond1 && cond2;
+    });
+
+    const imageKey =
+      data.dataAll.img.length === 0 ? undefined : data.dataAll.img[0].key;
+    const lastDataKey = getLastKey(filteredData);
+    let imageFiltered = data.dataAll.img;
+
+    if (filteredData.length === 0) {
+      imageFiltered = [];
+    } else if (lastDataKey !== imageKey) {
+      imageFiltered = await fetchImages(lastDataKey);
+    }
+    return { val: filteredData, img: imageFiltered };
+  };
+
+  console.log("Updated: Data");
   //render
   return (
     <DataContext.Provider
       value={{
-        data: dataFiltered,
-        images: imagesFiltered,
-        counter: dataFiltered.length + counter,
+        data: data.dataFiltered.val,
+        images: data.dataFiltered.img,
+        counter: data.dataFiltered.val.length + counter,
         incCounter: incCounter,
-        lastDate: lastDate,
+        lastDate: getLastDate(),
         setFetchedData: setFetchedData,
         fetchImages: fetchImages,
-        setDateFrom: setDateFrom,
-        dateFrom: dateFrom,
-        setDateTo: setDateTo,
-        setDataFiltered: setDataFiltered,
-        dateTo: dateTo,
-        dataAll: dataAll,
+        dateFrom: data.from,
+        dateTo: data.to,
+        setFromTo: setFromTo,
+        dataAll: data.dataAll.val,
         switchMicroscope: switchMicroscope,
         microscope: microscope,
       }}

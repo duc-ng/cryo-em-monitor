@@ -7,11 +7,11 @@ export const APIContext = React.createContext({});
 export default function API(props) {
   const dataContext = React.useContext(DataContext);
   var fetchID = React.useRef(0); //avoiding multiple equal packages
-  var intervalTime = React.useRef(300);
+  var intervalTime = React.useRef(500);
 
   //lower waiting period at start
   intervalTime.current =
-    dataContext.dataAll.length === 0 ? 300 : config.app.refreshDataMs;
+    dataContext.dataAll.length === 0 ? 500 : config.app.refreshDataMs;
 
   //API: pull data + polling
   React.useEffect(() => {
@@ -50,6 +50,6 @@ export default function API(props) {
     return () => clearInterval(interval);
   }, [dataContext]);
 
-  console.log("API updated");
+  console.log("Updated: API");
   return <APIContext.Provider>{props.children}</APIContext.Provider>;
 }

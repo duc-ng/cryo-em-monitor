@@ -1,17 +1,20 @@
 const config = require("./../config.json");
+const Logger = require("./Logger");
 const v8 = require("v8");
 
 class Memory {
   constructor() {
-    this.microscopesNr = Object.keys(config.microscopes).length;
     this.maxHeapSize = //in Byte
       config.app.heapAllocation === "auto"
-        ? v8.getHeapStatistics().total_available_size / 2 / this.microscopesNr
+        ? v8.getHeapStatistics().total_available_size /
+          2 /
+          Object.keys(config.microscopes).length
         : config.app.heapAllocation;
-    this.avgDataPointSize = 1400; //in Byte
+    this.avgDataPointSize = config.app.avgDataPointSize; //in Byte
     this.maxArrSize = this.maxHeapSize / this.avgDataPointSize;
     this.keysSorted = [];
     this.dataValues = new Map();
+    this.logger = new Logger();
   }
 
   getData = (key) => {
@@ -34,7 +37,7 @@ class Memory {
   getDataNewerThan = (key) => {
     const data = this.getData(key);
     if (data !== undefined) {
-      let index = this.getIndex(key)
+      let index = this.getIndexByKey(key);
       return this.getDataAll().slice(index);
     } else {
       return [];
@@ -57,7 +60,7 @@ class Memory {
     if (!this.dataValues.has(key)) {
       //insert
       this.dataValues.set(key, { path: dirPath, data: obj });
-      let i = this.getIndexToInsert(date);
+      let i = this.getIndexByDate(date);
       this.keysSorted.splice(i, 0, key);
 
       //manage memory
@@ -65,13 +68,14 @@ class Memory {
         this.dataValues.delete(this.keysSorted.shift());
       }
 
-      console.log(
-        this.keysSorted.length + ". added: " + date + " (" + subfolder + ")"
+      this.logger.log(
+        "info",
+        this.keysSorted.length + ". Add: " + key + " (" + subfolder + ")"
       );
     }
   };
 
-  getIndex = (key) => {
+  getIndexByKey = (key) => {
     for (var i = this.keysSorted.length - 1; i >= 0; i--) {
       if (this.keysSorted[i] === key) {
         break;
@@ -80,7 +84,7 @@ class Memory {
     return i + 1;
   };
 
-  getIndexToInsert = (date) => {
+  getIndexByDate = (date) => {
     let i = 0;
     for (i = this.keysSorted.length - 1; i >= 0; i--) {
       let a = new Date(

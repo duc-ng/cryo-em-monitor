@@ -33,9 +33,9 @@ export default function TableRowSingle(props) {
   const classes = useStyles();
   const dataContext = React.useContext(DataContext);
 
-  const handleCollapse = () => {
+  const handleCollapse = async () => {
     setOpen(!open);
-    dataContext.fetchImages(row.key, setImages);
+    setImages(await dataContext.fetchImages(row.key));
   };
 
   const RowValues = () => {

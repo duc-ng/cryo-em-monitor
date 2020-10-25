@@ -6,6 +6,7 @@
 /.vscode
 /node_modules
 /data_test/data4Web
+/logs
 
 # testing
 /coverage

@@ -4,12 +4,13 @@
     "api_port": 5000,
     "rootDir": "data_test/data4Web",
     "rootDirDaysOld": 100,
-    "refreshDataMs": 30000,
+    "refreshDataMs": 15000,
     "heapAllocation": "auto",
     "noData": {
       "ms": 10000,
       "message": "No data for 10 seconds."
-    }
+    },
+    "avgDataPointSize": 1400
   },
 
   "microscopes": [

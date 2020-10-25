@@ -11,10 +11,6 @@ import config from "./../../../config.json";
 
 const marks = [
   {
-    value: null,
-    label: "All",
-  },
-  {
     value: 1,
     label: "Last 1h",
   },
@@ -42,10 +38,14 @@ const marks = [
     value: 336,
     label: "Last 14d",
   },
+  {
+    value: null,
+    label: "All",
+  },
 ];
 
 export default function Filter() {
-  const [value, setValue] = React.useState(null);
+  const [value, setValue] = React.useState(3);
   const dataContext = React.useContext(DataContext);
 
   return (
@@ -76,7 +76,7 @@ export default function Filter() {
               }
               onChange={(date) => {
                 setValue(undefined);
-                dataContext.setDateFrom(date);
+                dataContext.setFromTo(date, dataContext.to);
               }}
               label="From"
               format="MMM Do"
@@ -90,7 +90,7 @@ export default function Filter() {
               value={dataContext.dateTo}
               onChange={(date) => {
                 setValue(undefined);
-                dataContext.setDateTo(date);
+                dataContext.setFromTo(dataContext.from, date);
               }}
               label="To"
               format="MMM Do"
@@ -107,12 +107,12 @@ export default function Filter() {
                 color={item.value === value ? "primary" : "default"}
                 onClick={() => {
                   setValue(item.value);
-                  dataContext.setDateFrom(
+                  dataContext.setFromTo(
                     item.value === null
                       ? undefined
-                      : new Date(Date.now() - item.value * 60 * 60 * 1000)
+                      : new Date(Date.now() - item.value * 60 * 60 * 1000),
+                    undefined
                   );
-                  dataContext.setDateTo(undefined);
                 }}
               >
                 <Typography variant="button">{item.label}</Typography>

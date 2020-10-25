@@ -5,13 +5,22 @@ Monitor for Cryo-EM data of the Max Planck Institute of Biochemistry.
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ## Latest update
-- 11.10.20
- - removed websockets
- - replaced react-scrollspy-nav with react-scroll
- - added: API.js 
- - reader improved
- - added microscope switching
 
+- 22.10.20
+
+  - start time: 5-10s
+  - fix bugs: image filter, live update, header label, reader
+  - added Logger
+  - rendering optimized
+  - default: data of last 3h
+
+- 11.10.20
+
+  - removed websockets
+  - replaced react-scrollspy-nav with react-scroll
+  - added: API.js
+  - reader improved
+  - added microscope switching
 
 - 17.9.20
 
@@ -87,17 +96,27 @@ Get, build and run:
 git clone https://github.com/duc-ng/web-monitoring.git
 cd web-monitoring
 npm install                   #update node modules
+npm audit fix                 #fix vulnerabilities
 npm run build                 #build app
 node app.js                   #start server
 ```
-The application can be opened at: http://localhost:5000
 
-## Configure
+- The application can be opened at: http://localhost:5000
 
-Edit host, port, etc:
+- Configure host, port, etc: **src/config.json**
+
+## Development
+
+Start react development server (+auto refresh after save)
 
 ```bash
-./src/config.json
+npm run dev
+```
+
+Analyze app size
+
+```bash
+npm run analyze
 ```
 
 ## App structure
