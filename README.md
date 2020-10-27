@@ -109,7 +109,7 @@ node app.js                   #start server
 1. Configure host, port, etc. in: `src/config.json`
 2. Build app. `npm run build`
 
-`app`
+### **`app`**
 | Name | Type | Default | Description |
 | ------------- | ------------- |------------- |------------- |
 | **api_host** | String | "localhost" | Host |
@@ -122,7 +122,7 @@ node app.js                   #start server
 | heapAllocation | "auto" or Number | "auto" | max. heap size in Byte |
 | avgDataPointSize | Number | 1400 | avg. size of 1 datapoint in Byte for heap allocation |
 
-`key`
+### **`key`**
 | Name | Type | Default | Description |
 | ------------- | ------------- |------------- |------------- |
 | key | String | "\_mmsImageKey_Value" | key name of data point |
