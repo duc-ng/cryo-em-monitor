@@ -1,80 +1,155 @@
-import React, { useEffect, useRef } from "react";
-import Chartjs from "chart.js";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import Box from "@material-ui/core/Box";
+import React from "react";
+import Plot from "react-plotly.js";
 import SmallDivider from "./../../utils/SmallDivider";
+import Paper from "@material-ui/core/Paper";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Grid from "@material-ui/core/Grid";
 import { useTheme } from "@material-ui/core/styles";
+import { DataContext } from "./../../global/Data";
+import config from "./../../../config.json";
 
-const chartConfig = {
-  type: "bar",
-  data: {
-    labels: [12, 19, 3, 5, 2, 3, 12, 19, 3, 5, 2, 3, 12, 19, 3, 5, 2, 3],
-    datasets: [
-      {
-        data: [12, 19, 3, 5, 2, 3, 12, 19, 3, 5, 2, 3, 12, 19, 3, 5, 2, 3],
-        backgroundColor: "rgba(54, 162, 235, 0.2)",
-        borderColor: "rgba(54, 162, 235, 1)",
-        borderWidth: 1,
+export default function PlotMain() {
+  const theme = useTheme();
+  const dataContext = React.useContext(DataContext);
+
+  const dataRaw = ["main", "1", "2", "3", "4"].map((k) =>
+    dataContext.data
+      .map((item) => item[config["times.star"][k]])
+      .filter((item) => item !== 0)
+  );
+
+  const data = [
+    {
+      x: dataRaw[0],
+      type: "histogram",
+      mode: "lines",
+      marker: { color: theme.palette.info.light },
+      xbins: {
+        size: 10000,
       },
-    ],
-  },
-  options: {
-    scales: {
-      yAxes: [
+      hoverinfo: "y",
+    },
+  ];
+
+  const updatemenus = [
+    {
+      buttons: [
         {
-          ticks: {
-            beginAtZero: true,
-          },
+          args: ["x", [dataRaw[0]]],
+          label: "Images acquired",
+          method: "restyle",
+        },
+        {
+          args: ["x", [dataRaw[1]]],
+          label: "Images imported",
+          method: "restyle",
+        },
+        {
+          args: ["x", [dataRaw[2]]],
+          label: "Images processed",
+          method: "restyle",
+        },
+        {
+          args: ["x", [dataRaw[3]]],
+          label: "Images exported",
+          method: "restyle",
+        },
+        {
+          args: ["x", [dataRaw[4]]],
+          label: "Processing errors",
+          method: "restyle",
         },
       ],
+      showactive: true,
+      active: 0,
+      type: "dropdown",
+      x: 1,
+      y: 1.43,
+      yref: "paper",
+      font: {
+        color: theme.palette.primary.main,
+        size: 15,
+      },
+      bgcolor: theme.palette.background.paper,
+      bordercolor: "rgba(0,0,0,0)",
     },
-    legend: {
-      display: false,
+  ];
+
+  const layout = {
+    autosize: true,
+    height: 270,
+    title: {
+      text: "Volume",
+      x: 0,
+      xref: "container",
+      pad: {
+        l: 17,
+      },
     },
-    maintainAspectRatio: false, //adjust height
-  },
-};
+    margin: {
+      t: 80,
+      b: 50,
+      l: 40,
+      r: 40,
+    },
+    paper_bgcolor: "rgba(0,0,0,0)",
+    plot_bgcolor: "rgba(0,0,0,0)",
+    hovermode: "closest",
+    updatemenus: updatemenus,
+    bargap: 0.02,
+    font: {
+      family: theme.typography.fontFamily,
+      color: theme.palette.text.primary,
+    },
+    titlefont: {
+      size: 15,
+      color: theme.palette.warning.main,
+    },
+    xaxis: {
+      type: "date",
+      showgrid: false,
+      rangemode: "tozero",
+    },
+    yaxis: {
+      rangemode: "tozero",
+      showgrid: false,
+    },
+  };
 
-export default function Chart() {
-  const theme = useTheme();
-  const chartContainer = useRef(null);
+  const configuration = {
+    displayModeBar: false,
+  };
 
-  useEffect(() => {
-    if (chartContainer && chartContainer.current) {
-      new Chartjs(chartContainer.current, chartConfig);
-      // const newChartInstance = new Chartjs(chartContainer.current, chartConfig);
-    }
-  }, [chartContainer]);
+  const style = {
+    width: "100%",
+  };
 
-  console.log("Updated: Plot main");
+  console.log("Updated: plot main");
   return (
     <Grid container>
       <Grid item xs={12}>
         <div id="section_volume" />
-        <Paper>
-          <Box p={2}>
-            <Typography
-              variant="body1"
-              style={{ color: theme.palette.warning.main }}
-              id="section_2"
+        {dataContext.data.length !== 0 ? (
+          <Paper>
+            <Plot
+              data={data}
+              layout={layout}
+              config={configuration}
+              style={style}
+            />
+          </Paper>
+        ) : (
+          <Paper style={{ height: layout.height }}>
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+              style={{ height: "100%" }}
             >
-              Volume
-            </Typography>
-            <Typography
-              variant="body2"
-              gutterBottom
-              color="textSecondary"
-              paragraph={true}
-            >
-              Data points per hour
-            </Typography>
-            <div style={{ height: 320 }}>
-              <canvas ref={chartContainer} />
-            </div>
-          </Box>
-        </Paper>
+              <CircularProgress color="primary" />
+            </Grid>
+          </Paper>
+        )}
         <SmallDivider />
       </Grid>
     </Grid>

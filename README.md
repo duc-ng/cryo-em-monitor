@@ -13,6 +13,7 @@ These instructions will get you a copy of the project up and running on your loc
   - added Logger
   - rendering optimized
   - default: data of last 3h
+  - reader improved
 
 - 11.10.20
 
@@ -95,15 +96,52 @@ Get, build and run:
 ```bash
 git clone https://github.com/duc-ng/web-monitoring.git
 cd web-monitoring
-npm install                   #update node modules
-npm audit fix                 #fix vulnerabilities
+npm install                   #install node modules
+npm audit fix                 #fix modules
 npm run build                 #build app
 node app.js                   #start server
 ```
 
 - The application can be opened at: http://localhost:5000
 
-- Configure host, port, etc: **src/config.json**
+## Configuration
+
+1. Configure host, port, etc. in: `src/config.json`
+2. Build app. `npm run build`
+
+`app`
+| Name | Type | Default | Description |
+| ------------- | ------------- |------------- |------------- |
+| **api_host** | String | "localhost" | Host |
+| **api_port** | Number | 5000 | Port |
+| **rootDir** | Path | "data_test/data4Web" | path to data directory (relative or absolute) |
+| dataNotOlderThan | Number | 100 | data won't be read, if older than x days |
+| refreshDataMs | Number | 5000 | Refresh rate for data fetching in ms (client)  |
+| noData.ms | Number | 5000 | Notification after x ms, if no data has arrived |
+| noData.message | String | "No data for 10 seconds." | Notification message |
+| heapAllocation | "auto" or Number | "auto" | max. heap size in Byte |
+| avgDataPointSize | Number | 1400 | avg. size of 1 datapoint in Byte for heap allocation |
+
+`key`
+| Name | Type | Default | Description |
+| ------------- | ------------- |------------- |------------- |
+| key | String | "\_mmsImageKey_Value" | key name of data point |
+
+`microscopes`
+
+...
+
+`times.star`
+
+...
+
+`data.star`
+
+...
+
+`images.star`
+
+...
 
 ## Development
 

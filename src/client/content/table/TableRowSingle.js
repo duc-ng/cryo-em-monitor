@@ -51,14 +51,19 @@ export default function TableRowSingle(props) {
 
     //round values
     for (let i = 0; i < nrPlots; i++) {
-      const value = row.data[config["data.star"][i].value];
-      value !== undefined && Number(value) === value && value % 1 !== 0
-        ? tableCell.push(
-            <TableCell align="right" key={i}>
-              {value.toFixed(4)}
-            </TableCell>
-          )
-        : tableCell.push(<TableCell key={i} />);
+      let value = row.data[config["data.star"][i].value];
+      if (value !== undefined && Number(value) === value) {
+        if (value % 1 !== 0) {
+          value = value.toFixed(4);
+        }
+        tableCell.push(
+          <TableCell align="right" key={i}>
+            {value}
+          </TableCell>
+        );
+      } else {
+        tableCell.push(<TableCell key={i} />);
+      }
     }
     return tableCell;
   };

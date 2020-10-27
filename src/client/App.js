@@ -47,7 +47,7 @@ export default function App() {
             >
               <Toolbar />
               <Status />
-              {/* <PlotMain /> */}
+              <PlotMain />
               <TableContainer />
               <ImageContainer />
               <PlotContainer />

@@ -3,62 +3,53 @@ const fspromises = require("fs").promises;
 const config = require("./../config.json");
 
 /*
-  convert star-file to object
-  assumption: first value is fixed (key) 
+  converting star-file to object
+  files have to be no older than x days
 */
 class Reader {
+
   async readStarFile(file) {
     const { birthtime } = fs.statSync(file);
-    const { rootDirDaysOld } = config.app;
-
-    if (new Date() - birthtime < rootDirDaysOld * 24 * 60 * 60 * 1000) {
+    if (new Date() - birthtime < config.app.dataNotOlderThan * 24 * 60 * 60 * 1000) {
+      
       //read file
       var data = await fspromises.readFile(file, "utf8");
       var substrings = data.split(/[\n,\t]+/);
+      var keys = [];
+      var values = [];
 
       //remove empty strings and first two lines
       substrings = substrings.map((e)=>e.trim())
-      substrings = substrings.filter(Boolean)
+      substrings = substrings.filter(Boolean);
       substrings.shift();
       substrings.shift();
 
-      //get number of properties
-      var valueCount = 0
+      //format and get keys/values
       for (i = 0; i < substrings.length; i++) {
-        if (substrings[i][0]=="_"){
-          valueCount++;
+        if (substrings[i].startsWith("_")) {
+          keys.push(substrings[i]);
         } else {
-          break;
-        }
-      }
+          //text
+          substrings[i] = substrings[i].replace('"', "");
+          substrings[i] = substrings[i].replace('"', "");
 
-      //clean data
-      for (i = 0; i < substrings.length; i++) {
-        // substrings[i] = substrings[i].trim();
-        substrings[i] = substrings[i].replace('"', "");
-        substrings[i] = substrings[i].replace('"', "");
+          //date
+          if (file.endsWith("times.star") && substrings[i][10] === "-") {
+            substrings[i] = substrings[i].replaceAt(10, " ");
+          }
 
-        //dates
-        if (
-          i > valueCount &&
-          file.endsWith("times.star") &&
-          substrings[i].length > 1
-        ) {
-          substrings[i] = substrings[i].replaceAt(10, " ");
-        }
-
-        //numeric values
-        if (i >= valueCount && substrings[i].match(/^[0-9.]+$/) != null) {
-          substrings[i] = parseFloat(substrings[i]);
+          //numerics
+          if (substrings[i].match(/^[0-9.]+$/) != null) {
+            substrings[i] = parseFloat(substrings[i]);
+          }
+          values.push(substrings[i]);
         }
       }
 
       //convert to object
       var object = {};
-      for (var i = 0; i < valueCount; ++i)
-        object[substrings[i]] = substrings[i + valueCount];
+      for (var i = 0; i < keys.length; ++i) object[keys[i]] = values[i];
 
-      //Return
       return object;
     }
   }
