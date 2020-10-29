@@ -3,7 +3,6 @@ import Plot from "react-plotly.js";
 import Paper from "@material-ui/core/Paper";
 import { withStyles } from "@material-ui/core/styles";
 import { DataContext } from "./../../global/Data";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
 
 class Graphs extends Component {
@@ -131,7 +130,7 @@ class Graphs extends Component {
         modebar: {
           bgcolor: "rgba(0,0,0,0)",
           color: props.theme.palette.divider,
-        }
+        },
       },
       config: {
         // displayModeBar: true,
@@ -146,7 +145,7 @@ class Graphs extends Component {
           "toggleSpikelines",
           "toggleHover",
           "hoverClosestCartesian",
-          "hoverCompareCartesian"
+          "hoverCompareCartesian",
         ],
       },
       style: {
@@ -188,7 +187,7 @@ class Graphs extends Component {
     var layout = this.state.layout;
     layout.title.text = this.props.title;
     layout.font.color = this.props.theme.palette.text.primary;
-    layout.modebar.color = this.props.theme.palette.divider
+    layout.modebar.color = this.props.theme.palette.divider;
     layout.xaxis.gridcolor = this.props.theme.palette.divider;
     layout.xaxis.linecolor = this.props.theme.palette.divider;
     layout.yaxis.gridcolor = this.props.theme.palette.divider;
@@ -216,7 +215,7 @@ class Graphs extends Component {
               alignItems="center"
               style={{ height: "100%" }}
             >
-              <CircularProgress color="primary" />
+              No Data
             </Grid>
           </Paper>
         )}

@@ -116,7 +116,7 @@ node app.js                   #start server
 | **api_port** | Number | 5000 | Port |
 | **rootDir** | Path | "data_test/data4Web" | path to data directory (relative or absolute) |
 | dataNotOlderThan | Number | 100 | data won't be read, if older than x days |
-| refreshDataMs | Number | 5000 | Refresh rate for data fetching in ms (client)  |
+| refreshDataMs | Number | 5000 | Refresh rate for data fetching in ms |
 | noData.ms | Number | 5000 | Notification after x ms, if no data has arrived |
 | noData.message | String | "No data for 10 seconds." | Notification message |
 | heapAllocation | "auto" or Number | "auto" | max. heap size in Byte |
@@ -149,7 +149,7 @@ node app.js                   #start server
 
 ## Development
 
-Start react development server (+auto refresh after save)
+Start react development server (+auto refresh after save) at: http://localhost:3000
 
 ```bash
 npm run dev

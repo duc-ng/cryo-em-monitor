@@ -4,7 +4,6 @@ import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
 import { DataContext } from "./../../global/Data";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Paper from "@material-ui/core/Paper";
 import SmallDivider from "./../../utils/SmallDivider";
 import config from "./../../../config.json";
@@ -58,7 +57,7 @@ const ImageButton = ({ handleCarousel, i }) => {
       <Button onClick={handleCarousel} className={classes.button}>
         {images[i] === undefined ? (
           <Box className={classes.skeleton}>
-            <CircularProgress color="primary" />
+            No Data
           </Box>
         ) : (
           <img

@@ -38,7 +38,6 @@ export default function Data(props) {
 
   //reset microscope
   const switchMicroscope = (val) => {
-    setCounter(0);
     setMicroscope(val);
     setData({
       dataAll: {
@@ -48,9 +47,7 @@ export default function Data(props) {
       dataFiltered: {
         val: [],
         img: [],
-      },
-      from: undefined,
-      to: undefined,
+      }
     });
   };
 
@@ -114,7 +111,7 @@ export default function Data(props) {
   const updateData = async (arr, from, to) => {
     const filteredData = arr.filter((item) => {
       const date = new Date(item[config["times.star"].main]);
-      const cond1 = from === undefined ? true : date - from > 0;
+      const cond1 = from === undefined ? true : date - from >= 0;
       const cond2 = to === undefined ? true : to - date > 0;
       return date !== 0 && date !== undefined && cond1 && cond2;
     });

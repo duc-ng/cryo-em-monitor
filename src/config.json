@@ -4,7 +4,7 @@
     "api_port": 5000,
     "rootDir": "data_test/data4Web",
     "dataNotOlderThan": 100,
-    "refreshDataMs": 15000,
+    "refreshDataMs": 30000,
     "noData": {
       "ms": 10000,
       "message": "No data for 10 seconds."
