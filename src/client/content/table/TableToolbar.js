@@ -66,7 +66,7 @@ export default function TableToolbar(props) {
                 color="textSecondary"
                 paragraph={true}
               >
-                Cras mattis consectetur purus sit amet fermentum.
+                All data recorded
               </Typography>
             </React.Fragment>
           )}

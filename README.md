@@ -14,6 +14,9 @@ These instructions will get you a copy of the project up and running on your loc
   - rendering optimized
   - default: data of last 3h
   - reader improved
+  - fix: Volume 
+  - fix: 24h format
+  - 
 
 - 11.10.20
 

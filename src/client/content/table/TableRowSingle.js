@@ -14,6 +14,9 @@ import GridList from "@material-ui/core/GridList";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import GridListTile from "@material-ui/core/GridListTile";
+import Dialog from "@material-ui/core/Dialog";
+import Slide from "@material-ui/core/Slide";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   img: {
@@ -22,6 +25,10 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       opacity: 0.7,
     },
+  },
+  imgzoom: {
+    height: 600,
+    width: "auto",
   },
 }));
 
@@ -68,6 +75,60 @@ export default function TableRowSingle(props) {
     return tableCell;
   };
 
+  //image popover
+  const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
+
+  //image button
+  const ImageContent = (props) => {
+    const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
+
+    const handleCarousel = () => {
+      setOpen(!open);
+    };
+
+    return (
+      <React.Fragment>
+        <Button onClick={handleCarousel}>
+          {props.item === undefined ? (
+            <Box>No Data</Box>
+          ) : (
+            <img
+              src={props.item.data}
+              alt={props.item.label}
+              className={classes.img}
+            />
+          )}
+        </Button>
+        <Dialog
+          open={open}
+          unmountOnExit
+          onClose={handleCarousel}
+          TransitionComponent={Transition}
+          PaperProps={{
+            classes: {
+              root: classes.dialogpaper,
+            },
+          }}
+          BackdropProps={{
+            classes: {
+              root: classes.dialog,
+            },
+          }}
+          maxWidth="xl"
+        >
+          <img
+            src={props.item.data}
+            alt={props.item.label}
+            className={classes.imgzoom}
+          />
+        </Dialog>
+      </React.Fragment>
+    );
+  };
+
   return (
     <React.Fragment>
       {/* Main row */}
@@ -107,11 +168,12 @@ export default function TableRowSingle(props) {
                 >
                   {images.map((item, i) => (
                     <GridListTile key={i}>
-                      <img
+                      {/* <img
                         className={classes.img}
                         alt={item.label}
                         src={item.data}
-                      />
+                      /> */}
+                      <ImageContent item={item} />
                     </GridListTile>
                   ))}
                 </GridList>

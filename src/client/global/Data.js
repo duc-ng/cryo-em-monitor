@@ -6,7 +6,7 @@ import "moment/locale/en-gb";
 //24hours instead of AM/PM + format
 moment.locale("en", {
   longDateFormat: {
-    LT: "h:mm:ss", //added :ss
+    LT: "H:mm:ss", //added :ss
     L: "MM/DD/YYYY",
     l: "M/D/YYYY",
     LL: "MMMM Do YYYY",

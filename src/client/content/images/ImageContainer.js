@@ -134,7 +134,7 @@ export default function ImageContainer(props) {
               color="textSecondary"
               paragraph={true}
             >
-              Cras mattis consectetur purus sit amet fermentum.
+              Most recent images recorded
             </Typography>
             <GridList
               className={classes.gridList}
