@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.default,
   },
   button: {
-    color: theme.palette.text.secondary
-  }
+    color: theme.palette.text.secondary,
+  },
 }));
 
 export default function PlotsFullscreen(props) {
@@ -61,13 +61,13 @@ export default function PlotsFullscreen(props) {
           </Toolbar>
         </AppBar>
         <Grid container justify="space-around" className={classes.container}>
-          {Object.keys(config["data.star"]).map((key) => {
+          {config["data.star"].map((x, i) => {
             return (
-              <Grid item xs={4} key={key}>
+              <Grid item xs={4} key={i}>
                 <Box m={1}>
                   <Plot
-                    attr={props.calculateData(key)}
-                    title={config["data.star"][key].name}
+                    attr={props.calculateData(i)}
+                    title={config["data.star"][i].label}
                     counter={dataContext.counter}
                   />
                 </Box>

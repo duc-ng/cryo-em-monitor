@@ -24,14 +24,8 @@ export default function Data(props) {
   const [counter, setCounter] = React.useState(0); //force rerender
   const [microscope, setMicroscope] = React.useState(0);
   const [data, setData] = React.useState({
-    dataAll: {
-      val: [],
-      img: [],
-    },
-    dataFiltered: {
-      val: [],
-      img: [],
-    },
+    dataAll: [],
+    dataFiltered: [],
     from: new Date(Date.now() - 3 * 60 * 60 * 1000), //last 3h
     to: undefined,
   });
@@ -40,30 +34,9 @@ export default function Data(props) {
   const switchMicroscope = (val) => {
     setMicroscope(val);
     setData({
-      dataAll: {
-        val: [],
-        img: [],
-      },
-      dataFiltered: {
-        val: [],
-        img: [],
-      }
+      dataAll: [],
+      dataFiltered: [],
     });
-  };
-
-  //fetch images
-  const fetchImages = async (key) => {
-    const imageURL =
-      "http://" +
-      config.app.api_host +
-      ":" +
-      config.app.api_port +
-      "/images?key=" +
-      key +
-      "&microscope=" +
-      microscope;
-    const res = await fetch(imageURL);
-    return res.json();
   };
 
   //increase Counter +1
@@ -73,10 +46,10 @@ export default function Data(props) {
 
   //get last date
   const getLastDate = () => {
-    const arr = data.dataFiltered.val;
+    const arr = data.dataFiltered;
     return arr.length === 0
       ? 0
-      : arr[arr.length - 1][config["times.star"].main];
+      : arr[arr.length - 1][config["times.star"][0].value];
   };
 
   //get last key
@@ -85,14 +58,11 @@ export default function Data(props) {
   };
 
   //set fetched data
-  const setFetchedData = async (newData, images) => {
-    const all = [...data.dataAll.val, ...newData];
+  const setFetchedData = async (newData) => {
+    const all = [...data.dataAll, ...newData];
     setData({
       ...data,
-      dataAll: {
-        val: all,
-        img: images,
-      },
+      dataAll: all,
       dataFiltered: await updateData(all, data.from, data.to),
     });
   };
@@ -101,7 +71,7 @@ export default function Data(props) {
   const setFromTo = async (from, to) => {
     setData({
       ...data,
-      dataFiltered: await updateData(data.dataAll.val, from, to),
+      dataFiltered: await updateData(data.dataAll, from, to),
       from: from,
       to: to,
     });
@@ -110,23 +80,12 @@ export default function Data(props) {
   //update: data + images
   const updateData = async (arr, from, to) => {
     const filteredData = arr.filter((item) => {
-      const date = new Date(item[config["times.star"].main]);
+      const date = new Date(item[config["times.star"][0].value]);
       const cond1 = from === undefined ? true : date - from >= 0;
       const cond2 = to === undefined ? true : to - date > 0;
       return date !== 0 && date !== undefined && cond1 && cond2;
     });
-
-    const imageKey =
-      data.dataAll.img.length === 0 ? undefined : data.dataAll.img[0].key;
-    const lastDataKey = getLastKey(filteredData);
-    let imageFiltered = data.dataAll.img;
-
-    if (filteredData.length === 0) {
-      imageFiltered = [];
-    } else if (lastDataKey !== imageKey) {
-      imageFiltered = await fetchImages(lastDataKey);
-    }
-    return { val: filteredData, img: imageFiltered };
+    return filteredData;
   };
 
   console.log("Updated: Data");
@@ -134,19 +93,18 @@ export default function Data(props) {
   return (
     <DataContext.Provider
       value={{
-        data: data.dataFiltered.val,
-        images: data.dataFiltered.img,
-        counter: data.dataFiltered.val.length + counter,
+        dataAll: data.dataAll,
+        data: data.dataFiltered,
+        dateFrom: data.from,
+        dateTo: data.to,
+        counter: data.dataFiltered.length + counter,
         incCounter: incCounter,
         lastDate: getLastDate(),
         setFetchedData: setFetchedData,
-        fetchImages: fetchImages,
-        dateFrom: data.from,
-        dateTo: data.to,
         setFromTo: setFromTo,
-        dataAll: data.dataAll.val,
         switchMicroscope: switchMicroscope,
         microscope: microscope,
+        getLastKey: getLastKey,
       }}
     >
       {props.children}

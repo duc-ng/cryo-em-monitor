@@ -7,11 +7,12 @@ const config = require("./../config.json");
   files have to be no older than x days
 */
 class Reader {
-
   async readStarFile(file) {
     const { birthtime } = fs.statSync(file);
-    if (new Date() - birthtime < config.app.dataNotOlderThan * 24 * 60 * 60 * 1000) {
-      
+    if (
+      new Date() - birthtime <
+      config.app.dataNotOlderThan * 24 * 60 * 60 * 1000
+    ) {
       //read file
       var data = await fspromises.readFile(file, "utf8");
       var substrings = data.split(/[\n,\t]+/);
@@ -19,7 +20,7 @@ class Reader {
       var values = [];
 
       //remove empty strings and first two lines
-      substrings = substrings.map((e)=>e.trim())
+      substrings = substrings.map((e) => e.trim());
       substrings = substrings.filter(Boolean);
       substrings.shift();
       substrings.shift();
@@ -38,8 +39,8 @@ class Reader {
             substrings[i] = substrings[i].replaceAt(10, " ");
           }
 
-          //numerics
-          if (substrings[i].match(/^[0-9.]+$/) != null) {
+          //numerics (e.g. 0.123 or 4.214e-05)
+          if (substrings[i].match(/^[0-9.e-]+$/) != null) {
             substrings[i] = parseFloat(substrings[i]);
           }
           values.push(substrings[i]);

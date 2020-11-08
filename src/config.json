@@ -2,15 +2,20 @@
   "app": {
     "api_host": "localhost",
     "api_port": 5000,
-    "rootDir": "data_test/data4Web",
-    "dataNotOlderThan": 100,
+    "rootDir": "/Users/duc/Desktop/data_test/data4Web",
+    "dataNotOlderThan": 7,
     "refreshDataMs": 30000,
-    "noData": {
-      "ms": 10000,
-      "message": "No data for 10 seconds."
-    },
     "heapAllocation": "auto",
-    "avgDataPointSize": 1400
+    "avgDataPointSize": 1400,
+    "noData": {
+      "ms": 300000,
+      "message": "No data for 5 minutes."
+    }
+  },
+
+  "test": {
+    "loopMs": 100,
+    "folder": "Titan1"
   },
 
   "microscopes": [
@@ -23,125 +28,108 @@
 
   "key": "_mmsImageKey_Value",
 
-  "times.star": {
-    "main": "_mmsdateAuqired_Value",
-    "1": "_mmsdateImported_Value",
-    "2": "_mmsdateProcessed_Value",
-    "3": "_mmsdateExported_Value",
-    "4": "_mmsdateError_Value"
-  },
+  "times.star": [
+    { "label": "Images acquired", "value": "_mmsdateAuqired_Value" },
+    { "label": "Images imported", "value": "_mmsdateImported_Value" },
+    { "label": "Images processed", "value": "_mmsdateProcessed_Value" },
+    { "label": "Images exported", "value": "_mmsdateExported_Value" },
+    { "label": "Images errors", "value": "_mmsdateError_Value" }
+  ],
 
-  "data.star": {
-    "0": {
-      "name": "Mean",
+  "data.star": [
+    {
+      "label": "Mean",
       "value": "_mmsmean_Value",
       "info": "_mmsmean_Info",
-      "plot": {
-        "maxOptimum": 0.6,
-        "minOptimum": 0.2
-      }
+      "maxOptimum": 0.6,
+      "minOptimum": 0.2
     },
-    "1": {
-      "name": "Drift",
+    {
+      "label": "Drift",
       "value": "_mmsdrift_Value",
       "info": "_mmsdrift_Info",
-      "plot": {
-        "maxOptimum": 0.6,
-        "minOptimum": 0.2
-      }
+      "maxOptimum": 0.6,
+      "minOptimum": 0.2
     },
-    "2": {
-      "name": "Iciness",
+    {
+      "label": "Iciness",
       "value": "_mmsiciness_Value",
       "info": "_mmsiciness_Info",
-      "plot": {
-        "maxOptimum": 0.9,
-        "minOptimum": 0.1
-      }
+      "maxOptimum": 0.9,
+      "minOptimum": 0.1
     },
-    "3": {
-      "name": "Defocus",
+    {
+      "label": "Defocus",
       "value": "_mmsdefocus_Value",
       "info": "_mmsdefocus_Info",
-      "plot": {
-        "maxOptimum": 0.0,
-        "minOptimum": 0.0
-      }
+      "maxOptimum": 0.0,
+      "minOptimum": 0.0
     },
-    "4": {
-      "name": "Resolution",
+    {
+      "label": "Resolution",
       "value": "_mmsresolution_Value",
       "info": "_mmsresolution_Info",
-      "plot": {
-        "maxOptimum": 0.5,
-        "minOptimum": 0.4
-      }
+      "maxOptimum": 0.5,
+      "minOptimum": 0.4
     },
-    "5": {
-      "name": "CCvalue",
+    {
+      "label": "CCvalue",
       "value": "_mmsccOfCtfFit_Value",
       "info": "_mmsccOfCtfFit_Info",
-      "plot": {
-        "maxOptimum": 0.7,
-        "minOptimum": 0.3
-      }
+      "maxOptimum": 0.7,
+      "minOptimum": 0.3
     },
-
-    "6": {
-      "name": "Astigmatism",
+    {
+      "label": "Astigmatism",
       "value": "_mmsastigmatism_Value",
       "info": "_mmsastigmatism_Info",
-      "plot": {
-        "maxOptimum": 0.9,
-        "minOptimum": 0.0
-      }
+      "maxOptimum": 0.9,
+      "minOptimum": 0.0
     },
-    "7": {
-      "name": "NumberOfParticles",
+    {
+      "label": "NumberOfParticles",
       "value": "_mmnumberOfParticles_Value",
       "info": "_mmnumberOfParticles_Info",
-      "plot": {
-        "maxOptimum": 10000,
-        "minOptimum": 0.0
-      }
+      "maxOptimum": 10000,
+      "minOptimum": 0.0
     }
-  },
+  ],
 
-  "images.star": {
-    "0": {
-      "name": "mmsrawAvg",
-      "file": "_mmsrawAvg_Name",
+  "images.star": [
+    {
+      "label": "mmsrawAvg",
+      "value": "_mmsrawAvg_Name",
       "info": "_mmsrawAvg_Info"
     },
-    "1": {
-      "name": "mmspsRawAvg",
-      "file": "_mmspsRawAvg_Name",
+    {
+      "label": "mmspsRawAvg",
+      "value": "_mmspsRawAvg_Name",
       "info": "_mmspsRawAvg_Info"
     },
-    "2": {
-      "name": "mmsmotionCorrAvg",
-      "file": "_mmsmotionCorrAvg_Name",
+    {
+      "label": "mmsmotionCorrAvg",
+      "value": "_mmsmotionCorrAvg_Name",
       "info": "_mmsmotionCorrAvg_Info"
     },
-    "3": {
-      "name": "mmspsMotionCorrAvg",
-      "file": "_mmspsMotionCorrAvg_Name",
+    {
+      "label": "mmspsMotionCorrAvg",
+      "value": "_mmspsMotionCorrAvg_Name",
       "info": "_mmspsMotionCorrAvg_Info"
     },
-    "4": {
-      "name": "mmsdriftplot",
-      "file": "_mmsdriftplot_Name",
+    {
+      "label": "mmsdriftplot",
+      "value": "_mmsdriftplot_Name",
       "info": "_mmsdriftplot_Info"
     },
-    "5": {
-      "name": "mmsctfdiag",
-      "file": "_mmsctfdiag_Name",
+    {
+      "label": "mmsctfdiag",
+      "value": "_mmsctfdiag_Name",
       "info": "_mmsctfdiag_Info"
     },
-    "6": {
-      "name": "mmspick",
-      "file": "_mmspick_Name",
+    {
+      "label": "mmspick",
+      "value": "_mmspick_Name",
       "info": "_mmspick_Info"
     }
-  }
+  ]
 }

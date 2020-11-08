@@ -10,8 +10,6 @@ import SettingsBrightnessIcon from "@material-ui/icons/SettingsBrightness";
 import Badge from "@material-ui/core/Badge";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import Slide from "@material-ui/core/Slide";
-import useScrollTrigger from "@material-ui/core/useScrollTrigger";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import Switch from "@material-ui/core/Switch";
 import Box from "@material-ui/core/Box";
@@ -61,17 +59,6 @@ export default function Header(props) {
   const dataContext = React.useContext(DataContext);
   const themeContext = React.useContext(ThemeContext);
   const [tabValue, setTabValue] = React.useState(0);
-
-  //hide header when scrolling down
-  function HideOnScroll(props) {
-    const { children } = props;
-    const trigger = useScrollTrigger();
-    return (
-      <Slide appear={false} direction="down" in={!trigger}>
-        {children}
-      </Slide>
-    );
-  }
 
   //Displaying sidebar on mobile
   function SideBarButton() {
@@ -168,25 +155,23 @@ export default function Header(props) {
   //render
   console.log("Updated: header");
   return (
-    <HideOnScroll {...props}>
-      <AppBar color="inherit" className={classes.appbar}>
-        <Toolbar variant="dense" className={classes.toolbar}>
-          <Grid container justify="space-between" alignItems="center">
-            <Grid item xs={3}>
-              <DarkModeToggle />
-            </Grid>
-            <Grid item xs={6}>
-              <TabSwitch />
-            </Grid>
-            <Grid item xs={3}>
-              <Grid container alignItems="center" justify="flex-end">
-                <GithubButton />
-                <SideBarButton />
-              </Grid>
+    <AppBar color="inherit" className={classes.appbar}>
+      <Toolbar variant="dense" className={classes.toolbar}>
+        <Grid container justify="space-between" alignItems="center">
+          <Grid item xs={3}>
+            <DarkModeToggle />
+          </Grid>
+          <Grid item xs={6}>
+            <TabSwitch />
+          </Grid>
+          <Grid item xs={3}>
+            <Grid container alignItems="center" justify="flex-end">
+              <GithubButton />
+              <SideBarButton />
             </Grid>
           </Grid>
-        </Toolbar>
-      </AppBar>
-    </HideOnScroll>
+        </Grid>
+      </Toolbar>
+    </AppBar>
   );
 }

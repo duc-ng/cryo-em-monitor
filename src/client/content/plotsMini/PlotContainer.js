@@ -11,20 +11,19 @@ export default function PlotContainer(props) {
 
   //clean data
   const calculateData = (index) => {
-    const yName = config["data.star"][index].value;
-    const { minOptimum, maxOptimum } = config["data.star"][index].plot;
+    const { minOptimum, maxOptimum, value } = config["data.star"][index];
 
     const filterValues = (isTrace1, isX) => {
       return dataContext.data
         .filter((item) => {
-          return item[yName] !== undefined;
+          return item[value] !== undefined;
         })
         .filter((item) => {
-          const cond = item[yName] >= minOptimum && item[yName] <= maxOptimum;
+          const cond = item[value] >= minOptimum && item[value] <= maxOptimum;
           return isTrace1 ? cond : !cond;
         })
         .map((item) => {
-          return isX ? item[config["times.star"].main] : item[yName];
+          return isX ? item[config["times.star"][0].value] : item[value];
         });
     };
 
@@ -46,12 +45,12 @@ export default function PlotContainer(props) {
       <PlotsFullscreen calculateData={calculateData} />
       <Grid container justify="center" spacing={2}>
         <div id="section_plots" />
-        {Object.keys(config["data.star"]).map((key) => {
+        {config["data.star"].map((x, i) => {
           return (
-            <Grid item xs={12} sm={6} key={key}>
+            <Grid item xs={12} sm={6} key={i}>
               <PlotMini
-                attr={calculateData(key)}
-                title={config["data.star"][key].name}
+                attr={calculateData(i)}
+                title={config["data.star"][i].label}
               />
             </Grid>
           );

@@ -6,6 +6,15 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Latest update
 
+- 08.11.20
+  - fix table image still shown after changing page
+  - remove header scroll
+  - image loading parallelized + image error shown
+  - added Test class
+  - better structure in config
+  - Test: 24.000 datapoints: ~7-8s
+
+
 - 22.10.20
 
   - start time: 5-10s
@@ -14,9 +23,8 @@ These instructions will get you a copy of the project up and running on your loc
   - rendering optimized
   - default: data of last 3h
   - reader improved
-  - fix: Volume 
+  - fix: Volume
   - fix: 24h format
-  - 
 
 - 11.10.20
 
@@ -35,39 +43,7 @@ These instructions will get you a copy of the project up and running on your loc
   - robust reader + syncing
   - Test: 10.000 files ✓
 
-- 7.9.20
 
-  - header: scrollable Tabs, hides on scroll, github button
-  - global state management (React context API)
-  - global theming + darkmode
-  - overall speed improvements (less rendering)
-  - added sidebar
-  - improved filter + datepicker
-  - code splitting + clean src structure
-  - image preview in one row + extension possible
-  - image gallery (lazy load) + play button
-  - navigation in sidebar
-  - update on latest entries in sidebar
-  - export (selected) data to .xlsx files
-  - display date format in text
-
-- 22.7.20
-
-  - load test: added sorted array
-  - realtime update fixed
-  - config: color plots by value
-  - add histograms
-  - fix: hover on plot shows y-value
-  - added fullscreen view
-  - added notification, if no data has arrived for time x
-  - images not in memory anymore => read with fetch request
-  - fix: reading problems with star files
-
-- Problems
-  - Two config sources
-  - race condition at client when receiving high volume of datapoints
-  - reading delay when folder is added is unsafe
-  - ping time-out -> wrong count
 
 ## Requirements
 
@@ -101,7 +77,7 @@ git clone https://github.com/duc-ng/web-monitoring.git
 cd web-monitoring
 npm install                   #install node modules
 npm audit fix                 #fix modules
-npm run build                 #build app
+npm run build                 #build react app
 node app.js                   #start server
 ```
 
@@ -109,44 +85,42 @@ node app.js                   #start server
 
 ## Configuration
 
-1. Configure host, port, etc. in: `src/config.json`
-2. Build app. `npm run build`
+1. Configure host, port, etc. `src/config.json`
+2. Build app: `npm run build`
 
 #### **`app`**
-| Name | Type | Default | Description |
-| ------------- | ------------- |------------- |------------- |
-| **api_host** | String | "localhost" | Host |
-| **api_port** | Number | 5000 | Port |
-| **rootDir** | Path | "data_test/data4Web" | path to data directory (relative or absolute) |
-| dataNotOlderThan | Number | 100 | data won't be read, if older than x days |
-| refreshDataMs | Number | 5000 | Refresh rate for data fetching in ms |
-| noData.ms | Number | 5000 | Notification after x ms, if no data has arrived |
-| noData.message | String | "No data for 10 seconds." | Notification message |
-| heapAllocation | "auto" or Number | "auto" | max. heap size in Byte |
-| avgDataPointSize | Number | 1400 | avg. size of 1 datapoint in Byte for heap allocation |
+
+| Name             | Type             | Default                   | Description                                          |
+| ---------------- | ---------------- | ------------------------- | ---------------------------------------------------- |
+| **api_host**     | String           | "localhost"               | Host                                                 |
+| **api_port**     | Number           | 5000                      | Port                                                 |
+| **rootDir**      | Path             | "data_test/data4Web"      | path to data directory (relative or absolute)        |
+| dataNotOlderThan | Number           | 100                       | data won't be read, if older than x days             |
+| refreshDataMs    | Number           | 5000                      | Refresh rate for data fetching in ms                 |
+| noData.ms        | Number           | 5000                      | Notification after x ms, if no data has arrived      |
+| noData.message   | String           | "No data for 10 seconds." | Notification message                                 |
+| heapAllocation   | "auto" or Number | "auto"                    | max. heap size in Byte                               |
+| avgDataPointSize | Number           | 1400                      | avg. size of 1 datapoint in Byte for heap allocation |
 
 #### **`key`**
-| Name | Type | Default | Description |
-| ------------- | ------------- |------------- |------------- |
-| key | String | "\_mmsImageKey_Value" | key name of data point |
+
+| Name | Type   | Default               | Description            |
+| ---- | ------ | --------------------- | ---------------------- |
+| key  | String | "\_mmsImageKey_Value" | key name of data point |
 
 #### **`microscopes`**
 
 ...
 
-
 #### **`times.star`**
-
 
 ...
 
 #### **`data.star`**
 
-
 ...
 
 #### **`images.star`**
-
 
 ...
 
@@ -154,15 +128,21 @@ node app.js                   #start server
 
 Start react development server (+auto refresh after save) at: http://localhost:3000
 
-```bash
-npm run dev
-```
+-   ```bash
+    npm run dev
+    ```
 
-Analyze app size
+Analyze app size:
 
-```bash
-npm run analyze
-```
+- ```bash
+  npm run analyze
+  ```
+
+Create test files:
+
+1. `node app.js` (does not work with react dev. server)
+2. Type in number of files (e.g. 20)
+
 
 ## App structure
 
@@ -219,3 +199,4 @@ npm run analyze
 ## Author
 
 - **[Duc Nguyen](https://github.com/duc-ng)**
+```

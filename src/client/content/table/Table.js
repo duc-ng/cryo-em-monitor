@@ -57,11 +57,12 @@ function stableSort(array, comparator) {
 export default function TableEnhanced(props) {
   const classes = useStyles();
   const [order, setOrder] = React.useState("desc");
-  const [orderBy, setOrderBy] = React.useState(config["times.star"].main);
+  const [orderBy, setOrderBy] = React.useState(config["times.star"][0].value);
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [closeCollapse, setCloseCollapse] = React.useState(0);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -100,6 +101,7 @@ export default function TableEnhanced(props) {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
+    setCloseCollapse(closeCollapse + 1);
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -136,6 +138,7 @@ export default function TableEnhanced(props) {
                     row={row}
                     isSelected={isSelected}
                     handleClick={handleClick}
+                    closeCollapse={closeCollapse}
                   />
                 );
               })}

@@ -23,18 +23,20 @@ const useStyles = makeStyles((theme) => ({
 
 const headCells = [
   {
-    id: config["times.star"].main,
+    id: config["times.star"][0].value,
+    key: 0,
     numeric: false,
     disablePadding: false,
     label: "Time",
   },
 ].concat(
-  Object.values(config["data.star"]).map((x) => {
+  config["data.star"].map((x, i) => {
     return {
       id: x.value,
+      key: i + 1,
       numeric: true,
       disablePadding: false,
-      label: x.name,
+      label: x.label,
     };
   })
 );
@@ -64,7 +66,7 @@ export default function TableHeader(props) {
             size="small"
           />
         </TableCell>
-        {headCells.map((headCell, i) => (
+        {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}

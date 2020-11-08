@@ -34,7 +34,7 @@
     "testreact": "react-scripts test",
     "eject": "react-scripts eject",
     "nodemon": "nodemon app.js",
-    "dev": "concurrently \"npm run nodemon\" \"npm start\"",
+    "dev": "concurrently \"npm start \" \"npm run nodemon \"",
     "analyze": "source-map-explorer 'build/static/js/*.js'"
   },
   "eslintConfig": {

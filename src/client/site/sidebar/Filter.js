@@ -34,14 +34,6 @@ const marks = [
     value: 168,
     label: "Last 7d",
   },
-  {
-    value: 336,
-    label: "Last 14d",
-  },
-  {
-    value: null,
-    label: "All",
-  },
 ];
 
 export default function Filter() {
@@ -71,7 +63,7 @@ export default function Filter() {
               value={dataContext.dateFrom}
               initialFocusedDate={
                 dataContext.data.length > 0
-                  ? new Date(dataContext.data[0][config["times.star"].main])
+                  ? new Date(dataContext.data[0][config["times.star"][0].value])
                   : null
               }
               onChange={(date) => {
@@ -108,9 +100,7 @@ export default function Filter() {
                 onClick={() => {
                   setValue(item.value);
                   dataContext.setFromTo(
-                    item.value === null
-                      ? undefined
-                      : new Date(Date.now() - item.value * 60 * 60 * 1000),
+                    new Date(Date.now() - item.value * 60 * 60 * 1000),
                     undefined
                   );
                 }}

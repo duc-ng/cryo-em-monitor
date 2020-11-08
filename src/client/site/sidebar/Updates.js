@@ -30,7 +30,7 @@ export default function Updates() {
     var dates = [];
     for (var i = 0; i < 4; i++) {
       if (dataContext.data.length - i > 0) {
-        const date = dataContext.data[dataContext.data.length - i - 1][config["times.star"].main];
+        const date = dataContext.data[dataContext.data.length - i - 1][config["times.star"][0].value];
         dates.push(moment(date).calendar());
       }
     }

@@ -55,9 +55,9 @@ class Memory {
 
   add = (obj, dirPath, subfolder) => {
     const key = obj[config.key];
-    const date = obj[config["times.star"].main];
+    const date = obj[config["times.star"][0].value];
 
-    if (!this.dataValues.has(key)) {
+    if (!this.dataValues.has(key) && date !== undefined) {
       //insert
       this.dataValues.set(key, { path: dirPath, data: obj });
       let i = this.getIndexByDate(date);
@@ -88,7 +88,7 @@ class Memory {
     let i = 0;
     for (i = this.keysSorted.length - 1; i >= 0; i--) {
       let a = new Date(
-        this.getData(this.keysSorted[i])[config["times.star"].main]
+        this.getData(this.keysSorted[i])[config["times.star"][0].value]
       );
       if (new Date(date) - a >= 0) {
         break;

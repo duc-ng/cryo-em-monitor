@@ -39,7 +39,7 @@ export default function API(props) {
           if (res.data !== null && parseFloat(res.id) === fetchID.current) {
             console.log(res);
             fetchID.current++;
-            dataContext.setFetchedData(res.data, res.images);
+            dataContext.setFetchedData(res.data);
           }
         });
     };

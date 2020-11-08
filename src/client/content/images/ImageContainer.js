@@ -2,119 +2,25 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Grid from "@material-ui/core/Grid";
-import { DataContext } from "./../../global/Data";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 import SmallDivider from "./../../utils/SmallDivider";
 import config from "./../../../config.json";
-import ImageSelector from "./ImageSelector";
-import GridList from "@material-ui/core/GridList";
-import GridListTile from "@material-ui/core/GridListTile";
-import Tooltip from "@material-ui/core/Tooltip";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import Color from "color";
-import Slide from "@material-ui/core/Slide";
+import ImageViewer from "./../../utils/ImageViewer";
+import { DataContext } from "./../../global/Data";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     width: "100%",
   },
-  img: {
-    width: "100%",
-    height: "100%",
-    "&:hover": {
-      opacity: 0.7,
-    },
-  },
-  gridList: {
-    flexWrap: "nowrap",
-  },
-  button: {
-    padding: 0,
-    width: "100%",
-  },
-  dialogpaper: {
-    backgroundColor: "transparent",
-    boxShadow: "none",
-  },
-  dialog: {
-    backgroundColor: Color(theme.palette.grey[900]).alpha(0.9).string(),
-  },
-  skeleton: {
-    paddingTop: "40%",
-    paddingBottom: "40%",
-  },
 }));
-
-//image button
-const ImageButton = ({ handleCarousel, i }) => {
-  const classes = useStyles();
-  const { images } = React.useContext(DataContext);
-
-  return (
-    <Tooltip title={config["images.star"][i].name}>
-      <Button onClick={handleCarousel} className={classes.button}>
-        {images[i] === undefined ? (
-          <Box className={classes.skeleton}>
-            No Data
-          </Box>
-        ) : (
-          <img
-            src={images[i].data}
-            alt={images[i].label}
-            className={classes.img}
-          />
-        )}
-      </Button>
-    </Tooltip>
-  );
-};
-
-//image popover
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />;
-});
-
-const ImageContent = (props) => {
-  const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-
-  const handleCarousel = () => {
-    setOpen(!open);
-  };
-
-  return (
-    <React.Fragment>
-      <ImageButton i={props.i} handleCarousel={handleCarousel} />
-      <Dialog
-        open={open}
-        unmountOnExit
-        onClose={handleCarousel}
-        TransitionComponent={Transition}
-        PaperProps={{
-          classes: {
-            root: classes.dialogpaper,
-          },
-        }}
-        BackdropProps={{
-          classes: {
-            root: classes.dialog,
-          },
-        }}
-        maxWidth="xl"
-      >
-        <ImageSelector i={props.i} />
-      </Dialog>
-    </React.Fragment>
-  );
-};
 
 //main
 export default function ImageContainer(props) {
   const classes = useStyles();
   const theme = useTheme();
-  const imgConfig = Object.keys(config["images.star"]);
+  const { data } = React.useContext(DataContext);
+  const item = data[data.length - 1];
 
   return (
     <React.Fragment>
@@ -136,18 +42,13 @@ export default function ImageContainer(props) {
             >
               Most recent images recorded
             </Typography>
-            <GridList
-              className={classes.gridList}
-              cols={imgConfig.length}
-              cellHeight="auto"
-              spacing={10}
-            >
-              {Object.keys(config["images.star"]).map((item) => (
-                <GridListTile key={item}>
-                  <ImageContent i={item} />
-                </GridListTile>
+            <Grid container spacing={2} justify="center">
+              {config["images.star"].map((x, i) => (
+                <Grid item xs={4} sm={3} key={i}>
+                  <ImageViewer i={i} item={item} />
+                </Grid>
               ))}
-            </GridList>
+            </Grid>
           </Box>
         </Paper>
       </Grid>

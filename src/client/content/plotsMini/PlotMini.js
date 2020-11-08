@@ -18,7 +18,7 @@ class Graphs extends Component {
         },
         name: "",
         mode: "markers",
-        type: "scatter",
+        type: "scattergl",
         showlegend: false,
         //hoverinfo: "text",
         xbins: {
@@ -34,7 +34,7 @@ class Graphs extends Component {
         },
         name: "",
         mode: "markers",
-        type: "scatter",
+        type: "scattergl",
         showlegend: false,
         xbins: {
           size: 0.1,
@@ -74,7 +74,7 @@ class Graphs extends Component {
           {
             buttons: [
               {
-                args: [{ type: "scatter" }, {}],
+                args: [{ type: "scattergl" }, {}],
                 label: "Scatter",
                 method: "update",
               },

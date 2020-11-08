@@ -10,17 +10,37 @@ import config from "./../../../config.json";
 export default function PlotMain() {
   const theme = useTheme();
   const dataContext = React.useContext(DataContext);
+  var minDate = dataContext.dateFrom;
+  const maxDate =
+    dataContext.dateTo === undefined ? new Date() : dataContext.dateTo;
 
   const getData = (plotNr) => {
-    const plots = ["main", "1", "2", "3", "4"];
     let allData = [];
     for (let i = 0; i < dataContext.data.length; i++) {
-      let date = dataContext.data[i][config["times.star"][plots[plotNr]]];
-      if (date !== 0 && date !== undefined) {
+      let date = dataContext.data[i][config["times.star"][plotNr].value];
+
+      if (date !== 0) {
         allData = [...allData, date];
+        if (minDate === undefined || new Date(date) < new Date(minDate)) {
+          minDate = date;
+        }
       }
     }
     return allData;
+  };
+
+  // data<=4h => 10min bins
+  // data<=4d => 1h bins
+  // else 1d bins
+  const getBinSize = () => {
+    const diff = new Date(maxDate) - new Date(minDate);
+    if (diff <= 14400000) {
+      return 600000;
+    } else if (diff <= 345600000) {
+      return 3600000;
+    } else {
+      return 86400000;
+    }
   };
 
   const data = [
@@ -29,39 +49,21 @@ export default function PlotMain() {
       type: "histogram",
       mode: "lines",
       marker: { color: theme.palette.info.light },
-      hoverinfo: "y",
+      xbins: {
+        size: getBinSize(),
+      },
     },
   ];
 
   const updatemenus = [
     {
-      buttons: [
-        {
-          args: ["x", [getData(0)]],
-          label: "Images acquired",
+      buttons: config["times.star"].map((x, i) => {
+        return {
+          args: ["x", [getData(i)]],
+          label: config["times.star"][i].label,
           method: "restyle",
-        },
-        {
-          args: ["x", [getData(1)]],
-          label: "Images imported",
-          method: "restyle",
-        },
-        {
-          args: ["x", [getData(2)]],
-          label: "Images processed",
-          method: "restyle",
-        },
-        {
-          args: ["x", [getData(3)]],
-          label: "Images exported",
-          method: "restyle",
-        },
-        {
-          args: ["x", [getData(4)]],
-          label: "Processing errors",
-          method: "restyle",
-        },
-      ],
+        };
+      }),
       showactive: true,
       active: 0,
       type: "dropdown",
@@ -96,9 +98,8 @@ export default function PlotMain() {
     },
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
-    hovermode: "closest",
     updatemenus: updatemenus,
-    bargap: 0.02,
+    bargap: 0.01,
     font: {
       family: theme.typography.fontFamily,
       color: theme.palette.text.primary,
@@ -109,12 +110,14 @@ export default function PlotMain() {
     },
     xaxis: {
       type: "date",
-      showgrid: false,
-      rangemode: "tozero",
+      range: [minDate, maxDate],
+      gridcolor: theme.palette.divider,
+      linecolor: theme.palette.divider,
     },
     yaxis: {
       rangemode: "tozero",
-      showgrid: false,
+      gridcolor: theme.palette.divider,
+      linecolor: theme.palette.divider,
     },
   };
 

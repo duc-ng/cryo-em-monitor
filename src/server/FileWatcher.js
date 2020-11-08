@@ -39,7 +39,9 @@ class FileWatcher {
         this.reader.readStarFile(path.join(dirPath, "images.star")),
       ]);
       const merge = { ...files[0], ...files[1], ...files[2] };
-      this.memory.add(merge, dirPath, subfolder);
+      if (Object.keys(merge).length !== 0) {
+        this.memory.add(merge, dirPath, subfolder);
+      }
     } catch (error) {
       this.errorCount++;
       this.logger.log(
