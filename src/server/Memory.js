@@ -33,7 +33,6 @@ class Memory {
   };
 
   getDataFromTo = (from, to) => {
-    this.logger.log("info", "Call getDataFromTo()");
     let f = from === "undefined" ? new Date(0) : new Date(from);
     let t = to === "undefined" ? new Date() : new Date(to);
 
@@ -48,7 +47,6 @@ class Memory {
   };
 
   getDataNewerThan = (key) => {
-    this.logger.log("info", "Call getDataNewerThan()");
     if (this.has(key)) {
       const data = this.getData(key).data;
       if (data !== undefined) {
@@ -79,8 +77,10 @@ class Memory {
       this.dataValues.set(key, obj);
       let i = this.getIndexByDate(date);
       if (i === this.keysSorted.length) {
+        this.logger.log("info", "call spread");
         this.keysSorted = [...this.keysSorted, key];
       } else {
+        this.logger.log("info", "call splice()");
         this.keysSorted.splice(i, 0, key);
       }
 
