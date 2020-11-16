@@ -32,6 +32,7 @@ class FileWatcher {
   }
 
   read = async (filePath, subfolder) => {
+    this.logger.log("info", "Reading " + filePath);
     const dirPath = filePath.substring(0, filePath.lastIndexOf("/"));
     this.watcher.unwatch(path.join(dirPath, "*"));
     try {
