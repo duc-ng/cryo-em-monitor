@@ -1,7 +1,7 @@
-const config = require("./../config.json");
+const config = require("./src/config.json");
 const fs = require("fs");
 const path = require("path");
-const Logger = require("./Logger");
+const Logger = require("./src/server/Logger");
 const readline = require("readline");
 
 class Test {
@@ -31,23 +31,30 @@ class Test {
   }
 
   startLoop = async () => {
-    await this.sleep(1000);
-    var n = 0;
-    this.readline.question("", async (x) => {
-      if (Number.isInteger(parseInt(x))) n = x;
-      for (let i = 0; i < n; i++) {
-        this.createFiles();
-        await this.sleep(config.test.loopMs);
+    let n = 0;
+    this.readline.question(
+      "How many files do you want to generate? > ",
+      async (x) => {
+        if (Number.isInteger(parseInt(x))) n = x;
+        for (let i = 0; i < n; i++) {
+          await this.sleep(config.test.loopMs);
+          if (i > n - 5) {
+            this.createFiles(true);
+          } else {
+            this.createFiles(false);
+          }
+          console.log("Files generated: " + (i + 1));
+        }
+        this.startLoop();
       }
-      this.startLoop();
-    });
+    );
   };
 
   sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));
   };
 
-  createFiles = () => {
+  createFiles = (withImages) => {
     //generate star files
     let key = this.generateKey();
     let d = this.dataStar.replace(/XXX/g, key);
@@ -72,11 +79,19 @@ class Test {
     this.writeFile("times.star", t, src);
 
     //write images
-    for (i = 0; i < this.imgSrc.length; i++) {
-      let file = this.getRandomArrObj(this.imgFilenames[i]);
-      let srcFrom = path.join("test", this.imgSrc[i], file);
-      let srcTo = path.join(src, this.imgSrc[i] + ".png");
-      this.writeImage(srcFrom, srcTo);
+    // for (i = 0; i < this.imgSrc.length; i++) {
+    //   let file = this.getRandomArrObj(this.imgFilenames[i]);
+    //   let srcFrom = path.join("test", this.imgSrc[i], file);
+    //   let srcTo = path.join(src, this.imgSrc[i] + ".png");
+    //   this.writeImage(srcFrom, srcTo);
+    // }
+    if (withImages) {
+      for (i = 0; i < this.imgSrc.length; i++) {
+        let file = this.getRandomArrObj(this.imgFilenames[i]);
+        let srcFrom = path.join("test", this.imgSrc[i], file);
+        let srcTo = path.join(src, this.imgSrc[i] + ".png");
+        this.writeImage(srcFrom, srcTo);
+      }
     }
   };
 
@@ -123,8 +138,7 @@ class Test {
   };
 
   writeFile = (name, file, src) => {
-    let writer = fs.createWriteStream(path.join(src, name));
-    writer.write(file);
+    fs.writeFile(path.join(src, name), file, () => {});
   };
 
   getFolder = () => {
@@ -159,4 +173,4 @@ class Test {
   };
 }
 
-module.exports = Test;
+const test = new Test();

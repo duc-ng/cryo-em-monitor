@@ -4,7 +4,7 @@
     "api_port": 5000,
     "rootDir": "/Users/duc/Desktop/data_test/data4Web",
     "dataNotOlderThan": 7,
-    "refreshDataMs": 30000,
+    "refreshDataMs": 20000,
     "heapAllocation": "auto",
     "avgDataPointSize": 1400,
     "noData": {
@@ -14,7 +14,7 @@
   },
 
   "test": {
-    "loopMs": 100,
+    "loopMs": 2,
     "folder": "Titan1"
   },
 
@@ -87,7 +87,7 @@
       "minOptimum": 0.0
     },
     {
-      "label": "NumberOfParticles",
+      "label": "Particles",
       "value": "_mmnumberOfParticles_Value",
       "info": "_mmnumberOfParticles_Info",
       "maxOptimum": 10000,

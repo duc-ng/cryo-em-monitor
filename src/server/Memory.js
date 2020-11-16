@@ -10,20 +10,18 @@ class Memory {
           2 /
           Object.keys(config.microscopes).length
         : config.app.heapAllocation;
-    this.avgDataPointSize = config.app.avgDataPointSize; //in Byte
-    this.maxArrSize = this.maxHeapSize / this.avgDataPointSize;
-    this.keysSorted = [];
-    this.dataValues = new Map();
+    this.maxArrSize = this.maxHeapSize / config.app.avgDataPointSize;
+    this.keysSorted = []; //sorted object keys
+    this.dataValues = new Map(); //hashtable: key -> objects
     this.logger = new Logger();
   }
 
   getData = (key) => {
-    const val = this.dataValues.get(key);
-    return val !== undefined ? val.data : val;
+    return this.dataValues.get(key);
   };
 
   getDataAll = () => {
-    return this.keysSorted.map((key) => this.getData(key));
+    return this.keysSorted.map((key) => this.getData(key).data);
   };
 
   getPath = (key) => {
@@ -34,40 +32,62 @@ class Memory {
     return this.dataValues.has(key);
   };
 
+  getDataFromTo = (from, to) => {
+    let f = from === "undefined" ? new Date(0) : new Date(from);
+    let t = to === "undefined" ? new Date() : new Date(to);
+
+    const arr = this.keysSorted
+      .map((key) => this.getData(key).data)
+      .filter((obj) => {
+        let a = new Date(obj[config["times.star"][0].value]);
+        return a >= f && a < t;
+      });
+
+    return arr;
+  };
+
   getDataNewerThan = (key) => {
-    const data = this.getData(key);
-    if (data !== undefined) {
-      let index = this.getIndexByKey(key);
-      return this.getDataAll().slice(index);
-    } else {
-      return [];
+    if (this.has(key)) {
+      const data = this.getData(key).data;
+      if (data !== undefined) {
+        let index = this.getIndexByKey(key);
+        if (index < this.keysSorted.length) {
+          return this.getDataAll().slice(index);
+        }
+      }
     }
+    return null;
   };
 
   getLastKey = () => {
     if (this.keysSorted.length > 0) {
       const key = this.keysSorted[this.keysSorted.length - 1];
-      return this.getData(key)[config.key].toString();
+      return this.getData(key).data[config.key].toString();
     } else {
       return undefined;
     }
   };
 
-  add = (obj, dirPath, subfolder) => {
-    const key = obj[config.key];
-    const date = obj[config["times.star"][0].value];
+  add = (obj, subfolder) => {
+    const key = obj.data[config.key];
+    const date = obj.data[config["times.star"][0].value];
 
     if (!this.dataValues.has(key) && date !== undefined) {
       //insert
-      this.dataValues.set(key, { path: dirPath, data: obj });
+      this.dataValues.set(key, obj);
       let i = this.getIndexByDate(date);
-      this.keysSorted.splice(i, 0, key);
+      if (i === this.keysSorted.length) {
+        this.keysSorted = [...this.keysSorted, key];
+      } else {
+        this.keysSorted.splice(i, 0, key);
+      }
 
       //manage memory
       if (this.keysSorted.length > this.maxArrSize) {
         this.dataValues.delete(this.keysSorted.shift());
       }
 
+      //log
       this.logger.log(
         "info",
         this.keysSorted.length + ". Add: " + key + " (" + subfolder + ")"
@@ -75,22 +95,22 @@ class Memory {
     }
   };
 
-  getIndexByKey = (key) => {
-    for (var i = this.keysSorted.length - 1; i >= 0; i--) {
-      if (this.keysSorted[i] === key) {
+  getIndexByDate = (date) => {
+    let i = 0;
+    for (i = this.keysSorted.length - 1; i >= 0; i--) {
+      let a = new Date(
+        this.getData(this.keysSorted[i]).data[config["times.star"][0].value]
+      );
+      if (new Date(date) - a >= 0) {
         break;
       }
     }
     return i + 1;
   };
 
-  getIndexByDate = (date) => {
-    let i = 0;
-    for (i = this.keysSorted.length - 1; i >= 0; i--) {
-      let a = new Date(
-        this.getData(this.keysSorted[i])[config["times.star"][0].value]
-      );
-      if (new Date(date) - a >= 0) {
+  getIndexByKey = (key) => {
+    for (var i = this.keysSorted.length - 1; i >= 0; i--) {
+      if (this.keysSorted[i] === key) {
         break;
       }
     }

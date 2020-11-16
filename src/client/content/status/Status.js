@@ -69,7 +69,6 @@ export default function Status(props) {
     ).length;
   };
 
-  console.log("Updated: status");
   return (
     <React.Fragment>
       <div id="section_status" />

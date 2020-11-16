@@ -7,7 +7,7 @@ import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
 import IconButton from "@material-ui/core/IconButton";
 import Collapse from "@material-ui/core/Collapse";
 import config from "./../../../config.json";
-import ImageViewer from "./../../utils/ImageViewer";
+import ImageDisplay from "../../utils/ImageDisplay";
 import moment from "moment";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
@@ -88,7 +88,7 @@ export default function TableRowSingle(props) {
               <Grid container spacing={2} justify="center">
                 {config["images.star"].map((x, i) => (
                   <Grid item xs={4} sm={3} key={i}>
-                    <ImageViewer i={i} item={row.data} />
+                    <ImageDisplay i={i} item={row.data} />
                   </Grid>
                 ))}
               </Grid>

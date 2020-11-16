@@ -23,6 +23,7 @@ class FileWatcher {
       ignored: /^\./,
       persistent: true,
       awaitWriteFinish: true,
+      ignoreInitial: true,
     });
 
     this.watcher
@@ -38,9 +39,11 @@ class FileWatcher {
         this.reader.readStarFile(path.join(dirPath, "times.star")),
         this.reader.readStarFile(path.join(dirPath, "images.star")),
       ]);
-      const merge = { ...files[0], ...files[1], ...files[2] };
+      const merge = { ...files[0], ...files[1] };
+      const obj = { path: dirPath, data: merge, times: files[2] };
+
       if (Object.keys(merge).length !== 0) {
-        this.memory.add(merge, dirPath, subfolder);
+        this.memory.add(obj, subfolder);
       }
     } catch (error) {
       this.errorCount++;

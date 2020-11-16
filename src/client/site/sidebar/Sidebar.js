@@ -76,7 +76,6 @@ export default function Sidebar(props) {
   );
 
   //render mobile and desktop
-  console.log("Updated: sidebar");
   return (
     <nav className={classes.drawer}>
       <Hidden mdUp implementation="css">

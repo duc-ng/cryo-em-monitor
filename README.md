@@ -6,6 +6,24 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Latest update
 
+- 16.11.20
+  - API: minimal number of fetching
+  - filter: client side -> server side
+  - use compression
+  - PlotMain: speed up
+  - PlotMini: speed up + responsive
+  - use minified plotly package
+  - Fullscreen only calculated if opened
+  - Mini histograms only calculated if opened
+  - reduce fetch size 1/3 (no times.star)
+  - set environment to "production"
+  - aggregate values plotted, if too many
+  - (remove data.star info text)
+  - loading circle while fetching
+  - Scroll to top at end of page
+  - rebuild image display 
+
+
 - 08.11.20
   - fix table image still shown after changing page
   - remove header scroll
@@ -86,7 +104,7 @@ node app.js                   #start server
 ## Configuration
 
 1. Configure host, port, etc. `src/config.json`
-2. Build app: `npm run build`
+2. Rebuild app: `npm run build`
 
 #### **`app`**
 
@@ -128,20 +146,26 @@ node app.js                   #start server
 
 Start react development server (+auto refresh after save) at: http://localhost:3000
 
--   ```bash
-    npm run dev
-    ```
+```bash
+npm run dev
+```
 
 Analyze app size:
 
-- ```bash
-  npm run analyze
-  ```
+```bash
+npm run build
+npm run analyze
+```
 
-Create test files:
+Create test .star files:
+(Note: only last four datapoints have images)
 
-1. `node app.js` (does not work with react dev. server)
-2. Type in number of files (e.g. 20)
+```bash
+node test.js
+```
+
+Production:
+  - set `NODE_ENV=production` in `.env` 
 
 
 ## App structure

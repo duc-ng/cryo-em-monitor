@@ -1,14 +1,14 @@
 import React from "react";
 import Slide from "@material-ui/core/Slide";
 import Dialog from "@material-ui/core/Dialog";
-import ImageSelector from "./ImageSelector";
 import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
-import { DataContext } from "./../global/Data";
-import config from "./../../config.json";
+import { DataContext } from "../global/Data";
+import config from "../../config.json";
 import Box from "@material-ui/core/Box";
 import { makeStyles } from "@material-ui/core/styles";
 import Color from "color";
+import ImageFullscreen from "./ImageFullscreen";
 
 const useStyles = makeStyles((theme) => ({
   img: {
@@ -41,17 +41,20 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function ImageViewer(props) {
+export default function ImageDisplay(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const [image, setImage] = React.useState(undefined);
+  const [image, setImage] = React.useState({
+    data: undefined,
+    info: "",
+  });
   const dataContext = React.useContext(DataContext);
 
   //fetch image
   React.useEffect(() => {
     if (props.item !== undefined) {
       const key = props.item[config.key];
-      const file = props.item[config["images.star"][props.i].value];
+
       fetch(
         "http://" +
           config.app.api_host +
@@ -59,13 +62,12 @@ export default function ImageViewer(props) {
           config.app.api_port +
           "/image?key=" +
           key +
-          "&filename=" +
-          file +
+          "&type=" +
+          props.i +
           "&microscope=" +
           dataContext.microscope
       )
-        .then((res) => res.blob())
-        .then((res) => URL.createObjectURL(res))
+        .then((res) => res.json())
         .then((res) => setImage(res));
     }
   }, [props.item, props.i, dataContext.microscope]);
@@ -74,18 +76,17 @@ export default function ImageViewer(props) {
     setOpen(!open);
   };
 
-  console.log("Updated: images");
   return (
     <React.Fragment>
       {/* image button */}
       <Tooltip title={config["images.star"][props.i].label}>
         <Button onClick={handleOpen} className={classes.button}>
-          {image === undefined ? (
+          {image.data === undefined ? (
             <Box className={classes.box} border={1}>
               No Image
             </Box>
           ) : (
-            <img src={image} alt="" className={classes.img} />
+            <img src={image.data} alt="" className={classes.img} />
           )}
         </Button>
       </Tooltip>
@@ -93,7 +94,7 @@ export default function ImageViewer(props) {
       {/* image fullscreen */}
       <Dialog
         open={open}
-        unmountOnExit
+        fullScreen
         onClose={handleOpen}
         TransitionComponent={Transition}
         PaperProps={{
@@ -106,9 +107,13 @@ export default function ImageViewer(props) {
             root: classes.dialog,
           },
         }}
-        maxWidth="xl"
       >
-        <ImageSelector i={props.i} />
+        <ImageFullscreen
+          i={props.i}
+          img={image}
+          handleOpen={handleOpen}
+          item={props.item}
+        />
       </Dialog>
     </React.Fragment>
   );

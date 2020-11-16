@@ -114,7 +114,6 @@ export default function TableEnhanced(props) {
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, props.rows.length - page * rowsPerPage);
 
-  console.log("Updated: table");
   return (
     <div className={classes.root}>
       <TableToolbar selected={selected} rows={props.rows} />

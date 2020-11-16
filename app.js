@@ -3,13 +3,15 @@ const app = express();
 const path = require("path");
 const FileWatcher = require("./src/server/FileWatcher");
 const Logger = require("./src/server/Logger");
-const Test = require("./src/server/Test");
 const config = require("./src/config.json");
 const fspromises = require("fs").promises;
 const cors = require("cors");
+const compression = require("compression");
+require("dotenv").config();
 
 //init app
 app.use(cors());
+app.use(compression());
 app.use(express.static(path.join(__dirname, "build")));
 app.listen(config.app.api_port, () => {
   logger.log("info", "Server started");
@@ -18,7 +20,6 @@ app.listen(config.app.api_port, () => {
 //init others
 const fw = config.microscopes.map((x) => new FileWatcher(x.folder));
 const logger = new Logger();
-const test = new Test();
 
 //API: home
 app.get("/", (req, res) => {
@@ -26,22 +27,23 @@ app.get("/", (req, res) => {
 });
 
 //API: sync data
-app.get("/data", async (req, res) => {
-  const key = req.query.lastKey;
+app.get("/data", (req, res) => {
+  logger.log("info", "Received fetch request.");
   const memory = fw[req.query.microscope].memory;
-  const newData =
-    key == "ALL"
-      ? memory.getDataAll()
-      : memory.getDataNewerThan(parseFloat(key));
+  const lastKey = parseInt(req.query.lastKey);
 
-  if (key === memory.getLastKey() || newData.length === 0) {
-    res.send({ data: null });
+  if (lastKey === 0) {
+    var newData = memory.getDataFromTo(req.query.from, req.query.to);
   } else {
-    const keyImage = newData[newData.length - 1][config.key];
-    res.send({
-      data: newData,
-      id: req.query.id,
-    });
+    var newData = memory.getDataNewerThan(lastKey);
+  }
+
+  res.json({
+    data: newData,
+    id: req.query.id,
+  });
+
+  if (newData !== null) {
     logger.log("info", "Items sent: " + newData.length);
   }
 });
@@ -50,17 +52,24 @@ app.get("/data", async (req, res) => {
 app.get("/image", async (req, res) => {
   const memory = fw[req.query.microscope].memory;
   const key = parseFloat(req.query.key);
+  const type = parseFloat(req.query.type);
+  const filename = memory.getData(key).times[config["images.star"][type].value];
+  const info = memory.getData(key).times[config["images.star"][type].info];
+
   if (memory.has(key)) {
-    let filePath = path.join(memory.getPath(key), req.query.filename);
+    let filePath = path.join(memory.getPath(key), filename);
     try {
-      var image = await fspromises.readFile(filePath);
-      res.setHeader("Content-Type", "image/png");
-      res.send(image);
+      let image = await fspromises.readFile(filePath);
+      res.json({
+        data: "data:image/jpeg;base64," + image.toString("base64"),
+        info: info,
+      });
     } catch (error) {
       logger.log("error", "(Reading image) " + error);
+      res.json({ data: undefined, info: "" });
     }
   } else {
-    res.send(undefined);
+    res.json({ data: undefined, info: "" });
   }
 });
 

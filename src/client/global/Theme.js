@@ -1,7 +1,6 @@
 import React from "react";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { blue, grey } from "@material-ui/core/colors";
-import { DataContext } from "./Data";
 
 export const ThemeContext = React.createContext({});
 
@@ -9,7 +8,6 @@ export default function Theme(props) {
   const [darkMode, setDarkmode] = React.useState("dark");
   const [darkModeOn, setDarkmodeOn] = React.useState(true);
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const dataContext = React.useContext(DataContext);
 
   const theme = createMuiTheme({
     palette: {
@@ -36,7 +34,6 @@ export default function Theme(props) {
       setDarkmode("dark");
       setDarkmodeOn(true);
     }
-    dataContext.incCounter();
   };
 
   const handleDrawerToggle = () => {

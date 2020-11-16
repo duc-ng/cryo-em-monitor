@@ -11,8 +11,6 @@ import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import config from "./../../../config.json";
 import { makeStyles } from "@material-ui/core/styles";
-import { DataContext } from "./../../global/Data";
-import Plot from "./PlotMini";
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -31,11 +29,12 @@ const useStyles = makeStyles((theme) => ({
 export default function PlotsFullscreen(props) {
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
-  const dataContext = React.useContext(DataContext);
 
   const handleClick = () => {
     setOpen(!open);
   };
+
+  const MiniPlot = props.miniPlot
 
   return (
     <Hidden mdDown>
@@ -51,31 +50,29 @@ export default function PlotsFullscreen(props) {
           Fullscreen
         </Button>
       </Grid>
-      {/* Fullscreen Content */}
-      <Dialog fullScreen open={open} onClose={handleClick}>
-        <AppBar className={classes.appBar}>
-          <Toolbar variant="dense">
-            <IconButton edge="start" color="primary" onClick={handleClick}>
-              <CloseIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-        <Grid container justify="space-around" className={classes.container}>
-          {config["data.star"].map((x, i) => {
-            return (
-              <Grid item xs={4} key={i}>
+      {/*  Fullscreen Content  */}
+      {open ? (
+        <Dialog fullScreen open={open} onClose={handleClick}>
+          <AppBar className={classes.appBar}>
+            <Toolbar variant="dense">
+              <IconButton edge="start" color="primary" onClick={handleClick}>
+                <CloseIcon />
+              </IconButton>
+            </Toolbar>
+          </AppBar>
+          <Grid container justify="center" className={classes.container}>
+            {config["data.star"].map((x, i) => (
+              <Grid xs={4} key={i}>
                 <Box m={1}>
-                  <Plot
-                    attr={props.calculateData(i)}
-                    title={config["data.star"][i].label}
-                    counter={dataContext.counter}
-                  />
+                  <MiniPlot x={x} i={i} />
                 </Box>
               </Grid>
-            );
-          })}
-        </Grid>
-      </Dialog>
+            ))}
+          </Grid>
+        </Dialog>
+      ) : (
+        <div />
+      )}
     </Hidden>
   );
 }

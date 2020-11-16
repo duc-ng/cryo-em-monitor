@@ -14,8 +14,10 @@ import GitHubIcon from "@material-ui/icons/GitHub";
 import Switch from "@material-ui/core/Switch";
 import Box from "@material-ui/core/Box";
 import config from "./../../config.json";
-import { DataContext } from "../global/Data";
+import { DataContext } from "./../global/Data";
 import { ThemeContext } from "../global/Theme";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import API from "./API";
 
 const drawerWidth = 240;
 
@@ -59,6 +61,7 @@ export default function Header(props) {
   const dataContext = React.useContext(DataContext);
   const themeContext = React.useContext(ThemeContext);
   const [tabValue, setTabValue] = React.useState(0);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   //Displaying sidebar on mobile
   function SideBarButton() {
@@ -152,20 +155,26 @@ export default function Header(props) {
     );
   }
 
+  //show loading button, when data is fetched
+  function Loading() {
+    return isLoading ? <CircularProgress size={20} /> : <div />;
+  }
+
   //render
-  console.log("Updated: header");
   return (
     <AppBar color="inherit" className={classes.appbar}>
       <Toolbar variant="dense" className={classes.toolbar}>
+        <API setIsLoading={setIsLoading} />
         <Grid container justify="space-between" alignItems="center">
-          <Grid item xs={3}>
+          <Grid item>
             <DarkModeToggle />
           </Grid>
           <Grid item xs={6}>
             <TabSwitch />
           </Grid>
-          <Grid item xs={3}>
+          <Grid item>
             <Grid container alignItems="center" justify="flex-end">
+              <Loading />
               <GithubButton />
               <SideBarButton />
             </Grid>
