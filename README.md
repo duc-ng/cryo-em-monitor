@@ -7,6 +7,7 @@ These instructions will get you a copy of the project up and running on your loc
 ## Latest update
 
 - 16.11.20
+
   - API: minimal number of fetching
   - filter: client side -> server side
   - use compression
@@ -21,17 +22,16 @@ These instructions will get you a copy of the project up and running on your loc
   - (remove data.star info text)
   - loading circle while fetching
   - Scroll to top at end of page
-  - rebuild image display 
-
+  - rebuild image display
 
 - 08.11.20
+
   - fix table image still shown after changing page
   - remove header scroll
   - image loading parallelized + image error shown
   - added Test class
   - better structure in config
   - Test: 24.000 datapoints: ~7-8s
-
 
 - 22.10.20
 
@@ -60,8 +60,6 @@ These instructions will get you a copy of the project up and running on your loc
   - seperate Filewatcher class
   - robust reader + syncing
   - Test: 10.000 files ✓
-
-
 
 ## Requirements
 
@@ -165,8 +163,8 @@ node test.js
 ```
 
 Production:
-  - set `NODE_ENV=production` in `.env` 
 
+- change `NODE_ENV=development` to `NODE_ENV=production` in `.env`
 
 ## App structure
 
@@ -223,4 +221,7 @@ Production:
 ## Author
 
 - **[Duc Nguyen](https://github.com/duc-ng)**
+
+```
+
 ```

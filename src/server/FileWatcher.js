@@ -31,8 +31,9 @@ class FileWatcher {
       .on("change", (dirPath) => this.read(dirPath, subfolder));
   }
 
-  read = async (dirPath, subfolder) => {
-    dirPath = dirPath.substring(0, dirPath.lastIndexOf("/"));
+  read = async (filePath, subfolder) => {
+    const dirPath = filePath.substring(0, filePath.lastIndexOf("/"));
+    this.watcher.unwatch(path.join(dirPath, "*"));
     try {
       const files = await Promise.all([
         this.reader.readStarFile(path.join(dirPath, "data.star")),
