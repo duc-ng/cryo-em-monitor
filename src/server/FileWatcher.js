@@ -23,7 +23,6 @@ class FileWatcher {
       ignored: /^\./,
       persistent: true,
       awaitWriteFinish: true,
-      ignoreInitial: true,
     });
 
     this.watcher
@@ -32,7 +31,6 @@ class FileWatcher {
   }
 
   read = async (filePath, subfolder) => {
-    this.logger.log("info", "Reading .star file");
     const dirPath = filePath.substring(0, filePath.lastIndexOf("/"));
     this.watcher.unwatch(path.join(dirPath, "*"));
     try {
