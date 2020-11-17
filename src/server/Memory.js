@@ -83,6 +83,9 @@ class Memory {
         this.logger.log("info", "call splice()");
         this.keysSorted.splice(i, 0, key);
       }
+      const availSize =
+        v8.getHeapStatistics().total_available_size / 1024 / 1024;
+      this.logger.log("info", "Free heap memory: " + availSize.toFixed(2) + " MB");
 
       //manage memory
       if (this.keysSorted.length > this.maxArrSize) {
