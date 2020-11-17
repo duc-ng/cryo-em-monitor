@@ -23,6 +23,7 @@ class FileWatcher {
       ignored: /^\./,
       persistent: true,
       awaitWriteFinish: true,
+      ignoreInitial: true,
     });
 
     this.watcher
