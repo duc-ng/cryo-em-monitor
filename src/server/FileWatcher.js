@@ -23,6 +23,7 @@ class FileWatcher {
       ignored: /^\./,
       persistent: true,
       awaitWriteFinish: true,
+      usePolling: true,
     });
 
     this.watcher
@@ -32,7 +33,7 @@ class FileWatcher {
 
   read = async (filePath, subfolder) => {
     const dirPath = filePath.substring(0, filePath.lastIndexOf("/"));
-    this.watcher.unwatch(path.join(dirPath, "*"));
+    this.watcher.unwatch(filePath);
     try {
       const files = await Promise.all([
         this.reader.readStarFile(path.join(dirPath, "data.star")),
