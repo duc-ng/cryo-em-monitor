@@ -25,12 +25,13 @@ class FileWatcher {
       ignored: /^\./,
       persistent: true,
       awaitWriteFinish: true,
+      ignoreInitial: true,
     });
 
     this.watcher
       .on("add", (dirPath) => this.read(dirPath, subfolder))
-      .on("change", (dirPath) => this.read(dirPath, subfolder));
-
+      .on("change", (dirPath) => this.read(dirPath, subfolder))
+      .on('ready', () => console.log('Initial scan complete.'))
     // this.watcher = sane(this.directory, {
     //   glob: ["**/*.star"],
     // });
@@ -49,7 +50,8 @@ class FileWatcher {
     const imagesStar = path.join(dirPath, "images.star");
 
     this.watcher.unwatch(filePath);
-
+    this.readCount++;
+    console.log(this.readCount + ". read path");
     try {
       // await fs.promises.access(dataStar);
       // await fs.promises.access(timesStar);
@@ -64,8 +66,6 @@ class FileWatcher {
       // if (Object.keys(merge).length !== 0) {
       //   this.memory.add(obj, subfolder);
       // }
-      this.readCount++;
-      console.log(this.readCount + ". read path");
     } catch (error) {
       this.errorCount++;
       this.logger.log(
