@@ -1,5 +1,4 @@
 const fs = require("fs");
-const fspromises = require("fs").promises;
 const config = require("./../config.json");
 
 /*
@@ -14,7 +13,7 @@ class Reader {
       config.app.dataNotOlderThan * 24 * 60 * 60 * 1000
     ) {
       //read file
-      var data = await fspromises.readFile(file, "utf8");
+      var data = await fs.promises.readFile(file, "utf8");
       var substrings = data.split(/[\n,\t]+/);
       var keys = [];
       var values = [];

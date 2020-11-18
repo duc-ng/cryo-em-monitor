@@ -1,11 +1,11 @@
-const chokidar = require("chokidar");
+// const chokidar = require("chokidar");
 const config = require("./../config.json");
 const path = require("path");
 const Reader = require("./Reader");
 const Memory = require("./Memory");
 const Logger = require("./Logger");
-const fs = require("fs");
 const glob = require("glob");
+var sane = require("sane");
 
 class FileWatcher {
   constructor(subfolder) {
@@ -13,14 +13,6 @@ class FileWatcher {
     this.reader = new Reader();
     this.logger = new Logger();
     this.errorCount = 0;
-    this.readCount = 0;
-    this.directory = path.join(
-      config.app.rootDir,
-      subfolder,
-      "*",
-      "*",
-      "*.star"
-    );
 
     // this.watcher = chokidar.watch(this.directory, {
     //   ignored: /^\./,
@@ -32,11 +24,28 @@ class FileWatcher {
     // this.watcher
     //   .on("ready", () => console.log("Initial scan complete."))
     //   .on("add", (dirPath) => this.read(dirPath, subfolder));
+
     let self = this;
-    glob(this.directory, function (er, files) {
-      files.forEach((file) => {
-        self.read(file, subfolder);
+    let dirGlob = path.join(config.app.rootDir, subfolder, "**", "*.star");
+
+    var watcher = sane(config.app.rootDir, {
+      glob: [path.join(subfolder, "**", "*.star")],
+      watchman: true,
+    });
+    watcher.on("ready", () => {
+      this.logger.log("info", "Reading initial files..");
+      glob(dirGlob, async (er, files) => {
+        for (let i = 0; i < files.length; i++) {
+          await self.read(files[i], subfolder);
+          if (i === files.length) {
+            this.logger.log("info", "Server is ready.");
+          }
+        }
       });
+    });
+    watcher.on("add", (filepath, root, stat) => {
+      const dir = path.join(config.app.rootDir, subfolder, filepath);
+      self.read(dir, subfolder);
     });
   }
 
@@ -46,12 +55,8 @@ class FileWatcher {
     const timesStar = path.join(dirPath, "times.star");
     const imagesStar = path.join(dirPath, "images.star");
     // this.watcher.unwatch(filePath);
-    this.readCount++;
-    console.log(this.readCount + ". read path");
+
     try {
-      // await fs.promises.access(dataStar);
-      // await fs.promises.access(timesStar);
-      // await fs.promises.access(imagesStar);
       const files = await Promise.all([
         this.reader.readStarFile(dataStar),
         this.reader.readStarFile(timesStar),
