@@ -59,10 +59,10 @@ class FileWatcher {
       ]);
       const merge = { ...files[0], ...files[1] };
       const obj = { path: dirPath, data: merge, times: files[2] };
-
-      if (Object.keys(merge).length !== 0) {
-        this.memory.add(obj, subfolder);
-      }
+      console.log("yes")
+      // if (Object.keys(merge).length !== 0) {
+      //   this.memory.add(obj, subfolder);
+      // }
     } catch (error) {
       this.errorCount++;
       this.logger.log(
