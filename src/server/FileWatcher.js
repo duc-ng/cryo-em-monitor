@@ -42,35 +42,34 @@ class FileWatcher {
   }
 
   read = async (filePath, subfolder) => {
-    // const dirPath = filePath.substring(0, filePath.lastIndexOf("/"));
-    // const dataStar = path.join(dirPath, "data.star");
-    // const timesStar = path.join(dirPath, "times.star");
-    // const imagesStar = path.join(dirPath, "images.star");
+    const dirPath = filePath.substring(0, filePath.lastIndexOf("/"));
+    const dataStar = path.join(dirPath, "data.star");
+    const timesStar = path.join(dirPath, "times.star");
+    const imagesStar = path.join(dirPath, "images.star");
 
-    // this.watcher.unwatch(filePath);
-    // try {
-    //   // await fs.promises.access(dataStar);
-    //   // await fs.promises.access(timesStar);
-    //   // await fs.promises.access(imagesStar);
-    //   const files = await Promise.all([
-    //     this.reader.readStarFile(dataStar),
-    //     this.reader.readStarFile(timesStar),
-    //     this.reader.readStarFile(imagesStar),
-    //   ]);
-    //   const merge = { ...files[0], ...files[1] };
-    //   const obj = { path: dirPath, data: merge, times: files[2] };
+    this.watcher.unwatch(filePath);
+    try {
+      // await fs.promises.access(dataStar);
+      // await fs.promises.access(timesStar);
+      // await fs.promises.access(imagesStar);
+      const files = await Promise.all([
+        this.reader.readStarFile(dataStar),
+        this.reader.readStarFile(timesStar),
+        this.reader.readStarFile(imagesStar),
+      ]);
+      const merge = { ...files[0], ...files[1] };
+      const obj = { path: dirPath, data: merge, times: files[2] };
 
-    //   if (Object.keys(merge).length !== 0) {
-    //     this.memory.add(obj, subfolder);
-    //   }
-    // } catch (error) {
-    //   this.errorCount++;
-    //   this.logger.log(
-    //     "error",
-    //     "(File reading) " + this.errorCount + ". " + error
-    //   );
-    // }
-    console.log(filePath);
+      if (Object.keys(merge).length !== 0) {
+        this.memory.add(obj, subfolder);
+      }
+    } catch (error) {
+      this.errorCount++;
+      this.logger.log(
+        "error",
+        "(File reading) " + this.errorCount + ". " + error
+      );
+    }
   };
 
   set memory(val) {
