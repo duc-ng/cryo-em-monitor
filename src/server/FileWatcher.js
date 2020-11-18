@@ -22,20 +22,20 @@ class FileWatcher {
       "*.star"
     );
 
-    this.watcher = chokidar.watch(this.directory, {
-      ignored: /^\./,
-      persistent: true,
-      awaitWriteFinish: true,
-      ignoreInitial: true,
-    });
-
-    this.watcher
-      .on("ready", () => console.log("Initial scan complete."))
-      .on("add", (dirPath) => this.read(dirPath, subfolder));
-
-    // glob(this.directory, function (er, files) {
-    //   console.log(files);
+    // this.watcher = chokidar.watch(this.directory, {
+    //   ignored: /^\./,
+    //   persistent: true,
+    //   awaitWriteFinish: true,
+    //   ignoreInitial: true,
     // });
+
+    // this.watcher
+    //   .on("ready", () => console.log("Initial scan complete."))
+    //   .on("add", (dirPath) => this.read(dirPath, subfolder));
+
+    glob(this.directory, function (er, files) {
+      console.log(files);
+    });
   }
 
   read = async (filePath, subfolder) => {
