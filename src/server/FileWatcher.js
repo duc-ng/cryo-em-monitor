@@ -12,6 +12,7 @@ class FileWatcher {
     this.reader = new Reader();
     this.logger = new Logger();
     this.errorCount = 0;
+    this.readCount = 0;
     this.directory = path.join(
       config.app.rootDir,
       subfolder,
@@ -48,21 +49,23 @@ class FileWatcher {
     const imagesStar = path.join(dirPath, "images.star");
 
     this.watcher.unwatch(filePath);
+
     try {
       // await fs.promises.access(dataStar);
       // await fs.promises.access(timesStar);
       // await fs.promises.access(imagesStar);
-      const files = await Promise.all([
-        this.reader.readStarFile(dataStar),
-        this.reader.readStarFile(timesStar),
-        this.reader.readStarFile(imagesStar),
-      ]);
-      const merge = { ...files[0], ...files[1] };
-      const obj = { path: dirPath, data: merge, times: files[2] };
-      console.log("yes")
+      // const files = await Promise.all([
+      //   this.reader.readStarFile(dataStar),
+      //   this.reader.readStarFile(timesStar),
+      //   this.reader.readStarFile(imagesStar),
+      // ]);
+      // const merge = { ...files[0], ...files[1] };
+      // const obj = { path: dirPath, data: merge, times: files[2] };
       // if (Object.keys(merge).length !== 0) {
       //   this.memory.add(obj, subfolder);
       // }
+      this.readCount++;
+      console.log(this.readCount + ". read path");
     } catch (error) {
       this.errorCount++;
       this.logger.log(
