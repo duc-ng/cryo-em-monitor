@@ -38,7 +38,7 @@ class Test {
         if (Number.isInteger(parseInt(x))) n = x;
         for (let i = 0; i < n; i++) {
           await this.sleep(config.test.loopMs);
-          if (i > n - 5) {
+          if (i > n - 10) {
             this.createFiles(true);
           } else {
             this.createFiles(false);

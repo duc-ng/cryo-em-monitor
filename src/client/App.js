@@ -14,6 +14,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
 import TableContainer from "./content/table/TableContainer";
 import ScrollToTop from "./utils/ScrollToTop";
+import PullAndRefresh from "./utils/PullAndRefresh";
 
 //theme
 const useStyles = makeStyles((theme) => ({
@@ -21,7 +22,12 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
   },
   content: {
-    padding: theme.spacing(2),
+    [theme.breakpoints.down("sm")]: {
+      padding: 0,
+    },
+    [theme.breakpoints.up("md")]: {
+      padding: theme.spacing(2),
+    },
   },
 }));
 
@@ -34,6 +40,7 @@ function App() {
     <Data>
       <Theme>
         <CssBaseline />
+        <div id="section_start" />
         <div className={classes.root}>
           <Header />
           <Sidebar />
@@ -44,15 +51,17 @@ function App() {
             justify="center"
             className={classes.content}
           >
-            <Toolbar />
-            <Status />
-            <PlotMain />
-            <TableContainer />
-            <ImageContainer />
-            <PlotsMini />
-            <Footer />
-            <ScrollToTop />
+            <PullAndRefresh>
+              <Toolbar />
+              <Status />
+              <PlotMain />
+              <TableContainer />
+              <ImageContainer />
+              <PlotsMini />
+              <Footer />
+            </PullAndRefresh>
           </Grid>
+          <ScrollToTop />
         </div>
       </Theme>
     </Data>

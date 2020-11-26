@@ -49,7 +49,14 @@ function PlotMain() {
       x: plotData,
       type: "histogram",
       mode: "lines",
-      marker: { color: theme.palette.info.light },
+      opacity: 0.3,
+      marker: {
+        color: theme.palette.primary.main,
+        line: {
+          color: theme.palette.primary.main,
+          width: 5,
+        },
+      },
       xbins: {
         size: getBinSize(),
       },
@@ -61,13 +68,14 @@ function PlotMain() {
     height: 270,
     margin: {
       t: 10,
-      b: 40,
-      l: 35,
+      b: 55,
+      l: 45,
       r: 10,
+      pad: 0,
     },
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
-    bargap: 0.01,
+    bargap: 0.02,
     font: {
       family: theme.typography.fontFamily,
       color: theme.palette.text.primary,

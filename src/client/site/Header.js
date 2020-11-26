@@ -13,6 +13,7 @@ import MenuIcon from "@material-ui/icons/Menu";
 import GitHubIcon from "@material-ui/icons/GitHub";
 import Switch from "@material-ui/core/Switch";
 import Box from "@material-ui/core/Box";
+import Hidden from "@material-ui/core/Hidden";
 import config from "./../../config.json";
 import { DataContext } from "./../global/Data";
 import { ThemeContext } from "../global/Theme";
@@ -23,7 +24,7 @@ const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   appbar: {
-    [theme.breakpoints.up("md")]: {
+    [theme.breakpoints.up("lg")]: {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: drawerWidth,
     },
@@ -35,9 +36,12 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     marginRight: theme.spacing(2),
-    [theme.breakpoints.up("md")]: {
+    [theme.breakpoints.up("lg")]: {
       display: "none",
     },
+  },
+  circle: {
+    color: theme.palette.warning.main,
   },
 }));
 
@@ -56,7 +60,7 @@ const StyledTooltip = withStyles((theme) => ({
   },
 }))(Tooltip);
 
-export default function Header(props) {
+export default function Header() {
   const classes = useStyles();
   const dataContext = React.useContext(DataContext);
   const themeContext = React.useContext(ThemeContext);
@@ -147,17 +151,23 @@ export default function Header(props) {
   //Button Github
   function GithubButton() {
     return (
-      <Tooltip title="Project on Github">
-        <IconButton href="https://github.com/duc-ng/web-monitoring">
-          <GitHubIcon fontSize="small" />
-        </IconButton>
-      </Tooltip>
+      <Hidden smDown>
+        <Tooltip title="Project on Github">
+          <IconButton href="https://github.com/duc-ng/web-monitoring">
+            <GitHubIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </Hidden>
     );
   }
 
   //show loading button, when data is fetched
   function Loading() {
-    return isLoading ? <CircularProgress size={20} /> : <div />;
+    return isLoading ? (
+      <CircularProgress size={20} thickness={6} className={classes.circle} />
+    ) : (
+      <div />
+    );
   }
 
   //render
@@ -169,7 +179,7 @@ export default function Header(props) {
           <Grid item>
             <DarkModeToggle />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={5} sm={6}>
             <TabSwitch />
           </Grid>
           <Grid item>

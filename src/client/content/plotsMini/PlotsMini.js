@@ -14,7 +14,7 @@ import Typography from "@material-ui/core/Typography";
 
 const Plot = createPlotlyComponent(Plotly);
 
-function PlotsMini(props) {
+function PlotsMini() {
   const { data, dateFrom, dateTo } = React.useContext(DataContext);
   const theme = useTheme();
 
@@ -29,11 +29,14 @@ function PlotsMini(props) {
 
   const MiniPlot = (props) => {
     const [type, setType] = React.useState("scattergl");
-
-    const aggregateValue = //plot max. 5.000 random values
-      type === "scattergl" ? Math.ceil(data.length / 5000) : 1;
-
     const { minOptimum, maxOptimum, value } = config["data.star"][props.i];
+    const subtitle = config["data.star"][props.i].description;
+    const maxPointsPlotted = 5000;
+
+    const percentPlotted = Math.floor((maxPointsPlotted / data.length) * 100);
+
+    const aggregateValue = //plot max. x random values
+      type === "scattergl" ? Math.ceil(data.length / maxPointsPlotted) : 1;
 
     const getPlotData = () => {
       let xValues = [];
@@ -63,12 +66,6 @@ function PlotsMini(props) {
         hoverinfo: "y",
       };
     };
-
-    // const subtitle =
-    //   data.length === 0
-    //     ? ""
-    //     : data[data.length - 1][config["data.star"][props.i].info];
-    const subtitle = config["data.star"][props.i].info;
 
     const configuration = {
       displaylogo: false,
@@ -116,9 +113,9 @@ function PlotsMini(props) {
       height: 320,
       margin: {
         t: 10,
-        b: 40,
+        b: 55,
         l: 35,
-        r: 25,
+        r: 10,
       },
       modebar: {
         bgcolor: "rgba(0,0,0,0)",
@@ -166,6 +163,7 @@ function PlotsMini(props) {
         id={"section_images_" + props.i}
         title={props.x.label}
         subtitle={subtitle}
+        midtext={percentPlotted < 100 ? percentPlotted + "% plotted" : ""}
         height={layout.height}
         divider={false}
         button={SimpleMenu}

@@ -9,7 +9,7 @@ import StepLabel from "@material-ui/core/StepLabel";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
 import config from "./../../../config.json";
-import moment from "moment";
+import FormatDate from "./../../utils/FormatDate";
 
 const useStyles = makeStyles((theme) => ({
   timeline: {
@@ -30,8 +30,12 @@ export default function Updates() {
     var dates = [];
     for (var i = 0; i < 4; i++) {
       if (dataContext.data.length - i > 0) {
-        const date = dataContext.data[dataContext.data.length - i - 1][config["times.star"][0].value];
-        dates.push(moment(date).calendar());
+        const date = new Date(
+          dataContext.data[dataContext.data.length - i - 1][
+            config["times.star"][0].value
+          ]
+        );
+        dates.push(FormatDate(date));
       }
     }
     setDatesLast4(dates);

@@ -6,6 +6,18 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Latest update
 
+- 25.11.20
+  - replace moment.js (deprecated) with date-fns
+  - loading circle: orange + more thick
+  - node version in Readme
+  - description in data.star -> config
+  - checked compression level
+  - minplots: display "x% plotted" for subsets
+  - fix: missing plotdata after fullscreen mode
+  - fix: image display bugs 
+  - add: pull to reload on mobile
+  - fix: mobile and layout bugs
+
 - 16.11.20
 
   - API: minimal number of fetching
@@ -16,13 +28,14 @@ These instructions will get you a copy of the project up and running on your loc
   - use minified plotly package
   - Fullscreen only calculated if opened
   - Mini histograms only calculated if opened
-  - reduce fetch size 1/3 (no times.star)
+  - reduce fetch size 1/3 (no images.star)
   - set environment to "production"
   - aggregate values plotted, if too many
   - (remove data.star info text)
   - loading circle while fetching
   - Scroll to top at end of page
   - rebuild image display
+  - new Filewatcher: watchman
 
 - 08.11.20
 
@@ -63,7 +76,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Requirements
 
-To run this application, you have to install **[Node.js](https://nodejs.org/en/download/)**.
+To run this application, you have to install **[Node.js](https://nodejs.org/en/download/)** ^13.12. 
 
 - E.g. Linux/ Ubuntu:
 

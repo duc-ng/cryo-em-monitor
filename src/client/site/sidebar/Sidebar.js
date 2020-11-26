@@ -17,7 +17,7 @@ const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
-    [theme.breakpoints.up("md")]: {
+    [theme.breakpoints.up("lg")]: {
       width: drawerWidth,
       flexShrink: 0,
     },
@@ -26,9 +26,8 @@ const useStyles = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar, //content below header
   drawerPaper: {
     width: drawerWidth,
-    background: theme.palette.primary,
-    border: 0,
   },
+
   button: {
     backgroundColor: "transparent",
     padding: 0,
@@ -41,7 +40,7 @@ export default function Sidebar(props) {
   const themeContext = React.useContext(ThemeContext);
 
   const refreshPage = () => {
-    window.location.reload(false);
+    window.location.reload();
   };
 
   //sidebar
@@ -78,7 +77,7 @@ export default function Sidebar(props) {
   //render mobile and desktop
   return (
     <nav className={classes.drawer}>
-      <Hidden mdUp implementation="css">
+      <Hidden lgUp implementation="css">
         <Drawer
           variant="temporary"
           anchor={theme.direction === "rtl" ? "right" : "left"}
@@ -94,7 +93,7 @@ export default function Sidebar(props) {
           {drawer}
         </Drawer>
       </Hidden>
-      <Hidden smDown implementation="css">
+      <Hidden mdDown implementation="css">
         <Drawer
           classes={{
             paper: classes.drawerPaper,

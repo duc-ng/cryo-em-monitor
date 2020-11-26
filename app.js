@@ -31,7 +31,6 @@ app.get("/data", (req, res) => {
   logger.log("info", "Received fetch request.");
   const memory = fw[req.query.microscope].memory;
   const lastKey = parseInt(req.query.lastKey);
-
   if (lastKey === 0) {
     var newData = memory.getDataFromTo(req.query.from, req.query.to);
   } else {

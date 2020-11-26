@@ -8,9 +8,9 @@ import IconButton from "@material-ui/core/IconButton";
 import Collapse from "@material-ui/core/Collapse";
 import config from "./../../../config.json";
 import ImageDisplay from "../../utils/ImageDisplay";
-import moment from "moment";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
+import FormatDate from "./../../utils/FormatDate";
 
 export default function TableRowSingle(props) {
   const { row, isSelected, handleClick } = props;
@@ -28,11 +28,12 @@ export default function TableRowSingle(props) {
   const RowValues = () => {
     const nrPlots = config["data.star"].length;
     let tableCell = [];
+    let date = new Date(row.data[config["times.star"][0].value]);
 
     //format date
     tableCell.push(
       <TableCell component="th" scope="row" key={row.key}>
-        {moment(row.data[config["times.star"][0].value]).calendar()}
+        {FormatDate(date)}
       </TableCell>
     );
 

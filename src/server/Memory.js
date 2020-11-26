@@ -77,29 +77,11 @@ class Memory {
       this.dataValues.set(key, obj);
       let i = this.getIndexByDate(date);
       if (i === this.keysSorted.length) {
-        this.logger.log("info", "call spread");
         this.keysSorted = [...this.keysSorted, key];
       } else {
-        this.logger.log("info", "call splice()");
         this.keysSorted.splice(i, 0, key);
       }
-      const totalSize = (
-        v8.getHeapStatistics().heap_size_limit /
-        1024 /
-        1024
-      ).toFixed(2);
-
-      const usedSize = (
-        v8.getHeapStatistics().used_heap_size /
-        1024 /
-        1024
-      ).toFixed(2);
-
-      this.logger.log(
-        "info",
-        "Used heap memory: " + usedSize + "/ " + totalSize + " MB"
-      );
-
+      
       //manage memory
       if (this.keysSorted.length > this.maxArrSize) {
         this.dataValues.delete(this.keysSorted.shift());

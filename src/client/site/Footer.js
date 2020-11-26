@@ -8,7 +8,12 @@ export default function Footer(props) {
   return (
     <Grid container justify="center">
       <Box pt={2} pb={5}>
-        <Typography variant="body2" color="textSecondary" component="p">
+        <Typography
+          align="center"
+          variant="body2"
+          color="textSecondary"
+          component="p"
+        >
           {"@2020 "}
           <Link href="https://www.biochem.mpg.de/cryoem" color="inherit">
             Cryo-EM Facility

@@ -5,7 +5,7 @@ import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import { DataContext } from "./../../global/Data";
 import { DateTimePicker } from "@material-ui/pickers";
-import MomentUtils from "@date-io/moment";
+import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import config from "./../../../config.json";
 
@@ -52,7 +52,7 @@ export default function Filter() {
           Filter
         </Typography>
       </Box>
-      <MuiPickersUtilsProvider utils={MomentUtils}>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <Grid container spacing={1}>
           {/* Date picker */}
           <Grid item xs={6}>
@@ -71,7 +71,7 @@ export default function Filter() {
                 dataContext.setFromTo(date, dataContext.to);
               }}
               label="From"
-              format="MMM Do"
+              format="MMM do"
             />
           </Grid>
           <Grid item xs={6}>
@@ -85,7 +85,7 @@ export default function Filter() {
                 dataContext.setFromTo(dataContext.from, date);
               }}
               label="To"
-              format="MMM Do"
+              format="MMM do"
             />
           </Grid>
 

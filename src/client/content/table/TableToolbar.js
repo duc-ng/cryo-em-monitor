@@ -57,6 +57,7 @@ export default function TableToolbar(props) {
                 variant="body1"
                 style={{ color: theme.palette.warning.main }}
                 id="section_2"
+                align="left"
               >
                 Data
               </Typography>
@@ -65,6 +66,7 @@ export default function TableToolbar(props) {
                 gutterBottom
                 color="textSecondary"
                 paragraph={true}
+                align="left"
               >
                 All data recorded
               </Typography>

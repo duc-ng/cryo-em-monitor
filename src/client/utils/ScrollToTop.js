@@ -25,7 +25,7 @@ export default function ScrollToTop(props) {
 
   const handleClick = (event) => {
     const anchor = (event.target.ownerDocument || document).querySelector(
-      "#section_status"
+      "#section_start"
     );
 
     if (anchor) {

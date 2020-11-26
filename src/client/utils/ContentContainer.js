@@ -24,7 +24,7 @@ export default function ContentContainer(props) {
       <div id={id} />
       <Grid container justify="center">
         <Paper style={{ width: "100%" }}>
-          <Box m={2}>
+          <Box pt={2} px={2}>
             <Grid
               container
               direction="row"
@@ -35,6 +35,7 @@ export default function ContentContainer(props) {
                 <Typography
                   variant="body1"
                   style={{ color: theme.palette.warning.main }}
+                  align="left"
                 >
                   {title}
                 </Typography>
@@ -43,25 +44,31 @@ export default function ContentContainer(props) {
                   gutterBottom
                   color="textSecondary"
                   paragraph={true}
+                  align="left"
                 >
                   {subtitle}
                 </Typography>
               </Grid>
+              <Grid item>
+                <Typography variant="body2" color="textSecondary">
+                  {props.midtext}
+                </Typography>
+              </Grid>
               <Grid item>{button}</Grid>
             </Grid>
-            {data.length === 0 && noData ? (
-              <Grid
-                container
-                justify="center"
-                alignItems="center"
-                style={{ height: height }}
-              >
-                <Typography variant="body1">No Data</Typography>
-              </Grid>
-            ) : (
-              props.children
-            )}
           </Box>
+          {data.length === 0 && noData ? (
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+              style={{ height: height }}
+            >
+              <Typography variant="body1">No Data</Typography>
+            </Grid>
+          ) : (
+            props.children
+          )}
         </Paper>
       </Grid>
       {divider ? <SmallDivider /> : <div />}

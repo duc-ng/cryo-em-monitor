@@ -1,22 +1,5 @@
 import React from "react";
 import config from "./../../config.json";
-import moment from "moment";
-import "moment/locale/en-gb";
-
-//24hours instead of AM/PM + format
-moment.locale("en", {
-  longDateFormat: {
-    LT: "H:mm:ss", //added :ss
-    L: "MM/DD/YYYY",
-    l: "M/D/YYYY",
-    LL: "MMMM Do YYYY",
-    ll: "MMM D YYYY",
-    LLL: "MMMM Do YYYY LT",
-    lll: "MMM D YYYY LT",
-    LLLL: "dddd, MMMM Do YYYY LT",
-    llll: "ddd, MMM D YYYY LT",
-  },
-});
 
 export const DataContext = React.createContext({});
 
@@ -33,6 +16,15 @@ export default function Data(props) {
     setMicroscope(val);
     setData({
       dataAll: [],
+      from: data.from,
+      to: data.to,
+    });
+  };
+
+  //refresh
+  const refresh = () => {
+    setData({
+      dataAll: data.dataAll,
       from: data.from,
       to: data.to,
     });
@@ -61,6 +53,7 @@ export default function Data(props) {
     });
   };
 
+
   //render
   return (
     <DataContext.Provider
@@ -74,6 +67,7 @@ export default function Data(props) {
         microscope: microscope,
         getLastKey: getLastKey,
         setData: setData,
+        refresh: refresh,
       }}
     >
       {props.children}

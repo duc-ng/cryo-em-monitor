@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
+import Box from "@material-ui/core/Box";
 import SmallDivider from "./../../utils/SmallDivider";
 import Typography from "@material-ui/core/Typography";
 import config from "../../../config.json";
@@ -14,11 +15,11 @@ import DataUsageIcon from "@material-ui/icons/DataUsage";
 import CheckIcon from "@material-ui/icons/Check";
 import { DataContext } from "./../../global/Data";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     height: "100%",
   },
-});
+}));
 
 export default function Status(props) {
   const classes = useStyles();
@@ -70,16 +71,16 @@ export default function Status(props) {
   };
 
   return (
-    <React.Fragment>
+    <Box m={1}>
       <div id="section_status" />
       <Grid container spacing={2} justify="center">
         {statusCards.map(([index, name, label, icon, color]) => {
           return (
-            <Grid item xs={4} md={2} key={index}>
+            <Grid item xs={6} md={2} key={index}>
               <Card className={classes.root}>
                 <CardContent>
                   <Grid container justify="space-between">
-                    <Typography gutterBottom variant="h4" component="h2">
+                    <Typography gutterBottom variant="h5" component="h2">
                       {calcStatusValues(name)}
                     </Typography>
                     <Avatar style={{ backgroundColor: color }}>{icon}</Avatar>
@@ -88,6 +89,7 @@ export default function Status(props) {
                     variant="body2"
                     color="textSecondary"
                     component="p"
+                    align="left"
                   >
                     {label}
                   </Typography>
@@ -98,6 +100,6 @@ export default function Status(props) {
         })}
       </Grid>
       <SmallDivider />
-    </React.Fragment>
+    </Box>
   );
 }

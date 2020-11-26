@@ -1,4 +1,3 @@
-// const chokidar = require("chokidar");
 const config = require("./../config.json");
 const path = require("path");
 const Reader = require("./Reader");
@@ -14,26 +13,14 @@ class FileWatcher {
     this.logger = new Logger();
     this.errorCount = 0;
 
-    // this.watcher = chokidar.watch(this.directory, {
-    //   ignored: /^\./,
-    //   persistent: true,
-    //   // awaitWriteFinish: true,
-    //   ignoreInitial: true,
-    // });
-
-    // this.watcher
-    //   .on("ready", () => console.log("Initial scan complete."))
-    //   .on("add", (dirPath) => this.read(dirPath, subfolder));
-
     let self = this;
-    let dirGlob = path.join(config.app.rootDir, subfolder, "**", "*.star");
-
+    let dirGlob = path.join(config.app.rootDir, subfolder, "*", "*", "*.star");
     var watcher = sane(config.app.rootDir, {
-      glob: [path.join(subfolder, "**", "*.star")],
+      glob: [path.join(subfolder, "*", "*", "*.star")],
       watchman: true,
     });
+
     watcher.on("ready", () => {
-      this.logger.log("info", "Reading initial files..");
       glob(dirGlob, async (er, files) => {
         for (let i = 0; i < files.length; i++) {
           await self.read(files[i], subfolder);
@@ -43,8 +30,9 @@ class FileWatcher {
         }
       });
     });
+
     watcher.on("add", (filepath, root, stat) => {
-      const dir = path.join(config.app.rootDir, subfolder, filepath);
+      const dir = path.join(config.app.rootDir, filepath);
       self.read(dir, subfolder);
     });
   }
@@ -54,7 +42,6 @@ class FileWatcher {
     const dataStar = path.join(dirPath, "data.star");
     const timesStar = path.join(dirPath, "times.star");
     const imagesStar = path.join(dirPath, "images.star");
-    // this.watcher.unwatch(filePath);
 
     try {
       const files = await Promise.all([

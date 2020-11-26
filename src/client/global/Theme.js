@@ -37,6 +37,7 @@ export default function Theme(props) {
   };
 
   const handleDrawerToggle = () => {
+    console.log(!mobileOpen)
     setMobileOpen(!mobileOpen);
   };
 

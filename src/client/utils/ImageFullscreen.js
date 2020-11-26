@@ -15,6 +15,8 @@ import PauseIcon from "@material-ui/icons/Pause";
 import config from "./../../config.json";
 import Paper from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
+import FormatDate from "./FormatDate";
+import Hidden from "@material-ui/core/Hidden";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -37,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
   white: {
     color: theme.palette.common.white,
   },
+  pause: {
+    color: theme.palette.warning.main,
+  },
 }));
 
 export default function ImageFullscreen(props) {
@@ -45,13 +50,11 @@ export default function ImageFullscreen(props) {
   const [image, setImage] = React.useState(props.img);
   const [isPlaying, setIsPlaying] = React.useState(false);
 
-  const getInitIndex = () => {
-    return data.length === 0
+  const [currentIndex, setIndex] = React.useState(
+    data.length === 0
       ? 0
-      : data.findIndex((elem) => elem[config.key] === props.item[config.key]);
-  };
-
-  const [currentIndex, setIndex] = React.useState(getInitIndex());
+      : data.findIndex((elem) => elem[config.key] === props.item[config.key])
+  );
 
   const loadImage = (ind) => {
     if (data[ind] !== undefined) {
@@ -74,14 +77,14 @@ export default function ImageFullscreen(props) {
   };
 
   const onPrevImage = () => {
-    const ind = currentIndex === 0 ? 0 : (currentIndex + 1) % data.length;
+    const ind = data.length === 0 ? 0 : (currentIndex + 1) % data.length;
     setIndex(ind);
     loadImage(ind);
   };
 
   const onNextImage = () => {
     const ind =
-      currentIndex === 0 ? 0 : (currentIndex - 1 + data.length) % data.length;
+      data.length === 0 ? 0 : (currentIndex - 1 + data.length) % data.length;
     setIndex(ind);
     loadImage(ind);
   };
@@ -93,7 +96,10 @@ export default function ImageFullscreen(props) {
         <PlayArrowIcon fontSize="small" className={classes.white} />
       </IconButton>
     );
-    const ind = getInitIndex();
+    const ind =
+      data.length === 0
+        ? 0
+        : data.findIndex((elem) => elem[config.key] === props.item[config.key]);
     setIndex(ind);
     loadImage(ind);
   };
@@ -102,7 +108,7 @@ export default function ImageFullscreen(props) {
     setIsPlaying(true);
     setButtonPlay(
       <IconButton onClick={onPause}>
-        <PauseIcon fontSize="small" color="primary" />
+        <PauseIcon fontSize="small" className={classes.pause} />
       </IconButton>
     );
   };
@@ -131,22 +137,129 @@ export default function ImageFullscreen(props) {
     return () => clearInterval(interval);
   });
 
-  const ButtonPrevImage = () => (
-    <IconButton onClick={onPrevImage}>
-      <KeyboardArrowLeftIcon fontSize="large" className={classes.white} />
-    </IconButton>
-  );
-
-  const ButtonNextImage = () => (
-    <IconButton onClick={onNextImage}>
-      <KeyboardArrowRightIcon fontSize="large" className={classes.white} />
-    </IconButton>
-  );
-
   const ButtonReset = () => (
     <IconButton onClick={onReset}>
       <StopIcon fontSize="small" className={classes.white} />
     </IconButton>
+  );
+
+  const date =
+    data.length === 0
+      ? 0
+      : FormatDate(new Date(data[currentIndex][config["times.star"][0].value]));
+
+  const onKeyDown = (e) => {
+    if (e.key === "ArrowRight") {
+      onNextImage();
+    } else if (e.key === "ArrowLeft") {
+      onPrevImage();
+    } else if (e.key === " ") {
+      isPlaying ? onPause() : onPlay();
+    }
+  };
+
+  React.useEffect(() => {
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  });
+
+  const TitleMain = () => (
+    <Grid item xs={12}>
+      <Grid container justify="center">
+        <Grid item>
+          <Typography variant="h6" className={classes.white}>
+            {image.data === undefined ? <Box m={4} /> : image.info}
+          </Typography>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+
+  const TitleSub = () => (
+    <Grid item xs={12}>
+      <Grid container justify="center">
+        <Grid item>
+          <Typography variant="subtitle1" className={classes.white}>
+            {image.data === undefined ? <Box m={4} /> : date}
+          </Typography>
+        </Grid>
+      </Grid>
+    </Grid>
+  );
+
+  const ArrowLeftDesktop = () => (
+    <Grid item xs={0} md={1} lg={2}>
+      <Hidden mdDown>
+        <Grid container justify="center">
+          <IconButton onClick={onPrevImage}>
+            <KeyboardArrowLeftIcon fontSize="large" className={classes.white} />
+          </IconButton>
+        </Grid>
+      </Hidden>
+    </Grid>
+  );
+
+  const ArrowRightDesktop = () => (
+    <Grid item xs={0} md={1} lg={2}>
+      <Hidden mdDown>
+        <Grid container justify="center">
+          <IconButton onClick={onNextImage}>
+            <KeyboardArrowRightIcon
+              fontSize="large"
+              className={classes.white}
+            />
+          </IconButton>
+        </Grid>
+      </Hidden>
+    </Grid>
+  );
+
+  const ArrowLeftRightMobile = () => (
+    <Hidden lgUp>
+      <Grid item>
+        <IconButton onClick={onPrevImage} edge="end">
+          <KeyboardArrowLeftIcon className={classes.white} />
+        </IconButton>
+        <IconButton onClick={onNextImage}>
+          <KeyboardArrowRightIcon className={classes.white} />
+        </IconButton>
+      </Grid>
+    </Hidden>
+  );
+
+  const ImageDisplay = () => (
+    <Grid item xs={12} md={10} lg={8}>
+      {image.data === undefined ? (
+        <div>
+          <Box border={1} className={classes.box}>
+            <Grid container justify="center">
+              <Typography variant="subtitle1" className={classes.white}>
+                No Image
+              </Typography>
+            </Grid>
+          </Box>
+        </div>
+      ) : (
+        <img className={classes.img} src={image.data} alt={image.info} />
+      )}
+    </Grid>
+  );
+
+  const PlayReset = () => (
+    <Grid item>
+      <ButtonReset />
+      {ButtonPlay}
+    </Grid>
+  );
+
+  const ImageCount = () => (
+    <Grid item>
+      <Paper className={classes.paper}>
+        {data.length - currentIndex + "/ " + data.length}
+      </Paper>
+    </Grid>
   );
 
   return (
@@ -161,67 +274,16 @@ export default function ImageFullscreen(props) {
         </Toolbar>
       </AppBar>
       <Grid container justify="center">
-        <Grid item xs={11} sm={9} lg={7}>
+        <Grid item xs={12} sm={9} lg={7}>
           <Grid container justify="space-around" alignItems="center">
-            <Grid item xs={12}>
-              <Grid container justify="center">
-                <Grid item>
-                  <Typography variant="subtitle1" className={classes.white}>
-                    {image.info}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={12}>
-              <Grid container justify="center">
-                <Grid item>
-                  <Typography variant="subtitle1" className={classes.white}>
-                    {image.data === undefined
-                      ? ""
-                      : data[currentIndex][config["times.star"][0].value]}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid item xs={2}>
-              <Grid container justify="center">
-                <ButtonPrevImage />
-              </Grid>
-            </Grid>
-            <Grid item xs={8}>
-              {image.data === undefined ? (
-                <div>
-                  <Box m={6} /> {/* padding */}
-                  <Box border={1} className={classes.box}>
-                    <Grid container justify="center">
-                      <Typography variant="subtitle1" className={classes.white}>
-                        No Image
-                      </Typography>
-                    </Grid>
-                  </Box>
-                </div>
-              ) : (
-                <img
-                  className={classes.img}
-                  src={image.data}
-                  alt={image.info}
-                />
-              )}
-            </Grid>
-            <Grid item xs={2}>
-              <Grid container justify="center">
-                <ButtonNextImage />
-              </Grid>
-            </Grid>
-            <Grid item>
-              <ButtonReset />
-              {ButtonPlay}
-            </Grid>
-            <Grid item>
-              <Paper className={classes.paper}>
-                {data.length - currentIndex + "/ " + data.length}
-              </Paper>
-            </Grid>
+            <TitleMain />
+            <TitleSub />
+            <ArrowLeftDesktop />
+            <ImageDisplay />
+            <ArrowRightDesktop />
+            <PlayReset />
+            <ImageCount />
+            <ArrowLeftRightMobile />
           </Grid>
         </Grid>
       </Grid>

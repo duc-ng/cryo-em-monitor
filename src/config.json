@@ -14,7 +14,7 @@
   },
 
   "test": {
-    "loopMs": 2,
+    "loopMs": 10,
     "folder": "Titan1"
   },
 
@@ -39,6 +39,7 @@
   "data.star": [
     {
       "label": "Mean",
+      "description": "Pixel Values [counts/px]",
       "value": "_mmsmean_Value",
       "info": "_mmsmean_Info",
       "maxOptimum": 0.6,
@@ -46,6 +47,7 @@
     },
     {
       "label": "Drift",
+      "description": "Total Sample Drift [Å]",
       "value": "_mmsdrift_Value",
       "info": "_mmsdrift_Info",
       "maxOptimum": 0.6,
@@ -53,6 +55,7 @@
     },
     {
       "label": "Iciness",
+      "description": "Iciness [a.u.]",
       "value": "_mmsiciness_Value",
       "info": "_mmsiciness_Info",
       "maxOptimum": 0.9,
@@ -60,6 +63,7 @@
     },
     {
       "label": "Defocus",
+      "description": "Defocus Fit [μm]",
       "value": "_mmsdefocus_Value",
       "info": "_mmsdefocus_Info",
       "maxOptimum": 0.0,
@@ -67,6 +71,7 @@
     },
     {
       "label": "Resolution",
+      "description": "Resolution of CTF Fit [Å]",
       "value": "_mmsresolution_Value",
       "info": "_mmsresolution_Info",
       "maxOptimum": 0.5,
@@ -74,6 +79,7 @@
     },
     {
       "label": "CCvalue",
+      "description": "CC Value of CTF Fit [a.u.]",
       "value": "_mmsccOfCtfFit_Value",
       "info": "_mmsccOfCtfFit_Info",
       "maxOptimum": 0.7,
@@ -81,6 +87,7 @@
     },
     {
       "label": "Astigmatism",
+      "description": "Astigmatism [μm]",
       "value": "_mmsastigmatism_Value",
       "info": "_mmsastigmatism_Info",
       "maxOptimum": 0.9,
@@ -88,6 +95,7 @@
     },
     {
       "label": "Particles",
+      "description": "Number of Particles",
       "value": "_mmnumberOfParticles_Value",
       "info": "_mmnumberOfParticles_Info",
       "maxOptimum": 10000,
