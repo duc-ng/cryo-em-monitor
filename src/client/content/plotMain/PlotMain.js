@@ -49,12 +49,12 @@ function PlotMain() {
       x: plotData,
       type: "histogram",
       mode: "lines",
-      opacity: 0.8,
+      opacity: 0.9,
       marker: {
         color: theme.palette.primary.light,
         line: {
           color: theme.palette.primary.dark,
-          width: 3,
+          width: 1,
         },
       },
       xbins: {
