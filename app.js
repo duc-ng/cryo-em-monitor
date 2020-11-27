@@ -34,7 +34,7 @@ app.get("/data", (req, res) => {
   if (lastKey === 0) {
     var newData = memory.getDataFromTo(req.query.from, req.query.to);
   } else {
-    var newData = memory.getDataNewerThan(lastKey);
+    newData = memory.getDataNewerThan(lastKey);
   }
 
   res.json({
@@ -42,9 +42,8 @@ app.get("/data", (req, res) => {
     id: req.query.id,
   });
 
-  if (newData !== null) {
-    logger.log("info", "Items sent: " + newData.length);
-  }
+  const ret = !newData ? null : newData.length;
+  logger.log("info", "Items sent: " + ret);
 });
 
 //API: image by key + type

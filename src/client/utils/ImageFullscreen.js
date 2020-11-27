@@ -190,7 +190,7 @@ export default function ImageFullscreen(props) {
   );
 
   const ArrowLeftDesktop = () => (
-    <Grid item xs={0} md={1} lg={2}>
+    <Grid item md={1} lg={2}>
       <Hidden mdDown>
         <Grid container justify="center">
           <IconButton onClick={onPrevImage}>
@@ -202,7 +202,7 @@ export default function ImageFullscreen(props) {
   );
 
   const ArrowRightDesktop = () => (
-    <Grid item xs={0} md={1} lg={2}>
+    <Grid item md={1} lg={2}>
       <Hidden mdDown>
         <Grid container justify="center">
           <IconButton onClick={onNextImage}>

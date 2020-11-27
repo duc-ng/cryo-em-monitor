@@ -17,6 +17,7 @@ These instructions will get you a copy of the project up and running on your loc
   - fix: image display bugs 
   - add: pull to reload on mobile
   - fix: mobile and layout bugs
+  - add: miniplot value filter
 
 - 16.11.20
 

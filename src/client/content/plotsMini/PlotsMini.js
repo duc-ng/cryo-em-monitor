@@ -39,32 +39,47 @@ function PlotsMini() {
       type === "scattergl" ? Math.ceil(data.length / maxPointsPlotted) : 1;
 
     const getPlotData = () => {
-      let xValues = [];
-      let yValues = [];
-      let colorValues = [];
+      let xValues1 = [];
+      let xValues2 = [];
+      let yValues1 = [];
+      let yValues2 = [];
 
       for (let i = 0; i < data.length; i = i + aggregateValue) {
-        xValues.push(data[i][config["times.star"][0].value]);
-        yValues.push(data[i][value]);
         if (data[i][value] >= minOptimum && data[i][value] < maxOptimum) {
-          colorValues.push(theme.palette.success.main);
+          xValues1.push(data[i][config["times.star"][0].value]);
+          yValues1.push(data[i][value]);
         } else {
-          colorValues.push(theme.palette.primary.main);
+          xValues2.push(data[i][config["times.star"][0].value]);
+          yValues2.push(data[i][value]);
         }
       }
 
-      return {
-        x: type === "scattergl" ? xValues : yValues,
-        y: yValues,
-        marker: {
-          color:
-            type === "scattergl" ? colorValues : theme.palette.primary.main,
+      return [
+        {
+          x: type === "scattergl" ? xValues1 : yValues1,
+          y: yValues1,
+          marker: {
+            color: theme.palette.success.main,
+          },
+          name: "Good",
+          opacity: 0.8,
+          mode: "markers",
+          type: type,
+          hoverinfo: "y",
         },
-        mode: "markers",
-        type: type,
-        showlegend: false,
-        hoverinfo: "y",
-      };
+        {
+          x: type === "scattergl" ? xValues2 : yValues2,
+          y: yValues2,
+          name: "Normal",
+          marker: {
+            color: theme.palette.primary.light,
+          },
+          opacity: 0.8,
+          mode: "markers",
+          type: type,
+          hoverinfo: "y",
+        },
+      ];
     };
 
     const configuration = {
@@ -97,6 +112,7 @@ function PlotsMini() {
       paper_bgcolor: "rgba(0,0,0,0)",
       plot_bgcolor: "rgba(0,0,0,0)",
       hovermode: "closest",
+      barmode: "stack",
       xaxis: {
         type: type === "scattergl" ? "date" : "",
         zeroline: true,
@@ -115,11 +131,19 @@ function PlotsMini() {
         t: 10,
         b: 55,
         l: 35,
-        r: 10,
+        r: 15,
       },
       modebar: {
         bgcolor: "rgba(0,0,0,0)",
         color: theme.palette.divider,
+      },
+      legend: {
+        x: 0.35,
+        y: -0.15,
+        orientation: "h",
+        font: {
+          color: theme.palette.grey[500],
+        },
       },
     };
 
@@ -169,7 +193,7 @@ function PlotsMini() {
         button={SimpleMenu}
       >
         <Plot
-          data={[getPlotData()]}
+          data={getPlotData()}
           layout={layout}
           config={configuration}
           style={style}
