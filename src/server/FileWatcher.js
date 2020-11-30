@@ -3,7 +3,7 @@ const path = require("path");
 const Reader = require("./Reader");
 const Memory = require("./Memory");
 const Logger = require("./Logger");
-const chokidar = require("chokidar");
+const glob = require("glob");
 
 class FileWatcher {
   constructor(subfolder) {
@@ -11,26 +11,31 @@ class FileWatcher {
     this.reader = new Reader();
     this.logger = new Logger();
     this.errorCount = 0;
-    this.directory = path.join(
-      config.app.rootDir,
-      subfolder,
-      "*",
-      "*",
-      "*.star"
-    );
-    this.watcher = chokidar.watch(this.directory, {
-      ignored: /^\./,
-      persistent: true,
-      awaitWriteFinish: true,
-      usePolling: true,
-    });
-    this.watcher
-      .on("add", (dirPath) => this.read(dirPath, subfolder))
-      .on("change", (dirPath) => this.read(dirPath, subfolder));
+    this.directory = path.join(config.app.rootDir, subfolder, "*");
+
+    this.readLoop = () => {
+      glob(this.directory, (err, files) => {
+        files.map((date) => {
+          glob(path.join(date, "*"), (err, files) => {
+            files.map((file) => {
+              let key = path.basename(file);
+              if (!this.memory.has(key)) {
+                this.read(file, subfolder);
+              }
+            });
+          });
+        });
+      });
+    };
+
+    //get all "date-directories"
+    this.readLoop();
+    setInterval(this.readLoop, 20000);
   }
 
   read = async (filePath, subfolder) => {
-    const dirPath = filePath.substring(0, filePath.lastIndexOf("/"));
+    // const dirPath = filePath.substring(0, filePath.lastIndexOf("/"));
+    const dirPath = filePath;
     const dataStar = path.join(dirPath, "data.star");
     const timesStar = path.join(dirPath, "times.star");
     const imagesStar = path.join(dirPath, "images.star");
