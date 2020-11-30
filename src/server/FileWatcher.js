@@ -22,6 +22,7 @@ class FileWatcher {
       ignored: /^\./,
       persistent: true,
       awaitWriteFinish: true,
+      usePolling: true,
     });
     this.watcher
       .on("add", (dirPath) => this.read(dirPath, subfolder))
