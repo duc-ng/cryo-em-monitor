@@ -3,7 +3,8 @@ const path = require("path");
 const Reader = require("./Reader");
 const Memory = require("./Memory");
 const Logger = require("./Logger");
-const chokidar = require("chokidar");
+const glob = require("glob");
+var sane = require("sane");
 
 class FileWatcher {
   constructor(subfolder) {
@@ -11,21 +12,29 @@ class FileWatcher {
     this.reader = new Reader();
     this.logger = new Logger();
     this.errorCount = 0;
-    this.directory = path.join(
-      config.app.rootDir,
-      subfolder,
-      "*",
-      "*",
-      "*.star"
-    );
-    this.watcher = chokidar.watch(this.directory, {
-      ignored: /^\./,
-      persistent: true,
-      awaitWriteFinish: true,
+
+    let self = this;
+    let dirGlob = path.join(config.app.rootDir, subfolder, "*", "*", "*.star");
+    var watcher = sane(config.app.rootDir, {
+      glob: [path.join(subfolder, "*", "*", "*.star")],
+      watchman: true,
     });
-    this.watcher
-      .on("add", (dirPath) => this.read(dirPath, subfolder))
-      .on("change", (dirPath) => this.read(dirPath, subfolder));
+
+    watcher.on("ready", () => {
+      glob(dirGlob, async (er, files) => {
+        for (let i = 0; i < files.length; i++) {
+          await self.read(files[i], subfolder);
+          if (i === files.length) {
+            this.logger.log("info", "Server is ready.");
+          }
+        }
+      });
+    });
+
+    watcher.on("add", (filepath, root, stat) => {
+      const dir = path.join(config.app.rootDir, filepath);
+      self.read(dir, subfolder);
+    });
   }
 
   read = async (filePath, subfolder) => {

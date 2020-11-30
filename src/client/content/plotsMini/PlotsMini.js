@@ -62,7 +62,6 @@ function PlotsMini() {
             color: theme.palette.success.main,
           },
           name: "Good",
-          opacity: 0.9,
           mode: "markers",
           type: type,
           hoverinfo: "y",
@@ -74,7 +73,6 @@ function PlotsMini() {
           marker: {
             color: theme.palette.primary.light,
           },
-          opacity: 0.9,
           mode: "markers",
           type: type,
           hoverinfo: "y",
