@@ -14,35 +14,35 @@ class Reader {
     ) {
       //read file
       var data = await fs.promises.readFile(file, "utf8");
-      var substrings = data.split(/[\n,\t]+/);
       var keys = [];
       var values = [];
 
       //remove empty strings and first two lines
-      substrings = substrings.map((e) => e.trim());
-      substrings = substrings.filter(Boolean);
-      substrings.shift();
-      substrings.shift();
+      data = data.split(/[\n,\t]+/);
+      data = data.map((e) => e.trim());
+      data = data.filter(Boolean);
+      data.shift();
+      data.shift();
 
       //format and get keys/values
-      for (i = 0; i < substrings.length; i++) {
-        if (substrings[i].startsWith("_")) {
-          keys.push(substrings[i]);
+      for (i = 0; i < data.length; i++) {
+        if (data[i].startsWith("_")) {
+          keys.push(data[i]);
         } else {
           //text
-          substrings[i] = substrings[i].replace('"', "");
-          substrings[i] = substrings[i].replace('"', "");
+          data[i] = data[i].replace('"', "");
+          data[i] = data[i].replace('"', "");
 
           //date
-          if (file.endsWith("times.star") && substrings[i][10] === "-") {
-            substrings[i] = substrings[i].replaceAt(10, " ");
+          if (file.endsWith("times.star") && data[i][10] === "-") {
+            data[i] = data[i].replaceAt(10, " ");
           }
 
           //numerics (e.g. 0.123 or 4.214e-05)
-          if (substrings[i].match(/^[0-9.e-]+$/) != null) {
-            substrings[i] = parseFloat(substrings[i]);
+          if (data[i].match(/^[0-9.e-]+$/) != null) {
+            data[i] = parseFloat(data[i]);
           }
-          values.push(substrings[i]);
+          values.push(data[i]);
         }
       }
 

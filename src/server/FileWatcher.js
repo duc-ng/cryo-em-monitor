@@ -3,37 +3,41 @@ const path = require("path");
 const Reader = require("./Reader");
 const Memory = require("./Memory");
 const Logger = require("./Logger");
-const glob = require("glob");
+const fg = require("fast-glob");
+const async = require("async");
 
 class FileWatcher {
   constructor(subfolder) {
+    this.subfolder = subfolder;
     this.memory = new Memory();
     this.reader = new Reader();
     this.logger = new Logger();
     this.errorCount = 0;
-    this.directory = path.join(config.app.rootDir, subfolder, "*");
+    this.directory = path.join(config.app.rootDir, subfolder, "*", "*");
 
-    this.readLoop = () => {
-      glob(this.directory, (err, files) => {
-        files.map((date) => {
-          glob(path.join(date, "*"), (err, files) => {
-            files.map((file) => {
-              let key = path.basename(file);
-              if (!this.memory.has(key)) {
-                this.read(file, subfolder);
-              }
-            });
-          });
-        });
-      });
+    let queue = async.queue(async (file, cb) => {
+      await this.read(file);
+      cb(); //has to be invoked
+    }, 100);
+
+    queue.drain(() => {
+      console.log("all items have been processed");
+    });
+
+    this.readLoop = async () => {
+      const dirKeys = await fg([this.directory], { onlyDirectories: true });
+      for (let i = 0; i < dirKeys.length; i++) {
+        if (!this.memory.has(dirKeys[i])) {
+          queue.push(dirKeys[i]);
+        }
+      }
     };
 
-    //get all "date-directories"
     this.readLoop();
-    setInterval(this.readLoop, 20000);
+    setInterval(this.readLoop, 10000);
   }
 
-  read = async (filePath, subfolder) => {
+  read = async (filePath) => {
     // const dirPath = filePath.substring(0, filePath.lastIndexOf("/"));
     const dirPath = filePath;
     const dataStar = path.join(dirPath, "data.star");
@@ -49,7 +53,7 @@ class FileWatcher {
       const merge = { ...files[0], ...files[1] };
       const obj = { path: dirPath, data: merge, times: files[2] };
       if (Object.keys(merge).length !== 0) {
-        this.memory.add(obj, subfolder);
+        this.memory.add(obj, this.subfolder);
       }
     } catch (error) {
       this.errorCount++;
