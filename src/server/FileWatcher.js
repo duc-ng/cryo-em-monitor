@@ -13,33 +13,67 @@ class FileWatcher {
     this.reader = new Reader();
     this.logger = new Logger();
     this.errorCount = 0;
-    this.directory = path.join(config.app.rootDir, subfolder, "*", "*");
-
-    let queue = async.queue(async (file, cb) => {
+    this.queue = async.queue(async (file, cb) => {
       await this.read(file);
-      cb(); //has to be invoked
-    }, 100);
+      cb(); //mandatory
+    }, 100); //max. 100 parallel read calls
 
-    queue.drain(() => {
-      console.log("all items have been processed");
-    });
-
-    this.readLoop = async () => {
-      const dirKeys = await fg([this.directory], { onlyDirectories: true });
-      for (let i = 0; i < dirKeys.length; i++) {
-        if (!this.memory.has(dirKeys[i])) {
-          queue.push(dirKeys[i]);
-        }
+    //poll new files
+    let initFlag = true;
+    this.initScan();
+    this.queue.drain(() => {
+      if (initFlag) {
+        this.logger.log("info", "Finished initial scan: " + this.subfolder);
+        setInterval(this.loop, config.app.refreshDataMs);
+        initFlag = false;
       }
-    };
-
-    this.readLoop();
-    setInterval(this.readLoop, 10000);
+    });
   }
 
-  read = async (filePath) => {
-    // const dirPath = filePath.substring(0, filePath.lastIndexOf("/"));
-    const dirPath = filePath;
+  initScan = () => {
+    this.scan(config.app.dataNotOlderThan);
+  };
+
+  loop = () => {
+    this.scan(2);
+  };
+
+  scan = async (nrDays) => {
+    let directory = path.join(
+      config.app.rootDir,
+      this.subfolder,
+      this.getLastXDays(nrDays),
+      "*"
+    );
+    const dirKeys = await fg([directory], { onlyDirectories: true });
+    dirKeys.map((file) => {
+      let key = parseFloat(path.basename(file));
+      if (!this.memory.has(key)) {
+        this.queue.push(file);
+      }
+    });
+  };
+
+  getLastXDays = (nrDays) => {
+    const dates = [...Array(nrDays)].map((_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      return this.formatDate(d);
+    });
+    return "{" + dates.join(",") + "}";
+  };
+
+  formatDate = (d) => {
+    return (
+      d.getFullYear() +
+      "-" +
+      ("0" + (d.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("0" + d.getDate()).slice(-2)
+    );
+  };
+
+  read = async (dirPath) => {
     const dataStar = path.join(dirPath, "data.star");
     const timesStar = path.join(dirPath, "times.star");
     const imagesStar = path.join(dirPath, "images.star");
