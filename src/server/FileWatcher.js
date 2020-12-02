@@ -16,7 +16,7 @@ class FileWatcher {
     this.queue = async.queue(async (file, cb) => {
       await this.read(file);
       cb(); //mandatory
-    }, 100); //max. 100 parallel read calls
+    }, 50); //max. 50 parallel read calls
 
     //poll new files
     let initFlag = true;
@@ -24,7 +24,7 @@ class FileWatcher {
     this.queue.drain(() => {
       if (initFlag) {
         this.logger.log("info", "Finished initial scan: " + this.subfolder);
-        setInterval(this.loop, config.app.refreshDataMs);
+        setInterval(this.initLoop, config.app.refreshDataMs);
         initFlag = false;
       }
     });
@@ -34,7 +34,7 @@ class FileWatcher {
     this.scan(config.app.dataNotOlderThan);
   };
 
-  loop = () => {
+  initLoop = () => {
     this.scan(2);
   };
 
