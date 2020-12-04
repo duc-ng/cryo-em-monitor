@@ -10,7 +10,7 @@
     "heapAllocation": "auto",
     "autodelete": {
       "isOn": true,
-      "maxLogDays": 2,
+      "maxLogDays": 14,
       "maxDataSize": 50000
     }
   },
@@ -18,7 +18,7 @@
   "test": {
     "loopMs": 10,
     "folder": "Titan1",
-    "partial": false,
+    "partial": true,
     "partialNr": 10
   },
 

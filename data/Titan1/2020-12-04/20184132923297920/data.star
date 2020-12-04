@@ -1,0 +1,15 @@
+ 
+data_measure 
+ 
+loop_
+_mmsImageKey_Value
+_mmsmean_Value
+_mmsdrift_Value
+_mmsiciness_Value
+_mmsdefocus_Value
+_mmsresolution_Value
+_mmsccOfCtfFit_Value
+_mmsastigmatism_Value
+_mmnumberOfParticles_Value
+ 
+20184132923297920	0.024186849744070704	0.7185700746249477	0.381654598025166	0.3051206582970347	0.16395545299853143	0.5919985698594354	0.927322426375357	97

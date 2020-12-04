@@ -5,8 +5,6 @@
 .pnp.js
 /.vscode
 /node_modules
-/data_test/data4Web
-/data_test/data_prod
 /logs
 
 # testing
