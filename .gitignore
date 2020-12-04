@@ -8,6 +8,7 @@
 /data_test/data4Web
 /data_test/data_prod
 /logs
+/.VSCodeCounter
 
 # testing
 /coverage
