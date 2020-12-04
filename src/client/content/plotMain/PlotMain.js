@@ -49,12 +49,12 @@ function PlotMain() {
       x: plotData,
       type: "histogram",
       mode: "lines",
-      opacity: 0.9,
+      opacity: 0.7,
       marker: {
         color: theme.palette.primary.light,
         line: {
-          color: theme.palette.primary.dark,
-          width: 1,
+          color: theme.palette.common.white,
+          width: 0.5,
         },
       },
       xbins: {
@@ -116,7 +116,12 @@ function PlotMain() {
 
     return (
       <div>
-        <Button aria-haspopup="true" onClick={handleOpen} color="primary">
+        <Button
+          aria-haspopup="true"
+          onClick={handleOpen}
+          variant="outlined"
+          color="primary"
+        >
           {config["times.star"][plotNr].label}
         </Button>
         <Menu

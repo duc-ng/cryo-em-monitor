@@ -22,9 +22,9 @@ function API(props) {
 
     const fetchURL =
       "http://" +
-      config.app.api_host +
+      process.env.REACT_APP_HOST +
       ":" +
-      config.app.api_port +
+      process.env.REACT_APP_PORT +
       "/data?from=" +
       getDateString(dateFrom) +
       "&to=" +
@@ -78,11 +78,11 @@ function API(props) {
         fetchData(true);
         var interval = setInterval(() => {
           fetchData(false);
-        }, config.app.refreshDataMs);
+        }, config.app.pollClientMs);
       } else {
         interval = setInterval(() => {
           fetchData(false);
-        }, config.app.refreshDataMs);
+        }, config.app.pollClientMs);
       }
     } else {
       fetchData(true);

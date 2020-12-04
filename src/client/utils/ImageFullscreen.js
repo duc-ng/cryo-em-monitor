@@ -40,7 +40,10 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.common.white,
   },
   pause: {
-    color: theme.palette.warning.main,
+    color: theme.palette.secondary.main,
+  },
+  closeButton: {
+    color: theme.palette.common.white,
   },
 }));
 
@@ -61,9 +64,9 @@ export default function ImageFullscreen(props) {
       const key = data[ind][config.key];
       fetch(
         "http://" +
-          config.app.api_host +
+          process.env.REACT_APP_HOST +
           ":" +
-          config.app.api_port +
+          process.env.REACT_APP_PORT +
           "/image?key=" +
           key +
           "&type=" +
@@ -267,7 +270,10 @@ export default function ImageFullscreen(props) {
       <AppBar className={classes.appBar}>
         <Toolbar>
           <Grid container justify="flex-end">
-            <IconButton color="inherit" onClick={props.handleOpen}>
+            <IconButton
+              className={classes.closeButton}
+              onClick={props.handleOpen}
+            >
               <CloseIcon />
             </IconButton>
           </Grid>

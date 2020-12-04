@@ -13,58 +13,50 @@ import SystemUpdateAltIcon from "@material-ui/icons/SystemUpdateAlt";
 import ErrorOutlineIcon from "@material-ui/icons/ErrorOutline";
 import DataUsageIcon from "@material-ui/icons/DataUsage";
 import CheckIcon from "@material-ui/icons/Check";
+import HelpIcon from "@material-ui/icons/Help";
 import { DataContext } from "./../../global/Data";
+import Fade from "@material-ui/core/Fade";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   root: {
     height: "100%",
   },
 }));
 
-export default function Status(props) {
+export default function Status() {
   const classes = useStyles();
   const theme = useTheme();
   const dataContext = React.useContext(DataContext);
 
-  const statusCards = [
-    [
-      1,
-      config["times.star"][0].value,
-      config["times.star"][0].label,
-      <PhotoCameraIcon />,
-      theme.palette.primary.main,
-    ],
-    [
-      2,
-      config["times.star"][1].value,
-      config["times.star"][1].label,
-      <SystemUpdateAltIcon />,
-      theme.palette.primary.main,
-    ],
-    [
-      3,
-      config["times.star"][2].value,
-      config["times.star"][2].label,
-      <DataUsageIcon />,
-      theme.palette.primary.main,
-    ],
-    [
-      4,
-      config["times.star"][3].value,
-      config["times.star"][3].label,
-      <CheckIcon />,
-      theme.palette.success.main,
-    ],
-    [
-      5,
-      config["times.star"][4].value,
-      config["times.star"][4].label,
-      <ErrorOutlineIcon />,
-      theme.palette.warning.main,
-    ],
-  ];
+  const getIcon = (i) => {
+    switch (i) {
+      case 0:
+        return <PhotoCameraIcon />;
+      case 1:
+        return <SystemUpdateAltIcon />;
+      case 2:
+        return <DataUsageIcon />;
+      case 3:
+        return <CheckIcon />;
+      case 4:
+        return <ErrorOutlineIcon />;
+      default:
+        return <HelpIcon />;
+    }
+  };
 
-  const calcStatusValues = (name) => {
+  const getColor = (i) => {
+    switch (i) {
+      case 3:
+        return theme.palette.success.main;
+      case 4:
+        return theme.palette.warning.main;
+      default:
+        return theme.palette.primary.main;
+    }
+  };
+
+  const getValue = (name) => {
     return dataContext.data.filter(
       (item) => item[name] !== 0 && item[name] !== undefined
     ).length;
@@ -74,26 +66,30 @@ export default function Status(props) {
     <Box m={1}>
       <div id="section_status" />
       <Grid container spacing={2} justify="center">
-        {statusCards.map(([index, name, label, icon, color]) => {
+        {config["times.star"].map(({ label, value }, i) => {
           return (
-            <Grid item xs={6} md={2} key={index}>
+            <Grid item xs={6} md={2} key={i}>
               <Card className={classes.root}>
-                <CardContent>
-                  <Grid container justify="space-between">
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {calcStatusValues(name)}
+                <Fade in={true} timeout={1000}>
+                  <CardContent>
+                    <Grid container justify="space-between">
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {getValue(value)}
+                      </Typography>
+                      <Avatar style={{ backgroundColor: getColor(i) }}>
+                        {getIcon(i)}
+                      </Avatar>
+                    </Grid>
+                    <Typography
+                      variant="body2"
+                      color="textSecondary"
+                      component="p"
+                      align="left"
+                    >
+                      {label}
                     </Typography>
-                    <Avatar style={{ backgroundColor: color }}>{icon}</Avatar>
-                  </Grid>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                    align="left"
-                  >
-                    {label}
-                  </Typography>
-                </CardContent>
+                  </CardContent>
+                </Fade>
               </Card>
             </Grid>
           );

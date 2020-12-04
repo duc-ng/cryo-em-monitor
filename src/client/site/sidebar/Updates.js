@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 10,
   },
   icon: {
-    color: theme.palette.warning.main,
+    color: theme.palette.secondary.main,
   },
 }));
 

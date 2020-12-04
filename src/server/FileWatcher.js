@@ -24,14 +24,14 @@ class FileWatcher {
     this.queue.drain(() => {
       if (initFlag) {
         this.logger.log("info", "Finished initial scan: " + this.subfolder);
-        setInterval(this.initLoop, config.app.refreshDataMs);
+        setInterval(this.initLoop, config.app.pollServerMs);
         initFlag = false;
       }
     });
   }
 
   initScan = () => {
-    this.scan(config.app.dataNotOlderThan);
+    this.scan(config.app.maxDays);
   };
 
   initLoop = () => {
@@ -40,7 +40,7 @@ class FileWatcher {
 
   scan = async (nrDays) => {
     let directory = path.join(
-      config.app.rootDir,
+      process.env.ROOT_DATA,
       this.subfolder,
       this.getLastXDays(nrDays),
       "*"

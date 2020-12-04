@@ -1,19 +1,25 @@
 const config = require("./../config.json");
 const winston = require("winston");
+require("winston-daily-rotate-file");
 
 class Logger {
   constructor() {
+    this.config = {
+      filename: "logs/%DATE%.log",
+      datePattern: "YYYY-MM-DD",
+      maxSize: "20m",
+    };
+
+    //AutoDelete
+    if (config.app.autodelete.isOn) {
+      this.config.maxFiles = config.app.autodelete.maxLogDays + "d";
+    }
+
     this.logger = winston.createLogger({
-      level: "info",
-      format: winston.format.json(),
-      transports: [
-        new winston.transports.File({
-          filename: "logs/" + this.getTime(true) + ".log",
-        }),
-      ],
+      transports: [new winston.transports.DailyRotateFile(this.config)],
     });
 
-    // log to the `console` with colors
+    // log to the console with colors
     if (process.env.NODE_ENV !== "production") {
       this.logger.add(
         new winston.transports.Console({
@@ -26,29 +32,17 @@ class Logger {
     }
   }
 
-  getTime = (isDate) => {
+  getTime = () => {
     const d = new Date();
-    if (isDate) {
-      return (
-        ("0" + d.getDate()).slice(-2) +
-        "-" +
-        ("0" + (d.getMonth() + 1)).slice(-2) +
-        "-" +
-        d.getFullYear()
-      );
-    } else {
-      return (
-        ("0" + d.getHours()).slice(-2) +
-        ":" +
-        ("0" + (d.getMinutes() + 1)).slice(-2)
-      );
-    }
+    return (
+      ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2)
+    );
   };
 
   log = (level, message) => {
     this.logger.log({
       level: level,
-      message: this.getTime(false) + " " + message,
+      message: this.getTime() + " " + message,
     });
   };
 }

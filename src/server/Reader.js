@@ -18,7 +18,7 @@ class Reader {
     data.shift();
 
     //format and get keys/values
-    for (i = 0; i < data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
       if (data[i].startsWith("_")) {
         keys.push(data[i]);
       } else {
@@ -28,7 +28,7 @@ class Reader {
 
         //date
         if (file.endsWith("times.star") && data[i][10] === "-") {
-          data[i] = data[i].replaceAt(10, " ");
+          data[i] = this.stringReplaceAt(data[i], 10, " ");
         }
 
         //numerics (e.g. 0.123 or 4.214e-05)
@@ -42,18 +42,14 @@ class Reader {
     //convert to object
     var object = {};
     for (var i = 0; i < keys.length; ++i) object[keys[i]] = values[i];
-
     return object;
   }
-}
 
-//replace specific char in string
-String.prototype.replaceAt = function (index, replacement) {
-  return (
-    this.substr(0, index) +
-    replacement +
-    this.substr(index + replacement.length)
-  );
-};
+  stringReplaceAt = (string, i, replacement) => {
+    return (
+      string.substr(0, i) + replacement + string.substr(i + replacement.length)
+    );
+  };
+}
 
 module.exports = Reader;

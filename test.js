@@ -3,13 +3,23 @@ const fs = require("fs");
 const path = require("path");
 const Logger = require("./src/server/Logger");
 const readline = require("readline");
+require("dotenv").config();
 
 class Test {
   constructor() {
     this.logger = new Logger();
-    this.dataStar = fs.readFileSync(path.join("test", "data.star"), "utf8");
-    this.imagesStar = fs.readFileSync(path.join("test", "images.star"), "utf8");
-    this.timesStar = fs.readFileSync(path.join("test", "times.star"), "utf8");
+    this.dataStar = fs.readFileSync(
+      path.join("testfiles", "data.star"),
+      "utf8"
+    );
+    this.imagesStar = fs.readFileSync(
+      path.join("testfiles", "images.star"),
+      "utf8"
+    );
+    this.timesStar = fs.readFileSync(
+      path.join("testfiles", "times.star"),
+      "utf8"
+    );
     this.imgSrc = [
       "ctfdiag",
       "driftplot",
@@ -20,7 +30,7 @@ class Test {
       "rawAvg",
     ];
     this.imgFilenames = this.imgSrc.map((x) =>
-      fs.readdirSync(path.join("test", x))
+      fs.readdirSync(path.join("testfiles", x))
     );
     this.readline = readline.createInterface({
       input: process.stdin,
@@ -43,7 +53,7 @@ class Test {
           } else {
             this.createFiles(false);
           }
-          console.log("Files generated: " + (i + 1));
+          process.stdout.write("Files generated: " + (i + 1) + "\r");
         }
         this.startLoop();
       }
@@ -68,7 +78,7 @@ class Test {
 
     //write star files
     const src = path.join(
-      config.app.rootDir,
+      process.env.ROOT_DATA,
       config.test.folder,
       this.getFolder(),
       key.toString()
@@ -78,17 +88,10 @@ class Test {
     this.writeFile("images.star", i, src);
     this.writeFile("times.star", t, src);
 
-    //write images
-    // for (i = 0; i < this.imgSrc.length; i++) {
-    //   let file = this.getRandomArrObj(this.imgFilenames[i]);
-    //   let srcFrom = path.join("test", this.imgSrc[i], file);
-    //   let srcTo = path.join(src, this.imgSrc[i] + ".png");
-    //   this.writeImage(srcFrom, srcTo);
-    // }
     if (withImages) {
       for (i = 0; i < this.imgSrc.length; i++) {
         let file = this.getRandomArrObj(this.imgFilenames[i]);
-        let srcFrom = path.join("test", this.imgSrc[i], file);
+        let srcFrom = path.join("testfiles", this.imgSrc[i], file);
         let srcTo = path.join(src, this.imgSrc[i] + ".png");
         this.writeImage(srcFrom, srcTo);
       }
@@ -173,4 +176,4 @@ class Test {
   };
 }
 
-const test = new Test();
+new Test();

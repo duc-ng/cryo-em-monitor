@@ -8,7 +8,7 @@ import { Link } from "react-scroll";
 const useStyles = makeStyles((theme) => ({
   link: {
     "&:hover": {
-      color: theme.palette.warning.main,
+      color: theme.palette.secondary.main,
       backgroundColor: "transparent",
       cursor: "pointer",
     },

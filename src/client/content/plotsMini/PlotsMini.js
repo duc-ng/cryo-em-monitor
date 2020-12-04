@@ -12,8 +12,6 @@ import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Typography from "@material-ui/core/Typography";
 
-const Plot = createPlotlyComponent(Plotly);
-
 function PlotsMini() {
   const { data, dateFrom, dateTo } = React.useContext(DataContext);
   const theme = useTheme();
@@ -32,6 +30,7 @@ function PlotsMini() {
     const { minOptimum, maxOptimum, value } = config["data.star"][props.i];
     const subtitle = config["data.star"][props.i].description;
     const maxPointsPlotted = 5000;
+    const Plot = createPlotlyComponent(Plotly);
 
     const percentPlotted = Math.floor((maxPointsPlotted / data.length) * 100);
 
@@ -58,6 +57,7 @@ function PlotsMini() {
         {
           x: type === "scattergl" ? xValues1 : yValues1,
           y: yValues1,
+          opacity: 0.9,
           marker: {
             color: theme.palette.success.main,
           },
@@ -69,7 +69,8 @@ function PlotsMini() {
         {
           x: type === "scattergl" ? xValues2 : yValues2,
           y: yValues2,
-          name: "Normal",
+          name: "Ok",
+          opacity: 0.9,
           marker: {
             color: theme.palette.primary.light,
           },
@@ -179,6 +180,7 @@ function PlotsMini() {
         </ButtonGroup>
       );
     };
+
 
     return (
       <ContentContainer

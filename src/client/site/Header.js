@@ -18,6 +18,7 @@ import config from "./../../config.json";
 import { DataContext } from "./../global/Data";
 import { ThemeContext } from "../global/Theme";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Typography from "@material-ui/core/Typography";
 import API from "./API";
 
 const drawerWidth = 240;
@@ -30,6 +31,7 @@ const useStyles = makeStyles((theme) => ({
     },
     boxShadow: "none",
     padding: 0,
+    opacity: 0.9
   },
   toolbar: {
     padding: 0,
@@ -41,13 +43,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   circle: {
-    color: theme.palette.warning.main,
+    color: theme.palette.secondary.main,
   },
 }));
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
-    backgroundColor: theme.palette.warning.main,
+    backgroundColor: theme.palette.secondary.main,
     color: theme.palette.common.white,
     top: 2,
     right: -7,
@@ -56,7 +58,7 @@ const StyledBadge = withStyles((theme) => ({
 
 const StyledTooltip = withStyles((theme) => ({
   tooltip: {
-    backgroundColor: theme.palette.warning.main,
+    color: theme.palette.secondary.main,
   },
 }))(Tooltip);
 
@@ -90,7 +92,7 @@ export default function Header() {
         setInvisible(
           !(
             Date.now() - new Date(dataContext.lastDate) >
-              config.app.noData.ms && props.val === tabValue
+              config.app.notification.ms && props.val === tabValue
           )
         );
       }, 1000);
@@ -99,8 +101,14 @@ export default function Header() {
       };
     }, [props.val]);
 
+    const tooltipText = (
+      <Typography variant="caption">
+        {config.app.notification.message}
+      </Typography>
+    );
+
     return (
-      <StyledTooltip title={invisible ? "" : config.app.noData.message}>
+      <StyledTooltip title={invisible ? "" : tooltipText}>
         <StyledBadge invisible={invisible} variant="dot">
           {props.label}
         </StyledBadge>
@@ -118,9 +126,6 @@ export default function Header() {
           setTabValue(newValue);
         }}
         variant="scrollable"
-        scrollButtons="on"
-        indicatorColor="primary"
-        textColor="primary"
         className={classes.tabs}
       >
         {config.microscopes.map((x, i) => (

@@ -95,8 +95,8 @@ export default function Filter() {
               <Button
                 fullWidth
                 disableElevation
-                variant={item.value === value ? "contained" : "outlined"}
-                color={item.value === value ? "primary" : "default"}
+                variant="outlined"
+                color={item.value === value ? "secondary" : "default"}
                 onClick={() => {
                   setValue(item.value);
                   dataContext.setFromTo(

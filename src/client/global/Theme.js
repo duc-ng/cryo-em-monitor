@@ -1,6 +1,5 @@
 import React from "react";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import { blue, grey } from "@material-ui/core/colors";
 
 export const ThemeContext = React.createContext({});
 
@@ -13,17 +12,28 @@ export default function Theme(props) {
     palette: {
       type: darkMode,
       primary: {
-        main: blue[600],
+        light: "#B1DAFC",
+        main: "#72B5E9",
       },
       secondary: {
-        main: grey[300],
+        main: "#F9C80E",
+      },
+      warning: {
+        main: "#E97720",
+      },
+      success: {
+        main: "#53DD6C",
+      },
+      background: {
+        default: darkMode === "dark" ? "#181818" : "#fafafa",
+        paper: darkMode === "dark" ? "#202931" : "#fff",
       },
     },
     typography: {
       button: {
-        textTransform: 'none' //enable lower case in button
-      }
-    }
+        textTransform: "none", //enable lower case in button
+      },
+    },
   });
 
   const switchDarkMode = () => {

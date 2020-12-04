@@ -6,11 +6,8 @@ class Memory {
   constructor() {
     this.maxHeapSize = //in Byte
       config.app.heapAllocation === "auto"
-        ? v8.getHeapStatistics().total_available_size /
-          2 /
-          Object.keys(config.microscopes).length
+        ? v8.getHeapStatistics().total_available_size / 2
         : config.app.heapAllocation;
-    this.maxArrSize = this.maxHeapSize / config.app.avgDataPointSize;
     this.keysSorted = []; //sorted object keys
     this.dataValues = new Map(); //hashtable: key -> objects
     this.logger = new Logger();
@@ -36,14 +33,14 @@ class Memory {
     let f = from === "undefined" ? new Date(0) : new Date(from);
     let t = to === "undefined" ? new Date() : new Date(to);
 
-    const arr = this.keysSorted
-      .map((key) => this.getData(key).data)
-      .filter((obj) => {
-        let a = new Date(obj[config["times.star"][0].value]);
-        return a >= f && a < t;
-      });
-
-    return arr;
+    return this.keysSorted.reduce((filtered, key) => {
+      let data = this.getData(key).data;
+      let a = new Date(data[config["times.star"][0].value]);
+      if (a >= f && a < t) {
+        filtered.push(data);
+      }
+      return filtered;
+    }, []);
   };
 
   getDataNewerThan = (key) => {
@@ -81,10 +78,15 @@ class Memory {
       } else {
         this.keysSorted.splice(i, 0, key);
       }
-      
-      //manage memory
-      if (this.keysSorted.length > this.maxArrSize) {
-        this.dataValues.delete(this.keysSorted.shift());
+
+      //manage heap
+      let usedHeap = v8.getHeapStatistics().used_heap_size;
+      let propUsed = usedHeap / this.maxHeapSize;
+      this.logger.log("debug", "Heap used: " + propUsed.toFixed(2) + "%");
+      if (usedHeap > this.maxHeapSize) {
+        let key = this.keysSorted.shift();
+        this.dataValues.set(key, undefined);
+        this.logger.log("debug", "Heap full. Removed: " + key);
       }
 
       //log

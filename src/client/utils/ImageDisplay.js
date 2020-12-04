@@ -57,9 +57,9 @@ export default function ImageDisplay(props) {
 
       fetch(
         "http://" +
-          config.app.api_host +
+          process.env.REACT_APP_HOST +
           ":" +
-          config.app.api_port +
+          process.env.REACT_APP_PORT +
           "/image?key=" +
           key +
           "&type=" +

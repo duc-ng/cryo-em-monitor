@@ -1,15 +1,17 @@
 {
   "app": {
-    "api_host": "localhost",
-    "api_port": 5000,
-    "rootDir": "/Users/duc/Desktop/data_test/data4Web",
-    "dataNotOlderThan": 7,
-    "refreshDataMs": 20000,
-    "heapAllocation": "auto",
-    "avgDataPointSize": 1400,
-    "noData": {
+    "maxDays": 7,
+    "pollServerMs": 10000,
+    "pollClientMs": 20000,
+    "notification": {
       "ms": 300000,
       "message": "No data for 5 minutes."
+    },
+    "heapAllocation": "auto",
+    "autodelete": {
+      "isOn": true,
+      "maxLogDays": 2,
+      "maxDataSize": 50000
     }
   },
 
@@ -41,7 +43,6 @@
       "label": "Mean",
       "description": "Pixel Values [counts/px]",
       "value": "_mmsmean_Value",
-      "info": "_mmsmean_Info",
       "maxOptimum": 0.6,
       "minOptimum": 0.2
     },
@@ -49,7 +50,6 @@
       "label": "Drift",
       "description": "Total Sample Drift [Å]",
       "value": "_mmsdrift_Value",
-      "info": "_mmsdrift_Info",
       "maxOptimum": 0.6,
       "minOptimum": 0.2
     },
@@ -57,7 +57,6 @@
       "label": "Iciness",
       "description": "Iciness [a.u.]",
       "value": "_mmsiciness_Value",
-      "info": "_mmsiciness_Info",
       "maxOptimum": 0.9,
       "minOptimum": 0.1
     },
@@ -65,7 +64,6 @@
       "label": "Defocus",
       "description": "Defocus Fit [μm]",
       "value": "_mmsdefocus_Value",
-      "info": "_mmsdefocus_Info",
       "maxOptimum": 0.0,
       "minOptimum": 0.0
     },
@@ -73,7 +71,6 @@
       "label": "Resolution",
       "description": "Resolution of CTF Fit [Å]",
       "value": "_mmsresolution_Value",
-      "info": "_mmsresolution_Info",
       "maxOptimum": 0.5,
       "minOptimum": 0.4
     },
@@ -81,7 +78,6 @@
       "label": "CCvalue",
       "description": "CC Value of CTF Fit [a.u.]",
       "value": "_mmsccOfCtfFit_Value",
-      "info": "_mmsccOfCtfFit_Info",
       "maxOptimum": 0.7,
       "minOptimum": 0.3
     },
@@ -89,7 +85,6 @@
       "label": "Astigmatism",
       "description": "Astigmatism [μm]",
       "value": "_mmsastigmatism_Value",
-      "info": "_mmsastigmatism_Info",
       "maxOptimum": 0.9,
       "minOptimum": 0.0
     },
@@ -97,7 +92,6 @@
       "label": "Particles",
       "description": "Number of Particles",
       "value": "_mmnumberOfParticles_Value",
-      "info": "_mmnumberOfParticles_Info",
       "maxOptimum": 10000,
       "minOptimum": 0.0
     }

@@ -4,7 +4,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import clsx from "clsx";
-import { useTheme } from "@material-ui/core/styles";
 import TableExport from "./TableExport";
 
 const useToolbarStyles = makeStyles((theme) => ({
@@ -26,7 +25,6 @@ const useToolbarStyles = makeStyles((theme) => ({
 
 export default function TableToolbar(props) {
   const classes = useToolbarStyles();
-  const theme = useTheme();
   const numSelected = props.selected.length;
 
   return (
@@ -54,8 +52,8 @@ export default function TableToolbar(props) {
           ) : (
             <React.Fragment>
               <Typography
-                variant="body1"
-                style={{ color: theme.palette.warning.main }}
+                variant="subtitle1"
+                // style={{ color: theme.palette.secondary.main }}
                 id="section_2"
                 align="left"
               >

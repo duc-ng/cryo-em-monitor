@@ -1,12 +1,15 @@
 # Cryo-EM data monitor
 
-Monitor for Cryo-EM data of the Max Planck Institute of Biochemistry.
+Monitoring application for Cryo-EM data of the Max Planck Institute of Biochemistry.
+
+This application reads data from from multiple microscopic recordings, when saved in _.star_ files, from the filesystem without the need for a database and scales up to 100k files and more. A modern client optimized for desktop and mobile view will analyze and display the data and images in realtime.
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ## Latest update
 
 - 25.11.20
+
   - replace moment.js (deprecated) with date-fns
   - loading circle: orange + more thick
   - node version in Readme
@@ -14,10 +17,16 @@ These instructions will get you a copy of the project up and running on your loc
   - checked compression level
   - minplots: display "x% plotted" for subsets
   - fix: missing plotdata after fullscreen mode
-  - fix: image display bugs 
+  - fix: image display bugs
   - add: pull to reload on mobile
   - fix: mobile and layout bugs
   - add: miniplot value filter
+  - rewrite: FileWatcher
+  - host,port,root -> .env
+  - clean: exit handling
+  - add: log debug
+  - times.star now extendable
+  - new colors
 
 - 16.11.20
 
@@ -47,37 +56,9 @@ These instructions will get you a copy of the project up and running on your loc
   - better structure in config
   - Test: 24.000 datapoints: ~7-8s
 
-- 22.10.20
-
-  - start time: 5-10s
-  - fix bugs: image filter, live update, header label, reader
-  - added Logger
-  - rendering optimized
-  - default: data of last 3h
-  - reader improved
-  - fix: Volume
-  - fix: 24h format
-
-- 11.10.20
-
-  - removed websockets
-  - replaced react-scrollspy-nav with react-scroll
-  - added: API.js
-  - reader improved
-  - added microscope switching
-
-- 17.9.20
-
-  - added plot: images/hour
-  - added zoom in/out in miniplots
-  - seperate Memory class + dynamic heap allocation + FIFO
-  - seperate Filewatcher class
-  - robust reader + syncing
-  - Test: 10.000 files ✓
-
 ## Requirements
 
-To run this application, you have to install **[Node.js](https://nodejs.org/en/download/)** ^13.12. 
+To run this application, you will have to install **[Node.js](https://nodejs.org/en/download/)** ^13.12.
 
 - E.g. Linux/ Ubuntu:
 
@@ -106,60 +87,146 @@ Get, build and run:
 git clone https://github.com/duc-ng/web-monitoring.git
 cd web-monitoring
 npm install                   #install node modules
-npm audit fix                 #fix modules
 npm run build                 #build react app
-node app.js                   #start server
+npm start                     #start server
+npm stop                      #stop server
 ```
 
 - The application can be opened at: http://localhost:5000
 
+## Directory structure
+
+This application reads data directly from the filesystem into memory given a fixed folder and file structure.
+
+```bash
+~/ROOT_DATA/microscope/YYYY-MM-DD/key/file
+```
+
+e.g.
+
+```bash
+./data/Titan3/2020-12-04/91436631163808500/data.star
+
+––– data                                  #root data directory
+    ├── Titan1                            #one folder for each microscope
+    ├── Titan2
+    └── Titan3
+        ├── 2020-11-17                    #one directory for each day
+        ├── 2020-11-30
+        ├── 2020-12-03
+        └── 2020-12-04
+            ├── 41801567764988104         #one directory per recording
+            └── 91436631163808500
+                ├── data.star             #contains all data values
+                ├── times.star            #contains all recording time values
+                ├── images.star           #contains names and descriptions of image files (below)
+                ├── ctfdiag.png
+                ├── driftplot.png
+                ├── motionCorrAvg.png
+                ├── pick.png
+                ├── psMotionCorrAvg.png
+                ├── psRawAvg.png
+                └── rawAvg.png
+```
+
 ## Configuration
 
-1. Configure host, port, etc. `src/config.json`
+### **`.env`**
+
+1. Configure local environment variables in `./.env`
+2. Rebuild app: `npm run build`
+
+| Name           | Type   | Default     | Description                                                                                                                                                  |
+| -------------- | ------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| NODE_ENV       | String | development | _development_ / _production_: Sets environment in which app is running. Production mode improves performance by e.g. suppressing console logs, caching, etc. |
+| REACT_APP_HOST | String | localhost   | Host                                                                                                                                                         |
+| REACT_APP_PORT | Number | 5000        | Port                                                                                                                                                         |
+| ROOT_DATA      | Path   | "data/"     | path to **data** directory (relative or absolute)                                                                                                            |
+
+### **`config.json`**
+
+1. Configure app variables in `./src/config.json`
 2. Rebuild app: `npm run build`
 
 #### **`app`**
 
-| Name             | Type             | Default                   | Description                                          |
-| ---------------- | ---------------- | ------------------------- | ---------------------------------------------------- |
-| **api_host**     | String           | "localhost"               | Host                                                 |
-| **api_port**     | Number           | 5000                      | Port                                                 |
-| **rootDir**      | Path             | "data_test/data4Web"      | path to data directory (relative or absolute)        |
-| dataNotOlderThan | Number           | 100                       | data won't be read, if older than x days             |
-| refreshDataMs    | Number           | 5000                      | Refresh rate for data fetching in ms                 |
-| noData.ms        | Number           | 5000                      | Notification after x ms, if no data has arrived      |
-| noData.message   | String           | "No data for 10 seconds." | Notification message                                 |
-| heapAllocation   | "auto" or Number | "auto"                    | max. heap size in Byte                               |
-| avgDataPointSize | Number           | 1400                      | avg. size of 1 datapoint in Byte for heap allocation |
+| Name                   | Type              | Default                  | Description                                                                    |
+| ---------------------- | ----------------- | ------------------------ | ------------------------------------------------------------------------------ |
+| maxDays                | Integer           | 7                        | Data won't be read, if older than \_ days                                      |
+| pollServerMs           | Integer           | 10000                    | Server polling interval in ms                                                  |
+| pollClientMs           | Integer           | 20000                    | Client polling interval in ms                                                  |
+| notification.ms        | Integer           | 300000                   | Notification: if no data has arrived after \_ ms,                              |
+| notification.message   | String            | "No data for 5 minutes." | Notification: message, if no data has arrived                                  |
+| heapAllocation         | "auto" or Integer | "auto"                   | "auto" / max. heap size in Byte : oldest data will be deleted, if heap is full |
+| autodelete.isOn        | Boolean           | true                     | Turn on/off auto delete of data on hard drive                                  |
+| autodelete.maxLogDays  | Integer           | 14                       | Keep last \_ days of logfiles                                                  |
+| autodelete.maxDataSize | Integer           | 50000                    | Delete oldest data on hard drive, if total size \_ in MB is reached            |
 
-#### **`key`**
+#### **`test`**
 
-| Name | Type   | Default               | Description            |
-| ---- | ------ | --------------------- | ---------------------- |
-| key  | String | "\_mmsImageKey_Value" | key name of data point |
+| Name   | Type    | Default  | Description                                           |
+| ------ | ------- | -------- | ----------------------------------------------------- |
+| loopMs | Integer | 10       | Interval in ms, when generating test data             |
+| folder | String  | "Titan1" | Directory of microscope, where test data is generated |
 
 #### **`microscopes`**
 
-...
+| Name   | Type   | Description                  |
+| ------ | ------ | ---------------------------- |
+| label  | String | Name of microscope displayed |
+| folder | String | Directory of microscope      |
+
+_Note: This configuration is expandable._
+
+#### **`key`**
+
+| Name | Type   | Default               | Description        |
+| ---- | ------ | --------------------- | ------------------ |
+| key  | String | "\_mmsImageKey_Value" | key in .star files |
 
 #### **`times.star`**
 
-...
+| Name  | Type   | Description              |
+| ----- | ------ | ------------------------ |
+| label | String | Label displayed          |
+| value | String | Value name in .star file |
+
+_Note: This configuration is expandable. First value is main value and has to be set._
 
 #### **`data.star`**
 
-...
+| Name        | Type   | Description                  |
+| ----------- | ------ | ---------------------------- |
+| label       | String | Title displayed              |
+| description | String | Subtitle displayed           |
+| value       | String | Value name in .star file     |
+| maxOptimum  | Number | max. value for optimal range |
+| minOptimum  | Number | min. value for optimal range |
+
+_Note: This configuration is expandable._
 
 #### **`images.star`**
 
-...
+| Name  | Type   | Description              |
+| ----- | ------ | ------------------------ |
+| label | String | Label displayed          |
+| value | String | Value name in .star file |
+| info  | String | Info name in .star file  |
+
+_Note: This configuration is expandable._
 
 ## Development
 
-Start react development server (+auto refresh after save) at: http://localhost:3000
+Start react development server at: http://localhost:3000
+(easier development with auto refresh after save and no need of building app after changes)
 
 ```bash
-npm run dev
+npm run dev                  #server & client (+auto refresh)
+
+  #or
+
+npm run devclient            #client (+auto refresh)
+npm run devserver            #server (+auto refresh)
 ```
 
 Analyze app size:
@@ -178,20 +245,27 @@ node test.js
 
 Production:
 
-- change `NODE_ENV=development` to `NODE_ENV=production` in `.env`
+- build app with `npm run build`
+- set `NODE_ENV` to `production` in `.env`
 
-## App structure
+## Logical folder structure
 
     ├── app.js                  #server
-    │   └── Reader.js
+    │   ├── FileWatcher.js
+    │   ├── Memory.js
+    │   ├── Reader.js
+    │   ├── Logger.js
+    │   └── AutoDelete.js
     │
     └── App.js                  #client
         ├── site
         │   ├── Header.js
         │   ├── Footer.js
+        │   ├── API.js
         │   └── Sidebar.js
         │       ├── Navigation.js
         │       ├── Filter.js
+        │       ├── Sidebar.js
         │       └── Updates.js
         │
         ├── global
@@ -204,8 +278,7 @@ Production:
         │   │
         │   ├── images
         │   │   └── ImageContainer.js
-        │   │       └── ImageSelector.js
-        │   │           └── imageGallery.css
+        │   │       
         │   ├── table
         │   │   └── TableContainer.js
         │   │       └── Table.js
@@ -213,26 +286,25 @@ Production:
         │   │           │   └── TableExport.js
         │   │           ├── TableHeader.js
         │   │           └── TableRowSingle.js
-        │   └── plots
-        │       └── PlotContainer.js
-        │           ├── PlotsFullscreen.js
-        │           └── Plot.js
+        │   │
+        │   ├── plotMain
+        │   │   └── PlotMain.js
+        │   │
+        │   └── plotsMini
+        │       └── PlotsMini.js
+        │           └── PlotsFullscreen.js
         │
         ├── utils
+        │   ├── ContentContainer.js
+        │   ├── FormatDate.js
+        │   ├── ImageDisplay.js
+        │   ├── ImageFullscreen.js
+        │   ├── PullAndRefresh.js
+        │   ├── ScrollToTop.js
         │   └── SmallDivider.js
         │
         └── assets
             └── logo.jpeg
-
-## Troubleshooting
-
-If you encounter one of the following problems, simply run:
-
-- (Linux) Error: ENOSPC: System limit for number of file watchers reached (see [here](https://github.com/guard/listen/wiki/Increasing-the-amount-of-inotify-watchers#the-technical-details))
-
-  ```bash
-  echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-  ```
 
 ## Built With
 
@@ -241,11 +313,8 @@ If you encounter one of the following problems, simply run:
 - [Plot.ly](https://plotly.com/javascript/) - Interactive plots
 - [Node.js](https://nodejs.org/en/) - JavaScript runtime environemnt
 - [Express.js](https://expressjs.com/) - Backend framework
+- and more..
 
 ## Author
 
-- **[Duc Nguyen](https://github.com/duc-ng)**
-
-```
-
-```
+- **[Duc Nguyen](https://github.com/duc-ng)** (Max Planck Institute of Biochemistry)
