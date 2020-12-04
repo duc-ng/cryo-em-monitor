@@ -2,7 +2,7 @@
 
 Monitoring application for Cryo-EM data of the Max Planck Institute of Biochemistry.
 
-This application reads data from from multiple microscopic recordings, when saved in _.star_ files, from the filesystem without the need for a database and scales up to 100k files and more. A modern client optimized for desktop and mobile view will analyze and display the data and images in realtime.
+This application reads data from from multiple microscopic recordings, when saved in _.star_ files, from the filesystem without the need for a database and scales up to 100k and more files. A modern client optimized for desktop and mobile view will analyze and display the data and images in realtime.
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
@@ -60,7 +60,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 To run this application, you will have to install **[Node.js](https://nodejs.org/en/download/)** ^13.12.
 
-- E.g. Linux/ Ubuntu:
+- e.g. Linux/ Ubuntu:
 
 ```bash
 #install node and package manager
@@ -73,7 +73,7 @@ sudo npm install -g n
 sudo n stable
 ```
 
-- E.g. Mac:
+- e.g. Mac:
 
 ```bash
 brew install node
@@ -84,12 +84,18 @@ brew install node
 Get, build and run:
 
 ```bash
+#get and build
 git clone https://github.com/duc-ng/web-monitoring.git
 cd web-monitoring
-npm install                   #install node modules
-npm run build                 #build react app
-npm start                     #start server
-npm stop                      #stop server
+npm install
+npm run build
+
+#start
+node app.js
+
+#or start as daemon
+npm start
+npm stop
 ```
 
 - The application can be opened at: http://localhost:5000
@@ -131,10 +137,11 @@ e.g.
 
 ## Configuration
 
-### **`.env`**
-
 1. Configure local environment variables in `./.env`
-2. Rebuild app: `npm run build`
+2. Configure app variables in `./src/config.json`
+3. Rebuild app: `npm run build`
+
+### **`.env`**
 
 | Name           | Type   | Default     | Description                                                                                                                                                  |
 | -------------- | ------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -144,9 +151,6 @@ e.g.
 | ROOT_DATA      | Path   | "data/"     | path to **data** directory (relative or absolute)                                                                                                            |
 
 ### **`config.json`**
-
-1. Configure app variables in `./src/config.json`
-2. Rebuild app: `npm run build`
 
 #### **`app`**
 
@@ -164,10 +168,12 @@ e.g.
 
 #### **`test`**
 
-| Name   | Type    | Default  | Description                                           |
-| ------ | ------- | -------- | ----------------------------------------------------- |
-| loopMs | Integer | 10       | Interval in ms, when generating test data             |
-| folder | String  | "Titan1" | Directory of microscope, where test data is generated |
+| Name      | Type    | Default  | Description                                                        |
+| --------- | ------- | -------- | ------------------------------------------------------------------ |
+| loopMs    | Integer | 10       | Interval in ms, when generating test data                          |
+| folder    | String  | "Titan1" | Directory of microscope, where test data is generated              |
+| partial   | Boolean | true     | wether all test data should contain test images (to save up space) |
+| partialNr | Integer | 10       | only last \_ data points generated will contain test images        |
 
 #### **`microscopes`**
 
@@ -176,7 +182,7 @@ e.g.
 | label  | String | Name of microscope displayed |
 | folder | String | Directory of microscope      |
 
-_Note: This configuration is expandable._
+_This configuration is expandable._
 
 #### **`key`**
 
@@ -191,7 +197,7 @@ _Note: This configuration is expandable._
 | label | String | Label displayed          |
 | value | String | Value name in .star file |
 
-_Note: This configuration is expandable. First value is main value and has to be set._
+_This configuration is expandable. First value is main value and has to be set._
 
 #### **`data.star`**
 
@@ -203,7 +209,7 @@ _Note: This configuration is expandable. First value is main value and has to be
 | maxOptimum  | Number | max. value for optimal range |
 | minOptimum  | Number | min. value for optimal range |
 
-_Note: This configuration is expandable._
+_This configuration is expandable._
 
 #### **`images.star`**
 
@@ -213,7 +219,7 @@ _Note: This configuration is expandable._
 | value | String | Value name in .star file |
 | info  | String | Info name in .star file  |
 
-_Note: This configuration is expandable._
+_This configuration is expandable._
 
 ## Development
 
@@ -237,7 +243,6 @@ npm run analyze
 ```
 
 Create test .star files:
-(Note: only last four datapoints have images)
 
 ```bash
 node test.js
@@ -248,7 +253,7 @@ Production:
 - build app with `npm run build`
 - set `NODE_ENV` to `production` in `.env`
 
-## Logical folder structure
+## Logical application structure
 
     ├── app.js                  #server
     │   ├── FileWatcher.js
@@ -278,7 +283,7 @@ Production:
         │   │
         │   ├── images
         │   │   └── ImageContainer.js
-        │   │       
+        │   │
         │   ├── table
         │   │   └── TableContainer.js
         │   │       └── Table.js

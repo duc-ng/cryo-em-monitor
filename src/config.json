@@ -17,7 +17,9 @@
 
   "test": {
     "loopMs": 10,
-    "folder": "Titan1"
+    "folder": "Titan1",
+    "partial": false,
+    "partialNr": 10
   },
 
   "microscopes": [
