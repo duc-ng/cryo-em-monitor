@@ -113,6 +113,7 @@ function PlotsMini() {
       },
       paper_bgcolor: "rgba(0,0,0,0)",
       plot_bgcolor: "rgba(0,0,0,0)",
+      bargap: 0.01,
       hovermode: plotType === "scattergl" ? "closest" : "x",
       barmode: "stack",
       xaxis: {

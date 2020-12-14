@@ -11,12 +11,11 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 const Plot = createPlotlyComponent(Plotly);
 
-
 function PlotMain() {
   const theme = useTheme();
   const { dateFrom, dateTo, data } = React.useContext(DataContext);
   const [plotNr, setPlotNr] = React.useState(0);
-
+  const maxDate = dateTo === undefined ? new Date() : dateTo;
   const minDate =
     dateFrom === undefined
       ? data.length === 0
@@ -24,25 +23,9 @@ function PlotMain() {
         : data[0][config["times.star"][plotNr].value]
       : dateFrom;
 
-  const maxDate = dateTo === undefined ? new Date() : dateTo;
-
-  // data<=4h => 10min bins
-  // data<=4d => 1h bins
-  // else 1d bins
-  const getBinSize = () => {
-    const diff = maxDate - minDate;
-    if (diff <= 14400000) {
-      return 600000;
-    } else if (diff <= 345600000) {
-      return 3600000;
-    } else {
-      return 86400000;
-    }
-  };
-
   const stepNr = 30;
   const stepSize = (maxDate - minDate) / stepNr;
-  const xData = [...Array(stepNr).keys()].map(
+  const xData = [...Array(stepNr+1).keys()].map(
     (i) => new Date(maxDate - stepSize * i)
   );
   const yData = xData.map(
@@ -53,7 +36,6 @@ function PlotMain() {
         return date !== 0 && date >= from && date < to;
       }).length
   );
-
 
   const dataPlot = [
     {
@@ -71,7 +53,7 @@ function PlotMain() {
       y: yData,
       mode: "markers",
       type: "bar",
-      opacity: 0.3,
+      opacity: 0.7,
       marker: {
         color: theme.palette.primary.main,
       },
@@ -92,7 +74,7 @@ function PlotMain() {
     },
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
-    bargap: 0.02,
+    bargap: 0.01,
     font: {
       family: theme.typography.fontFamily,
       color: theme.palette.text.primary,
