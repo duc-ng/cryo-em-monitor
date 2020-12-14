@@ -152,7 +152,7 @@ export default function ImageFullscreen(props) {
   const date =
     data.length === 0
       ? 0
-      : FormatDate(new Date(data[currentIndex][config["times.star"][0].value]));
+      : FormatDate(data[currentIndex][config["times.star"][0].value]);
 
   const onKeyDown = (e) => {
     if (e.key === "ArrowRight") {
