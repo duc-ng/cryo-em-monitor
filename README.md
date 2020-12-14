@@ -8,6 +8,16 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Latest update
 
+- 14.12.
+
+  - Logging files: rotating days
+  - fix webgl not showing plotdata
+  - notification, if webgl is not supported
+  - ANGLE flag -> readme
+  - fix: safari compatibility
+  - test on new linux copy
+  - plot main: count/h
+
 - 25.11.20
 
   - replace moment.js (deprecated) with date-fns
@@ -58,7 +68,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Requirements
 
-To run this application, you will have to install **[Node.js](https://nodejs.org/en/download/)** ^13.12.
+To run this application, you will need to install **[Node.js](https://nodejs.org/en/download/)** ^13.12.
 
 - e.g. Linux/ Ubuntu:
 
@@ -90,8 +100,11 @@ cd web-monitoring
 npm install
 npm run build
 
+#create test files
+node test.js        #enter a number and exit with ctrl+c
+
 #start
-node app.js
+node app.js         #exit with ctrl+c
 
 #or start as daemon
 npm start
@@ -100,9 +113,9 @@ npm stop
 
 - The application can be opened at: http://localhost:5000
 
-## Directory structure
+## Data directory
 
-This application reads data directly from the filesystem into memory given a fixed folder and file structure.
+This application reads data directly from the filesystem into memory given this fixed folder and file structure:
 
 ```bash
 ~/ROOT_DATA/microscope/YYYY-MM-DD/key/file
@@ -168,12 +181,12 @@ e.g.
 
 #### **`test`**
 
-| Name      | Type    | Default  | Description                                                        |
-| --------- | ------- | -------- | ------------------------------------------------------------------ |
-| loopMs    | Integer | 10       | Interval in ms, when generating test data                          |
-| folder    | String  | "Titan1" | Directory of microscope, where test data is generated              |
-| partial   | Boolean | true     | wether all test data should contain test images (to save up space) |
-| partialNr | Integer | 10       | only last \_ data points generated will contain test images        |
+| Name      | Type    | Default  | Description                                                                   |
+| --------- | ------- | -------- | ----------------------------------------------------------------------------- |
+| loopMs    | Integer | 10       | Interval in ms, when generating test data                                     |
+| folder    | String  | "Titan1" | Directory of microscope, where test data is generated                         |
+| partial   | Boolean | true     | wether only a part of test data should contain test images (to save up space) |
+| partialNr | Integer | 10       | only last \_ data points generated will contain test images                   |
 
 #### **`microscopes`**
 
@@ -229,8 +242,7 @@ Start react development server at: http://localhost:3000
 ```bash
 npm run dev                  #server & client (+auto refresh)
 
-  #or
-
+#or
 npm run devclient            #client (+auto refresh)
 npm run devserver            #server (+auto refresh)
 ```
@@ -253,7 +265,7 @@ Production:
 - build app with `npm run build`
 - set `NODE_ENV` to `production` in `.env`
 
-## Logical application structure
+## Logical app structure
 
     ├── app.js                  #server
     │   ├── FileWatcher.js
@@ -278,26 +290,21 @@ Production:
         │   └── Theme.js
         │
         ├── content
-        │   ├── status
-        │   │   └── Status.js
+        │   ├── Status.js
         │   │
-        │   ├── images
-        │   │   └── ImageContainer.js
+        │   ├── ImageContainer.js
         │   │
-        │   ├── table
-        │   │   └── TableContainer.js
-        │   │       └── Table.js
-        │   │           ├── TableToolbar.js
-        │   │           │   └── TableExport.js
-        │   │           ├── TableHeader.js
-        │   │           └── TableRowSingle.js
+        │   ├── TableContainer.js
+        │   │   └── Table.js
+        │   │       ├── TableToolbar.js
+        │   │       │   └── TableExport.js
+        │   │       ├── TableHeader.js
+        │   │       └── TableRowSingle.js
         │   │
-        │   ├── plotMain
-        │   │   └── PlotMain.js
+        │   ├── PlotMain.js
         │   │
-        │   └── plotsMini
-        │       └── PlotsMini.js
-        │           └── PlotsFullscreen.js
+        │   └── PlotsMini.js
+        │       └── PlotsFullscreen.js
         │
         ├── utils
         │   ├── ContentContainer.js
@@ -306,10 +313,18 @@ Production:
         │   ├── ImageFullscreen.js
         │   ├── PullAndRefresh.js
         │   ├── ScrollToTop.js
+        │   ├── DetectWebGL.js
         │   └── SmallDivider.js
         │
         └── assets
             └── logo.jpeg
+
+## Troubleshooting
+
+- **Data won't show up in plots (client).**
+
+  Some components rely on the [WebGL API](https://en.wikipedia.org/wiki/WebGL), which is mostly supported in modern browsers. Simply update your browser to the latest version, which supports WebGL.
+  Another solution would be to set your browser's *ANGLE flag* to support native OpenGL instead of WebGL.
 
 ## Built With
 
