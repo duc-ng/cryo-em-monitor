@@ -57,10 +57,6 @@ function PlotsMini() {
           y: yValues1,
           marker: {
             color: theme.palette.success.main,
-            line: {
-              color: theme.palette.grey[900],
-              width: 0.1,
-            },
           },
           name: "Good",
           mode: "markers",
@@ -73,10 +69,6 @@ function PlotsMini() {
           name: "Ok",
           marker: {
             color: theme.palette.primary.light,
-            line: {
-              color: theme.palette.grey[900],
-              width: 0.1,
-            },
           },
           mode: "markers",
           type: plotType,
@@ -113,7 +105,7 @@ function PlotsMini() {
       },
       paper_bgcolor: "rgba(0,0,0,0)",
       plot_bgcolor: "rgba(0,0,0,0)",
-      bargap: 0.01,
+      bargap: 0.02,
       hovermode: plotType === "scattergl" ? "closest" : "x",
       barmode: "stack",
       xaxis: {
