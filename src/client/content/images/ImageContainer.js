@@ -18,7 +18,7 @@ export default function ImageContainer(props) {
       subtitle="Most recent images recorded"
       noData={false}
     >
-      <Box m={2}>
+      <Box mx={2} mt={2} mb={5}>
         <Grid container spacing={2} justify="center">
           {config["images.star"].map((x, i) => (
             <Grid item xs={4} sm={3} key={i}>

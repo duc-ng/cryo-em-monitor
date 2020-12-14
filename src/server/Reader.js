@@ -28,7 +28,7 @@ class Reader {
 
         //date
         if (file.endsWith("times.star") && data[i][10] === "-") {
-          data[i] = this.stringReplaceAt(data[i], 10, " ");
+          data[i] = this.stringReplaceAt(data[i], 10, "T");
         }
 
         //numerics (e.g. 0.123 or 4.214e-05)

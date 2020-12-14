@@ -1,5 +1,6 @@
 import { formatRelative } from "date-fns";
 import { enGB } from "date-fns/locale";
+import parseISO from "date-fns/parseISO";
 
 const formatRelativeLocale = {
   lastWeek: "'Last' eeee 'at' pp",
@@ -16,5 +17,6 @@ const locale = {
 };
 
 export default function FormatDate(date) {
-  return formatRelative(date, new Date(), { locale });
+  let parsedDate = parseISO(date);
+  return formatRelative(parsedDate, new Date(), { locale });
 }

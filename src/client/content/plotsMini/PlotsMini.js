@@ -12,10 +12,15 @@ import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Typography from "@material-ui/core/Typography";
 
+const HEIGHT = 320;
+
 function PlotsMini() {
   const { data, dateFrom, dateTo } = React.useContext(DataContext);
   const theme = useTheme();
-
+  const [type, setType] = React.useState(new Array(10).fill("scattergl"));
+  const maxPointsPlotted = 5000;
+  const percentPlotted = Math.floor((maxPointsPlotted / data.length) * 100);
+  const maxDate = dateTo === undefined ? new Date() : dateTo;
   const minDate =
     dateFrom === undefined
       ? data.length === 0
@@ -23,19 +28,12 @@ function PlotsMini() {
         : data[0][config["times.star"][0].value]
       : dateFrom;
 
-  const maxDate = dateTo === undefined ? new Date() : dateTo;
-
   const MiniPlot = (props) => {
-    const [type, setType] = React.useState("scattergl");
-    const { minOptimum, maxOptimum, value } = config["data.star"][props.i];
-    const subtitle = config["data.star"][props.i].description;
-    const maxPointsPlotted = 5000;
+    const { plotType, i } = props;
+    const { minOptimum, maxOptimum, value } = config["data.star"][i];
     const Plot = createPlotlyComponent(Plotly);
-
-    const percentPlotted = Math.floor((maxPointsPlotted / data.length) * 100);
-
     const aggregateValue = //plot max. x random values
-      type === "scattergl" ? Math.ceil(data.length / maxPointsPlotted) : 1;
+      plotType === "scattergl" ? Math.ceil(data.length / maxPointsPlotted) : 1;
 
     const getPlotData = () => {
       let xValues1 = [];
@@ -55,28 +53,34 @@ function PlotsMini() {
 
       return [
         {
-          x: type === "scattergl" ? xValues1 : yValues1,
+          x: plotType === "scattergl" ? xValues1 : yValues1,
           y: yValues1,
-          opacity: 0.9,
           marker: {
             color: theme.palette.success.main,
+            line: {
+              color: theme.palette.grey[900],
+              width: 0.1,
+            },
           },
           name: "Good",
           mode: "markers",
-          type: type,
-          hoverinfo: "y",
+          type: plotType,
+          hoverinfo: plotType === "scattergl" ? "y" : "x+y",
         },
         {
-          x: type === "scattergl" ? xValues2 : yValues2,
+          x: plotType === "scattergl" ? xValues2 : yValues2,
           y: yValues2,
           name: "Ok",
-          opacity: 0.9,
           marker: {
             color: theme.palette.primary.light,
+            line: {
+              color: theme.palette.grey[900],
+              width: 0.1,
+            },
           },
           mode: "markers",
-          type: type,
-          hoverinfo: "y",
+          type: plotType,
+          hoverinfo: plotType === "scattergl" ? "y" : "x+y",
         },
       ];
     };
@@ -107,17 +111,16 @@ function PlotsMini() {
         family: theme.typography.fontFamily,
         color: theme.palette.text.primary,
       },
-      bargap: 0.02,
       paper_bgcolor: "rgba(0,0,0,0)",
       plot_bgcolor: "rgba(0,0,0,0)",
-      hovermode: "closest",
+      hovermode: plotType === "scattergl" ? "closest" : "x",
       barmode: "stack",
       xaxis: {
-        type: type === "scattergl" ? "date" : "",
+        type: plotType === "scattergl" ? "date" : "",
         zeroline: true,
         gridcolor: theme.palette.divider,
         linecolor: theme.palette.divider,
-        range: type === "scattergl" ? [minDate, maxDate] : [],
+        range: plotType === "scattergl" ? [minDate, maxDate] : [],
       },
       yaxis: {
         rangemode: "tozero",
@@ -125,7 +128,7 @@ function PlotsMini() {
         linecolor: theme.palette.divider,
       },
       autosize: true,
-      height: 320,
+      height: HEIGHT,
       margin: {
         t: 10,
         b: 55,
@@ -146,59 +149,52 @@ function PlotsMini() {
       },
     };
 
-    const SimpleMenu = () => {
-      const [button, setButton] = React.useState(0);
+    return (
+      <Plot
+        data={getPlotData()}
+        layout={layout}
+        config={configuration}
+        style={style}
+      />
+    );
+  };
 
-      const setScatter = () => {
-        setButton(0);
-        setType("scattergl");
-      };
+  const SimpleMenu = (i) => {
+    const [button, setButton] = React.useState(0);
 
-      const setHistogram = () => {
-        setButton(1);
-        setType("histogram");
-      };
-
-      return (
-        <ButtonGroup variant="text">
-          <Button onClick={setScatter}>
-            <Typography
-              variant="body2"
-              color={button === 0 ? "primary" : "textSecondary"}
-            >
-              Scatter
-            </Typography>
-          </Button>
-          <Button onClick={setHistogram}>
-            <Typography
-              variant="body2"
-              color={button === 1 ? "primary" : "textSecondary"}
-            >
-              Histogram
-            </Typography>
-          </Button>
-        </ButtonGroup>
-      );
+    const setScatter = () => {
+      setButton(0);
+      let newType = [...type];
+      newType[i] = "scattergl";
+      setType(newType);
     };
 
+    const setHistogram = () => {
+      setButton(1);
+      let newType = [...type];
+      newType[i] = "histogram";
+      setType(newType);
+    };
 
     return (
-      <ContentContainer
-        id={"section_images_" + props.i}
-        title={props.x.label}
-        subtitle={subtitle}
-        midtext={percentPlotted < 100 ? percentPlotted + "% plotted" : ""}
-        height={layout.height}
-        divider={false}
-        button={SimpleMenu}
-      >
-        <Plot
-          data={getPlotData()}
-          layout={layout}
-          config={configuration}
-          style={style}
-        />
-      </ContentContainer>
+      <ButtonGroup variant="text">
+        <Button onClick={setScatter}>
+          <Typography
+            variant="body2"
+            color={button === 0 ? "primary" : "textSecondary"}
+          >
+            Scatter
+          </Typography>
+        </Button>
+        <Button onClick={setHistogram}>
+          <Typography
+            variant="body2"
+            color={button === 1 ? "primary" : "textSecondary"}
+          >
+            Histogram
+          </Typography>
+        </Button>
+      </ButtonGroup>
     );
   };
 
@@ -210,7 +206,17 @@ function PlotsMini() {
       <Grid container justify="center" spacing={2}>
         {config["data.star"].map((x, i) => (
           <Grid item xs={12} sm={6} key={i}>
-            <MiniPlot x={x} i={i} />
+            <ContentContainer
+              id={"section_images_" + i}
+              title={x.label}
+              subtitle={config["data.star"][i].description}
+              midtext={percentPlotted < 100 ? percentPlotted + "% plotted" : ""}
+              height={HEIGHT}
+              divider={false}
+              button={SimpleMenu(i)}
+            >
+              <MiniPlot i={i} plotType={type[i]} />
+            </ContentContainer>
           </Grid>
         ))}
       </Grid>

@@ -39,6 +39,9 @@ const useStyles = makeStyles((theme) => ({
   white: {
     color: theme.palette.common.white,
   },
+  grey: {
+    color: theme.palette.text.secondary,
+  },
   pause: {
     color: theme.palette.secondary.main,
   },
@@ -184,7 +187,7 @@ export default function ImageFullscreen(props) {
     <Grid item xs={12}>
       <Grid container justify="center">
         <Grid item>
-          <Typography variant="subtitle1" className={classes.white}>
+          <Typography variant="subtitle1" className={classes.grey}>
             {image.data === undefined ? <Box m={4} /> : date}
           </Typography>
         </Grid>

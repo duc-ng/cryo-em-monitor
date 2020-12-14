@@ -15,6 +15,7 @@ import Grid from "@material-ui/core/Grid";
 import TableContainer from "./content/table/TableContainer";
 import ScrollToTop from "./utils/ScrollToTop";
 import PullAndRefresh from "./utils/PullAndRefresh";
+import DetectWebGL from "./utils/DetectWebGL";
 
 //theme
 const useStyles = makeStyles((theme) => ({
@@ -44,6 +45,7 @@ function App() {
         <div className={classes.root}>
           <Header />
           <Sidebar />
+          <DetectWebGL />
           <Grid
             container
             direction="column"

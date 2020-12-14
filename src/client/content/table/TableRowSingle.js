@@ -28,7 +28,7 @@ export default function TableRowSingle(props) {
   const RowValues = () => {
     const nrPlots = config["data.star"].length;
     let tableCell = [];
-    let date = new Date(row.data[config["times.star"][0].value]);
+    let date = row.data[config["times.star"][0].value];
 
     //format date
     tableCell.push(

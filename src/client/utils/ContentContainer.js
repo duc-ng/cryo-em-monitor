@@ -13,7 +13,7 @@ export default function ContentContainer(props) {
   const id = props.id !== undefined ? props.id : "";
   const title = props.title !== undefined ? props.title : "";
   const subtitle = props.subtitle !== undefined ? props.subtitle : "";
-  const button = props.button !== undefined ? props.button() : undefined;
+  const button = props.button !== undefined ? props.button : undefined;
   const height = props.height !== undefined ? props.height : "100%";
   const noData = props.noData === false ? false : true;
   const divider = props.divider === false ? false : true;

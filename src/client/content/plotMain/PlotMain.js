@@ -11,20 +11,20 @@ import MenuItem from "@material-ui/core/MenuItem";
 
 const Plot = createPlotlyComponent(Plotly);
 
+
 function PlotMain() {
   const theme = useTheme();
-  const dataContext = React.useContext(DataContext);
+  const { dateFrom, dateTo, data } = React.useContext(DataContext);
   const [plotNr, setPlotNr] = React.useState(0);
 
   const minDate =
-    dataContext.dateFrom === undefined
-      ? dataContext.data.length === 0
+    dateFrom === undefined
+      ? data.length === 0
         ? new Date(0)
-        : dataContext.data[0][config["times.star"][plotNr].value]
-      : dataContext.dateFrom;
+        : data[0][config["times.star"][plotNr].value]
+      : dateFrom;
 
-  const maxDate =
-    dataContext.dateTo === undefined ? new Date() : dataContext.dateTo;
+  const maxDate = dateTo === undefined ? new Date() : dateTo;
 
   // data<=4h => 10min bins
   // data<=4d => 1h bins
@@ -40,31 +40,48 @@ function PlotMain() {
     }
   };
 
-  const plotData = dataContext.data
-    .filter((obj) => obj[config["times.star"][plotNr].value] !== 0)
-    .map((obj) => obj[config["times.star"][plotNr].value]);
+  const stepNr = 30;
+  const stepSize = (maxDate - minDate) / stepNr;
+  const xData = [...Array(stepNr).keys()].map(
+    (i) => new Date(maxDate - stepSize * i)
+  );
+  const yData = xData.map(
+    (to) =>
+      data.filter((obj) => {
+        let date = new Date(obj[config["times.star"][plotNr].value]);
+        let from = new Date(to - 3600000);
+        return date !== 0 && date >= from && date < to;
+      }).length
+  );
 
-  const data = [
+
+  const dataPlot = [
     {
-      x: plotData,
-      type: "histogram",
-      mode: "lines",
-      opacity: 0.7,
+      x: xData,
+      y: yData,
+      type: "scatter",
+      line: { shape: "hvh" },
       marker: {
-        color: theme.palette.primary.light,
-        line: {
-          color: theme.palette.common.white,
-          width: 0.5,
-        },
+        color: theme.palette.secondary.main,
       },
-      xbins: {
-        size: getBinSize(),
+      hoverinfo: "x+y",
+    },
+    {
+      x: xData,
+      y: yData,
+      mode: "markers",
+      type: "bar",
+      opacity: 0.3,
+      marker: {
+        color: theme.palette.primary.main,
       },
+      hoverinfo: "x",
     },
   ];
 
   const layout = {
     autosize: true,
+    showlegend: false,
     height: 270,
     margin: {
       t: 10,
@@ -150,12 +167,12 @@ function PlotMain() {
     <ContentContainer
       id="section_volume"
       title="Volume"
-      subtitle="Image count"
+      subtitle="Images per hour"
       height={layout.height}
-      button={SimpleMenu}
+      button={SimpleMenu()}
     >
       <Plot
-        data={data}
+        data={dataPlot}
         layout={layout}
         config={configuration}
         style={{
