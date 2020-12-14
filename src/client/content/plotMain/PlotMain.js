@@ -46,7 +46,7 @@ function PlotMain() {
       marker: {
         color: theme.palette.secondary.main,
       },
-      hoverinfo: "x+y",
+      hoverinfo: "y",
     },
     {
       x: xData,
@@ -57,7 +57,7 @@ function PlotMain() {
       marker: {
         color: theme.palette.primary.main,
       },
-      hoverinfo: "x",
+      hoverinfo: "none",
     },
   ];
 
