@@ -23,7 +23,7 @@ function PlotMain() {
         : data[0][config["times.star"][plotNr].value]
       : dateFrom;
 
-  const stepNr = 30;
+  const stepNr = 100;
   const stepSize = (maxDate - minDate) / stepNr;
   const xData = [...Array(stepNr+1).keys()].map(
     (i) => new Date(maxDate - stepSize * i)
