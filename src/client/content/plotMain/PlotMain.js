@@ -8,8 +8,17 @@ import ContentContainer from "./../../utils/ContentContainer";
 import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import { fade } from "@material-ui/core/styles/colorManipulator";
 
 const Plot = createPlotlyComponent(Plotly);
+
+const getLastDate = (date, roundValue) => {
+  return date.setMinutes(
+    Math.floor(date.getMinutes() / roundValue) * roundValue,
+    0,
+    0
+  );
+};
 
 function PlotMain() {
   const theme = useTheme();
@@ -23,41 +32,45 @@ function PlotMain() {
         : data[0][config["times.star"][plotNr].value]
       : dateFrom;
 
-  const stepNr = 100;
-  const stepSize = (maxDate - minDate) / stepNr;
-  const xData = [...Array(stepNr+1).keys()].map(
-    (i) => new Date(maxDate - stepSize * i)
-  );
-  const yData = xData.map(
-    (to) =>
-      data.filter((obj) => {
-        let date = new Date(obj[config["times.star"][plotNr].value]);
-        let from = new Date(to - 3600000);
-        return date !== 0 && date >= from && date < to;
-      }).length
-  );
+  //init sizes
+  var xData2 = [];
+  var yData2 = [];
+  const isSmall = maxDate - minDate < 14400000; //less than 4h
+  var stepSize = isSmall ? 5 * 60 * 1000 : 3600000; //5min or 1h
+  const count = Math.floor((maxDate - minDate) / stepSize) + 1;
+  const firstStep = isSmall
+    ? getLastDate(new Date(), 5)
+    : new Date().setMinutes(0, 0, 0);
+
+  //calc x + y values
+  for (let i = 0; i < count; i++) {
+    const currStep = new Date(firstStep - i * stepSize);
+    const nextStep = new Date(firstStep - (i - 1) * stepSize);
+    xData2.push(currStep);
+
+    let y = 0;
+    for (let c = 0; c < data.length; c++) {
+      const date = new Date(data[c][config["times.star"][plotNr].value]);
+      if (date >= currStep && date < nextStep) {
+        y++;
+      }
+    }
+    yData2.push(isSmall ? 12 * y : y);
+  }
 
   const dataPlot = [
     {
-      x: xData,
-      y: yData,
-      type: "scatter",
-      line: { shape: "hvh" },
-      marker: {
+      x: xData2,
+      y: yData2,
+      mode: "lines+markers",
+      line: {
+        shape: "spline",
+        smoothing: 1.0,
         color: theme.palette.secondary.main,
       },
-      hoverinfo: "y",
-    },
-    {
-      x: xData,
-      y: yData,
-      mode: "markers",
-      type: "bar",
-      opacity: 0.7,
-      marker: {
-        color: theme.palette.primary.main,
-      },
-      hoverinfo: "none",
+      fill: "tozeroy",
+      fillcolor: fade(theme.palette.primary.main, 0.5),
+      hoverinfo: "x+y",
     },
   ];
 
@@ -74,7 +87,7 @@ function PlotMain() {
     },
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
-    bargap: 0.01,
+    bargap: 0.001,
     font: {
       family: theme.typography.fontFamily,
       color: theme.palette.text.primary,

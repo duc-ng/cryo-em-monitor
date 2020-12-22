@@ -8,7 +8,7 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import Grid from "@material-ui/core/Grid";
-import Box from "@material-ui/core/Box";
+import ContentContainer from "./../../utils/ContentContainer";
 import config from "./../../../config.json";
 import { makeStyles } from "@material-ui/core/styles";
 import { DataContext } from "./../../global/Data";
@@ -67,12 +67,23 @@ export default function PlotsFullscreen(props) {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <Grid container justify="center" className={classes.container}>
+          <Grid
+            container
+            justify="center"
+            spacing={2}
+            className={classes.container}
+          >
             {config["data.star"].map((x, i) => (
               <Grid item xs={4} key={i}>
-                <Box m={1}>
-                  <MiniPlot x={x} i={i} />
-                </Box>
+                <ContentContainer
+                  id={"section_images_" + i}
+                  title={x.label}
+                  subtitle={config["data.star"][i].description}
+                  height={props.HEIGHT}
+                  divider={false}
+                >
+                  <MiniPlot plotType={props.plotType[i]} i={i} />
+                </ContentContainer>
               </Grid>
             ))}
           </Grid>

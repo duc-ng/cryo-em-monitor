@@ -47,13 +47,13 @@ class Test {
       async (x) => {
         if (Number.isInteger(parseInt(x))) n = x;
         for (let i = 0; i < n; i++) {
-          await this.sleep(config.test.loopMs);
           if (config.test.partial && i < n - config.test.partialNr) {
             this.createFiles(false);
           } else {
             this.createFiles(true);
           }
           process.stdout.write("Files generated: " + (i + 1) + "\r");
+          await this.sleep(config.test.loopMs);
         }
         this.startLoop();
       }

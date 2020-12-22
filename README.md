@@ -8,6 +8,10 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Latest update
 
+- 22.12.
+  - fix Main plot: points/h
+  - fix fullscreen mode
+
 - 14.12.
 
   - Logging files: rotating days
@@ -323,16 +327,14 @@ Production:
 
 - **Data won't show up in plots (client).**
 
-  Some components rely on the [WebGL API](https://en.wikipedia.org/wiki/WebGL), which is mostly supported in modern browsers. Simply update your browser to the latest version, which supports WebGL.
-  Another solution would be to set your browser's *ANGLE flag* to support native OpenGL instead of WebGL.
+  Some components rely on the [WebGL API](https://en.wikipedia.org/wiki/WebGL), which is mostly supported in modern browsers. Simply update your browser to the latest version, which supports WebGL. On older operating systems you may need to set your browser's *ANGLE flag* to support native OpenGL instead of WebGL.
 
 ## Built With
-
+- [Node.js](https://nodejs.org/en/) - JavaScript runtime environemnt
 - [React.js](https://reactjs.org/) - Frontend framework
+- [Express.js](https://expressjs.com/) - Backend framework
 - [Material-UI](https://material-ui.com/) - UI component library
 - [Plot.ly](https://plotly.com/javascript/) - Interactive plots
-- [Node.js](https://nodejs.org/en/) - JavaScript runtime environemnt
-- [Express.js](https://expressjs.com/) - Backend framework
 - and more..
 
 ## Author

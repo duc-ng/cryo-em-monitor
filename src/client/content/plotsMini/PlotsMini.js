@@ -17,7 +17,9 @@ const HEIGHT = 320;
 function PlotsMini() {
   const { data, dateFrom, dateTo } = React.useContext(DataContext);
   const theme = useTheme();
-  const [type, setType] = React.useState(new Array(10).fill("scattergl"));
+  const [type, setType] = React.useState(
+    new Array(config["data.star"].length).fill("scattergl")
+  );
   const maxPointsPlotted = 5000;
   const percentPlotted = Math.floor((maxPointsPlotted / data.length) * 100);
   const maxDate = dateTo === undefined ? new Date() : dateTo;
@@ -57,7 +59,12 @@ function PlotsMini() {
           y: yValues1,
           marker: {
             color: theme.palette.success.main,
+            line: {
+              color: theme.palette.grey[900],
+              width: 1,
+            },
           },
+          opacity: 0.8,
           name: "Good",
           mode: "markers",
           type: plotType,
@@ -66,9 +73,14 @@ function PlotsMini() {
         {
           x: plotType === "scattergl" ? xValues2 : yValues2,
           y: yValues2,
+          opacity: 0.8,
           name: "Ok",
           marker: {
             color: theme.palette.primary.light,
+            line: {
+              color: theme.palette.grey[900],
+              width: 1,
+            },
           },
           mode: "markers",
           type: plotType,
@@ -105,7 +117,6 @@ function PlotsMini() {
       },
       paper_bgcolor: "rgba(0,0,0,0)",
       plot_bgcolor: "rgba(0,0,0,0)",
-      bargap: 0.02,
       hovermode: plotType === "scattergl" ? "closest" : "x",
       barmode: "stack",
       xaxis: {
@@ -152,20 +163,16 @@ function PlotsMini() {
     );
   };
 
-  const SimpleMenu = (i) => {
-    const [button, setButton] = React.useState(0);
-
+  const SimpleMenu = (props) => {
     const setScatter = () => {
-      setButton(0);
       let newType = [...type];
-      newType[i] = "scattergl";
+      newType[props.i] = "scattergl";
       setType(newType);
     };
 
     const setHistogram = () => {
-      setButton(1);
       let newType = [...type];
-      newType[i] = "histogram";
+      newType[props.i] = "histogram";
       setType(newType);
     };
 
@@ -174,7 +181,7 @@ function PlotsMini() {
         <Button onClick={setScatter}>
           <Typography
             variant="body2"
-            color={button === 0 ? "primary" : "textSecondary"}
+            color={type[props.i] === "scattergl" ? "primary" : "textSecondary"}
           >
             Scatter
           </Typography>
@@ -182,7 +189,7 @@ function PlotsMini() {
         <Button onClick={setHistogram}>
           <Typography
             variant="body2"
-            color={button === 1 ? "primary" : "textSecondary"}
+            color={type[props.i] === "histogram" ? "primary" : "textSecondary"}
           >
             Histogram
           </Typography>
@@ -195,7 +202,7 @@ function PlotsMini() {
   return (
     <React.Fragment>
       <div id="section_plots" />
-      <PlotsFullscreen miniPlot={MiniPlot} />
+      <PlotsFullscreen miniPlot={MiniPlot} HEIGHT={HEIGHT} plotType={type} />
       <Grid container justify="center" spacing={2}>
         {config["data.star"].map((x, i) => (
           <Grid item xs={12} sm={6} key={i}>
@@ -206,7 +213,7 @@ function PlotsMini() {
               midtext={percentPlotted < 100 ? percentPlotted + "% plotted" : ""}
               height={HEIGHT}
               divider={false}
-              button={SimpleMenu(i)}
+              button={<SimpleMenu i={i} />}
             >
               <MiniPlot i={i} plotType={type[i]} />
             </ContentContainer>
