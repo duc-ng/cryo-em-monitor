@@ -10,7 +10,7 @@
     "heapAllocation": "auto",
     "autodelete": {
       "isOn": true,
-      "maxLogDays": 2,
+      "maxLogDays": 30,
       "maxDataSize": 50000
     }
   },
