@@ -58,10 +58,9 @@ function API(props) {
           } else {
             fetchID.current++;
             let dateFromNew = new Date(Date.now() - filter * 60 * 60 * 1000);
-            let newData = data.filter((x) => {
-              console.log(new Date(x[config["times.star"][0].value]));
-              return new Date(x[config["times.star"][0].value]) > dateFromNew;
-            });
+            let newData = data.filter(
+              (x) => new Date(x[config["times.star"][0].value]) > dateFromNew
+            );
             setData(
               {
                 dataAll:
