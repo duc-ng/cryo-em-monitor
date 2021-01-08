@@ -1,15 +1,51 @@
+const fg = require("fast-glob");
+const path = require("path");
+const config = require("./../config.json");
 const fs = require("fs");
+const Logger = require("./Logger");
 
 class AutoDelete {
   constructor() {
-    this.part = true;
-
-
-
-
-
-    
+    this.logger = new Logger();
+    if (config.app.autodelete.isOn) {
+      this.start();
+      setInterval(() => {
+        this.start();
+      }, 1000 * 60 * 60 * 24);
+    }
   }
+
+  start = async () => {
+    //get and sort directories
+    const directory = path.join(process.env.ROOT_DATA, "*", "*");
+    let dirs = await fg([directory], { onlyDirectories: true });
+    dirs = dirs.sort((a, b) => {
+      let aName = new Date(path.basename(a));
+      let bName = new Date(path.basename(b));
+      if (aName < bName) {
+        return 1;
+      }
+      if (aName > bName) {
+        return -1;
+      }
+      return 0;
+    });
+
+    //remove
+    const { maxFiles } = config.app.autodelete;
+    let loop = true;
+    while (loop) {
+      let dirsDates = dirs.map((x) => path.basename(x));
+      var uSet = new Set(dirsDates);
+      if ([...uSet].length > maxFiles) {
+        const dir = dirs.pop();
+        fs.rmdirSync(dir, { recursive: true });
+        this.logger.log("info", "(Autodelete) Removed: " + dir);
+      } else {
+        loop = false;
+      }
+    }
+  };
 }
 
 module.exports = AutoDelete;

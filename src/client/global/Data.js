@@ -5,6 +5,7 @@ export const DataContext = React.createContext({});
 
 export default function Data(props) {
   const [microscope, setMicroscope] = React.useState(0);
+  const [filter, setFilter] = React.useState(3);
   const [data, setData] = React.useState({
     dataAll: [],
     from: new Date(Date.now() - 3 * 60 * 60 * 1000), //last 3h
@@ -68,6 +69,8 @@ export default function Data(props) {
         getLastKey: getLastKey,
         setData: setData,
         refresh: refresh,
+        setFilter: setFilter,
+        filter: filter
       }}
     >
       {props.children}

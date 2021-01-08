@@ -2,13 +2,20 @@
 
 Monitoring application for Cryo-EM data of the Max Planck Institute of Biochemistry.
 
-This application reads data from from multiple microscopic recordings, when saved in _.star_ files, from the filesystem without the need for a database and scales up to 100k and more files. A modern client optimized for desktop and mobile view will analyze and display the data and images in realtime.
+This application reads data from from multiple microscopic recordings, when saved in _.star_ files, from the filesystem without the need for a database and scales up to 100k and more files. A modern client optimized for desktop and mobile view analyzes and displays the data and images in realtime.
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ## Latest update
 
+- 08.01.
+
+  - add: AutoDelete (hard drive)
+  - various bug fixes
+
+
 - 22.12.
+
   - fix Main plot: points/h
   - fix fullscreen mode
 
@@ -72,7 +79,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Requirements
 
-To run this application, you will need to install **[Node.js](https://nodejs.org/en/download/)** ^13.12.
+To run this application, you will need to install **[Node.js](https://nodejs.org/en/download/)** (^13.12).
 
 - e.g. Linux/ Ubuntu:
 
@@ -115,7 +122,7 @@ npm start
 npm stop
 ```
 
-- The application can be opened at: http://localhost:5000
+&rarr; The application can be opened at: http://localhost:5000
 
 ## Data directory
 
@@ -142,7 +149,7 @@ e.g.
             └── 91436631163808500
                 ├── data.star             #contains all data values
                 ├── times.star            #contains all recording time values
-                ├── images.star           #contains names and descriptions of image files (below)
+                ├── images.star           #contains names and descriptions of image files
                 ├── ctfdiag.png
                 ├── driftplot.png
                 ├── motionCorrAvg.png
@@ -160,37 +167,36 @@ e.g.
 
 ### **`.env`**
 
-| Name           | Type   | Default     | Description                                                                                                                                                  |
-| -------------- | ------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| NODE_ENV       | String | development | _development_ / _production_: Sets environment in which app is running. Production mode improves performance by e.g. suppressing console logs, caching, etc. |
-| REACT_APP_HOST | String | localhost   | Host                                                                                                                                                         |
-| REACT_APP_PORT | Number | 5000        | Port                                                                                                                                                         |
-| ROOT_DATA      | Path   | "data/"     | path to **data** directory (relative or absolute)                                                                                                            |
+| Name           | Type   | Default     | Description                                                                                                                                                   |
+| -------------- | ------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| NODE_ENV       | String | development | _development_ / _production_: Sets environment in which app is running. Production mode improves performance, e.g. by suppressing console logs, caching, etc. |
+| REACT_APP_HOST | String | localhost   | Host                                                                                                                                                          |
+| REACT_APP_PORT | Number | 5000        | Port                                                                                                                                                          |
+| ROOT_DATA      | Path   | "data/"     | path to **data** directory (relative or absolute)                                                                                                             |
 
 ### **`config.json`**
 
 #### **`app`**
 
-| Name                   | Type              | Default                  | Description                                                                    |
-| ---------------------- | ----------------- | ------------------------ | ------------------------------------------------------------------------------ |
-| maxDays                | Integer           | 7                        | Data won't be read, if older than \_ days                                      |
-| pollServerMs           | Integer           | 10000                    | Server polling interval in ms                                                  |
-| pollClientMs           | Integer           | 20000                    | Client polling interval in ms                                                  |
-| notification.ms        | Integer           | 300000                   | Notification: if no data has arrived after \_ ms,                              |
-| notification.message   | String            | "No data for 5 minutes." | Notification: message, if no data has arrived                                  |
-| heapAllocation         | "auto" or Integer | "auto"                   | "auto" / max. heap size in Byte : oldest data will be deleted, if heap is full |
-| autodelete.isOn        | Boolean           | true                     | Turn on/off auto delete of data on hard drive                                  |
-| autodelete.maxLogDays  | Integer           | 14                       | Keep last \_ days of logfiles                                                  |
-| autodelete.maxDataSize | Integer           | 50000                    | Delete oldest data on hard drive, if total size \_ in MB is reached            |
+| Name                      | Type              | Default                  | Description                                                                    |
+| ------------------------- | ----------------- | ------------------------ | ------------------------------------------------------------------------------ |
+| maxDays                   | Integer           | 7                        | Data won't be read, if older than \_ days                                      |
+| pollServerMs              | Integer           | 10000                    | Server polling interval in ms                                                  |
+| pollClientMs              | Integer           | 30000                    | Client polling interval in ms                                                  |
+| notification.ms           | Integer           | 300000                   | Notification: if no data has arrived after \_ ms,                              |
+| notification.message      | String            | "No data for 5 minutes." | Notification: message, if no data has arrived                                  |
+| autodelete.heapAllocation | "auto" or Integer | "auto"                   | "auto" / max. heap size in Byte : oldest data will be deleted, if heap is full |
+| autodelete.isOn           | Boolean           | true                     | Turn on/off auto delete of data on hard drive                                  |
+| autodelete.maxFiles       | Integer           | 180                      | Number of last log- and data directories to keep (in Days)                     |
 
 #### **`test`**
 
 | Name      | Type    | Default  | Description                                                                   |
 | --------- | ------- | -------- | ----------------------------------------------------------------------------- |
-| loopMs    | Integer | 10       | Interval in ms, when generating test data                                     |
+| loopMs    | Integer | 10000    | Interval in ms, when generating test data                                     |
 | folder    | String  | "Titan1" | Directory of microscope, where test data is generated                         |
 | partial   | Boolean | true     | wether only a part of test data should contain test images (to save up space) |
-| partialNr | Integer | 10       | only last \_ data points generated will contain test images                   |
+| partialNr | Integer | 50       | only last \_ data points generated will contain test images                   |
 
 #### **`microscopes`**
 
@@ -214,7 +220,24 @@ _This configuration is expandable._
 | label | String | Label displayed          |
 | value | String | Value name in .star file |
 
-_This configuration is expandable. First value is main value and has to be set._
+&rarr; _This configuration is expandable. First value has to be set._
+
+E.g. content of _times.star_:
+
+```bash
+data_procTimes
+
+loop_
+
+_mmsImageKey_Value
+_mmsdateAuqired_Value
+_mmsdateImported_Value
+_mmsdateProcessed_Value
+_mmsdateExported_Value
+_mmsdateError_Value
+
+ 22401610646102390	2021-01-08-00:03:11	2021-01-08-00:03:11	2021-01-08-00:03:11	2021-01-08-00:03:11	0
+```
 
 #### **`data.star`**
 
@@ -226,7 +249,26 @@ _This configuration is expandable. First value is main value and has to be set._
 | maxOptimum  | Number | max. value for optimal range |
 | minOptimum  | Number | min. value for optimal range |
 
-_This configuration is expandable._
+&rarr; _This configuration is expandable._
+
+E.g. content of _data.star_:
+
+```bash
+data_measure
+
+loop_
+_mmsImageKey_Value
+_mmsmean_Value
+_mmsdrift_Value
+_mmsiciness_Value
+_mmsdefocus_Value
+_mmsresolution_Value
+_mmsccOfCtfFit_Value
+_mmsastigmatism_Value
+_mmnumberOfParticles_Value
+
+22401610646102390	0.19179381962081998	0.5578357710359079	0.3937294311401236	0.7571168150011385	0.3104739088494066	0.7018363759899893	0.6121199579849954	10
+```
 
 #### **`images.star`**
 
@@ -236,7 +278,33 @@ _This configuration is expandable._
 | value | String | Value name in .star file |
 | info  | String | Info name in .star file  |
 
-_This configuration is expandable._
+&rarr; _This configuration is expandable._
+
+E.g. content of _images.star_:
+
+```bash
+data_images
+
+loop_
+
+_mmsImageKey_Value
+_mmsrawAvg_Name
+_mmsrawAvg_Info
+_mmspsRawAvg_Name
+_mmspsRawAvg_Info
+_mmsmotionCorrAvg_Name
+_mmsmotionCorrAvg_Info
+_mmspsMotionCorrAvg_Name
+_mmspsMotionCorrAvg_Info
+_mmsdriftplot_Name
+_mmsdriftplot_Info
+_mmsctfdiag_Name
+_mmsctfdiag_Info
+_mmspick_Name
+_mmspick_Info
+
+ 22401610646102390	rawAvg.png	"Raw Average"	psRawAvg.png	"PowerSpectrum of Raw Average"	motionCorrAvg.png	"MotionCorr Average"	psMotionCorrAvg.png	"PowerSpectrum of Motincorr Average"	driftplot.png	"Driftplot"	ctfdiag.png	"CtfFit Diagnostic"	pick.png	"Particle Positions"
+```
 
 ## Development
 
@@ -273,8 +341,8 @@ Production:
 
     ├── app.js                  #server
     │   ├── FileWatcher.js
-    │   ├── Memory.js
-    │   ├── Reader.js
+    │   │   ├── Memory.js
+    │   │   └── Reader.js
     │   ├── Logger.js
     │   └── AutoDelete.js
     │
@@ -327,15 +395,15 @@ Production:
 
 - **Data won't show up in plots (client).**
 
-  Some components rely on the [WebGL API](https://en.wikipedia.org/wiki/WebGL), which is mostly supported in modern browsers. Simply update your browser to the latest version, which supports WebGL. On older operating systems you may need to set your browser's *ANGLE flag* to support native OpenGL instead of WebGL.
+  Some components rely on the [WebGL API](https://en.wikipedia.org/wiki/WebGL), which is mostly supported in modern browsers. Simply update your browser to the latest version, which supports WebGL. On older operating systems you may need to set your browser's _ANGLE flag_ to support native OpenGL instead of WebGL.
 
 ## Built With
+
 - [Node.js](https://nodejs.org/en/) - JavaScript runtime environemnt
 - [React.js](https://reactjs.org/) - Frontend framework
 - [Express.js](https://expressjs.com/) - Backend framework
 - [Material-UI](https://material-ui.com/) - UI component library
 - [Plot.ly](https://plotly.com/javascript/) - Interactive plots
-- and more..
 
 ## Author
 

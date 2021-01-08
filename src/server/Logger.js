@@ -4,19 +4,17 @@ require("winston-daily-rotate-file");
 
 class Logger {
   constructor() {
-    this.config = {
-      filename: "logs/%DATE%.log",
-      datePattern: "YYYY-MM-DD",
-      maxSize: "20m",
-    };
-
-    //AutoDelete
-    if (config.app.autodelete.isOn) {
-      this.config.maxFiles = config.app.autodelete.maxLogDays + "d";
-    }
-
+    //init
+    const { isOn, maxFiles } = config.app.autodelete;
     this.logger = winston.createLogger({
-      transports: [new winston.transports.DailyRotateFile(this.config)],
+      transports: [
+        new winston.transports.DailyRotateFile({
+          filename: "logs/%DATE%.log",
+          datePattern: "YYYY-MM-DD",
+          maxSize: "20m",
+          maxFiles: isOn ? maxFiles + "d" : null,  //autoDelete
+        }),
+      ],
     });
 
     // log to the console with colors

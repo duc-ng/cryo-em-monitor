@@ -5,9 +5,9 @@ const v8 = require("v8");
 class Memory {
   constructor() {
     this.maxHeapSize = //in Byte
-      config.app.heapAllocation === "auto"
+      config.app.autodelete.heapAllocation === "auto"
         ? v8.getHeapStatistics().total_available_size / 2
-        : config.app.heapAllocation;
+        : config.app.autodelete.heapAllocation;
     this.keysSorted = []; //sorted object keys
     this.dataValues = new Map(); //hashtable: key -> objects
     this.logger = new Logger();

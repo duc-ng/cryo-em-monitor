@@ -68,10 +68,10 @@ export default function Filter() {
               }
               onChange={(date) => {
                 setValue(undefined);
-                dataContext.setFromTo(date, dataContext.to);
+                dataContext.setFromTo(date, dataContext.dateTo);
               }}
               label="From"
-              format="MMM do"
+              format={value < 24 ? "HH:mm" : "MMM do"}
             />
           </Grid>
           <Grid item xs={6}>
@@ -79,13 +79,17 @@ export default function Filter() {
               ampm={false}
               inputVariant="filled"
               disableFuture
-              value={dataContext.dateTo}
+              value={
+                dataContext.dateTo === undefined
+                  ? new Date()
+                  : dataContext.dateTo
+              }
               onChange={(date) => {
                 setValue(undefined);
-                dataContext.setFromTo(dataContext.from, date);
+                dataContext.setFromTo(dataContext.dateFrom, date);
               }}
               label="To"
-              format="MMM do"
+              format={value < 24 ? "HH:mm" : "MMM do"}
             />
           </Grid>
 
@@ -99,6 +103,7 @@ export default function Filter() {
                 color={item.value === value ? "secondary" : "default"}
                 onClick={() => {
                   setValue(item.value);
+                  dataContext.setFilter(item.value);
                   dataContext.setFromTo(
                     new Date(Date.now() - item.value * 60 * 60 * 1000),
                     undefined

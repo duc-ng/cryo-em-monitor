@@ -68,7 +68,10 @@ export default function ImageDisplay(props) {
           dataContext.microscope
       )
         .then((res) => res.json())
-        .then((res) => setImage(res));
+        .then((res) => setImage(res))
+        .catch(() => {
+          return;
+        });
     }
   }, [props.item, props.i, dataContext.microscope]);
 
@@ -110,7 +113,7 @@ export default function ImageDisplay(props) {
       >
         <ImageFullscreen
           i={props.i}
-          img={image}
+          img={JSON.parse(JSON.stringify(image))}
           handleOpen={handleOpen}
           item={props.item}
         />

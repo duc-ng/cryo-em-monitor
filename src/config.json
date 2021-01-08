@@ -2,24 +2,23 @@
   "app": {
     "maxDays": 7,
     "pollServerMs": 10000,
-    "pollClientMs": 20000,
+    "pollClientMs": 30000,
     "notification": {
       "ms": 300000,
       "message": "No data for 5 minutes."
     },
-    "heapAllocation": "auto",
     "autodelete": {
+      "heapAllocation": "auto",
       "isOn": true,
-      "maxLogDays": 30,
-      "maxDataSize": 50000
+      "maxFiles": 180
     }
   },
 
   "test": {
-    "loopMs": 10,
+    "loopMs": 10000,
     "folder": "Titan1",
     "partial": true,
-    "partialNr": 10
+    "partialNr": 50
   },
 
   "microscopes": [

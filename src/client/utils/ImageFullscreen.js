@@ -17,6 +17,8 @@ import Paper from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import FormatDate from "./FormatDate";
 import Hidden from "@material-ui/core/Hidden";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import "abortcontroller-polyfill/dist/polyfill-patch-fetch";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -55,6 +57,7 @@ export default function ImageFullscreen(props) {
   const classes = useStyles();
   const [image, setImage] = React.useState(props.img);
   const [isPlaying, setIsPlaying] = React.useState(false);
+  const [allControllers] = React.useState([]);
 
   const [currentIndex, setIndex] = React.useState(
     data.length === 0
@@ -62,8 +65,11 @@ export default function ImageFullscreen(props) {
       : data.findIndex((elem) => elem[config.key] === props.item[config.key])
   );
 
-  const loadImage = (ind) => {
+  const loadImage = async (ind) => {
     if (data[ind] !== undefined) {
+      allControllers.map((e) => e.abort());
+      const controller = new AbortController();
+      allControllers.push(controller);
       const key = data[ind][config.key];
       fetch(
         "http://" +
@@ -75,15 +81,25 @@ export default function ImageFullscreen(props) {
           "&type=" +
           props.i +
           "&microscope=" +
-          microscope
+          microscope,
+        {
+          signal: controller.signal,
+        }
       )
         .then((res) => res.json())
-        .then((res) => setImage(res));
+        .then((res) => setImage(res))
+        .catch((err) => {
+          return;
+        });
     }
   };
 
   const onPrevImage = () => {
     const ind = data.length === 0 ? 0 : (currentIndex + 1) % data.length;
+    setImage((i) => {
+      i.data = null;
+      return i;
+    });
     setIndex(ind);
     loadImage(ind);
   };
@@ -91,6 +107,10 @@ export default function ImageFullscreen(props) {
   const onNextImage = () => {
     const ind =
       data.length === 0 ? 0 : (currentIndex - 1 + data.length) % data.length;
+    setImage((i) => {
+      i.data = null;
+      return i;
+    });
     setIndex(ind);
     loadImage(ind);
   };
@@ -106,6 +126,10 @@ export default function ImageFullscreen(props) {
       data.length === 0
         ? 0
         : data.findIndex((elem) => elem[config.key] === props.item[config.key]);
+    setImage((i) => {
+      i.data = null;
+      return i;
+    });
     setIndex(ind);
     loadImage(ind);
   };
@@ -243,6 +267,16 @@ export default function ImageFullscreen(props) {
             <Grid container justify="center">
               <Typography variant="subtitle1" className={classes.white}>
                 No Image
+              </Typography>
+            </Grid>
+          </Box>
+        </div>
+      ) : image.data === null ? (
+        <div>
+          <Box border={1} className={classes.box}>
+            <Grid container justify="center">
+              <Typography variant="subtitle1" className={classes.white}>
+                <CircularProgress />
               </Typography>
             </Grid>
           </Box>

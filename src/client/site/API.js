@@ -11,6 +11,7 @@ function API(props) {
     microscope,
     setData,
     getLastKey,
+    filter,
   } = React.useContext(DataContext);
 
   const getDateString = (date) => {
@@ -39,9 +40,9 @@ function API(props) {
     fetch(fetchURL)
       .then((response) => response.json())
       .then((res) => {
-        if (res.data !== null && parseFloat(res.id) === fetchID.current) {
+        if (parseFloat(res.id) === fetchID.current) {
           if (replace) {
-            if (res.data.length !== 0) {
+            if (res.data !== null && res.data.length !== 0) {
               fetchID.current++;
               setData(
                 {
@@ -56,10 +57,16 @@ function API(props) {
             }
           } else {
             fetchID.current++;
+            let dateFromNew = new Date(Date.now() - filter * 60 * 60 * 1000);
+            let newData = data.filter((x) => {
+              console.log(new Date(x[config["times.star"][0].value]));
+              return new Date(x[config["times.star"][0].value]) > dateFromNew;
+            });
             setData(
               {
-                dataAll: [...data, ...res.data],
-                from: dateFrom,
+                dataAll:
+                  res.data === null ? newData : [...newData, ...res.data],
+                from: dateFromNew,
                 to: dateTo,
               },
               props.setIsLoading(false)
@@ -68,6 +75,9 @@ function API(props) {
         } else {
           props.setIsLoading(false);
         }
+      })
+      .catch(() => {
+        return;
       });
   };
 

@@ -21,8 +21,9 @@ class FileWatcher {
     //poll new files
     let initFlag = true;
     this.initScan();
+    this.queue.push("");
     this.queue.drain(() => {
-      if (initFlag) {
+      if (initFlag) { //only once
         this.logger.log("info", "Finished initial scan: " + this.subfolder);
         setInterval(this.initLoop, config.app.pollServerMs);
         initFlag = false;
@@ -74,27 +75,29 @@ class FileWatcher {
   };
 
   read = async (dirPath) => {
-    const dataStar = path.join(dirPath, "data.star");
-    const timesStar = path.join(dirPath, "times.star");
-    const imagesStar = path.join(dirPath, "images.star");
+    if (dirPath !== "") {
+      const dataStar = path.join(dirPath, "data.star");
+      const timesStar = path.join(dirPath, "times.star");
+      const imagesStar = path.join(dirPath, "images.star");
 
-    try {
-      const files = await Promise.all([
-        this.reader.readStarFile(dataStar),
-        this.reader.readStarFile(timesStar),
-        this.reader.readStarFile(imagesStar),
-      ]);
-      const merge = { ...files[0], ...files[1] };
-      const obj = { path: dirPath, data: merge, times: files[2] };
-      if (Object.keys(merge).length !== 0) {
-        this.memory.add(obj, this.subfolder);
+      try {
+        const files = await Promise.all([
+          this.reader.readStarFile(dataStar),
+          this.reader.readStarFile(timesStar),
+          this.reader.readStarFile(imagesStar),
+        ]);
+        const merge = { ...files[0], ...files[1] };
+        const obj = { path: dirPath, data: merge, times: files[2] };
+        if (Object.keys(merge).length !== 0) {
+          this.memory.add(obj, this.subfolder);
+        }
+      } catch (error) {
+        this.errorCount++;
+        this.logger.log(
+          "error",
+          "(File reading) " + this.errorCount + ". " + error
+        );
       }
-    } catch (error) {
-      this.errorCount++;
-      this.logger.log(
-        "error",
-        "(File reading) " + this.errorCount + ". " + error
-      );
     }
   };
 
