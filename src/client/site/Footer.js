@@ -14,7 +14,7 @@ export default function Footer(props) {
           color="textSecondary"
           component="p"
         >
-          {"@2020 "}
+          {"@2021 "}
           <Link href="https://www.biochem.mpg.de/cryoem" color="inherit">
             Cryo-EM Facility
           </Link>

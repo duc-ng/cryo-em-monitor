@@ -106,7 +106,7 @@ Get, build and run:
 
 ```bash
 #get and build
-git clone https://github.com/duc-ng/web-monitoring.git
+git clone https://github.com/duc-ng/cryo-em-monitor.git
 cd web-monitoring
 npm install
 npm run build

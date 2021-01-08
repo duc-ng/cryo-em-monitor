@@ -158,7 +158,7 @@ export default function Header() {
     return (
       <Hidden smDown>
         <Tooltip title="Project on Github">
-          <IconButton href="https://github.com/duc-ng/web-monitoring">
+          <IconButton href="https://github.com/duc-ng/cryo-em-monitor">
             <GitHubIcon fontSize="small" />
           </IconButton>
         </Tooltip>
