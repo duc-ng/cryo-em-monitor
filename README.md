@@ -12,6 +12,9 @@ These instructions will get you a copy of the project up and running on your loc
 
   - add: AutoDelete (hard drive)
   - various bug fixes
+  - test: Windows ✓ 
+  - test: Edge ✓ 
+  - test: IE ×
 
 
 - 22.12.
@@ -110,9 +113,12 @@ brew install node
 Get, build and run:
 
 ```bash
-#get and build
+#get and configure
 git clone https://github.com/duc-ng/cryo-em-monitor.git
 cd cryo-em-monitor
+vim .env            #e.g. set ROOT_DATA to your data folder
+
+#build
 npm install
 npm run build
 
@@ -177,7 +183,7 @@ e.g.
 | NODE_ENV       | String | development | _development_ / _production_: Sets environment in which app is running. Production mode improves performance, e.g. by suppressing console logs, caching, etc. |
 | REACT_APP_HOST | String | localhost   | Host                                                                                                                                                          |
 | REACT_APP_PORT | Number | 5000        | Port                                                                                                                                                          |
-| ROOT_DATA      | Path   | "data/"     | path to **data** directory (relative or absolute)                                                                                                             |
+| ROOT_DATA      | Path   | "/Users/duc/cryo-em-monitor/data"     | path to **data** directory (absolute)                                                                                                             |
 
 ### **`config.json`**
 
@@ -401,6 +407,10 @@ Production:
 - **Data won't show up in plots (client).**
 
   Some components rely on the [WebGL API](https://en.wikipedia.org/wiki/WebGL), which is mostly supported in modern browsers. Simply update your browser to the latest version, which supports WebGL. On older operating systems you may need to set your browser's _ANGLE flag_ to support native OpenGL instead of WebGL.
+
+- **Application gets stuck in "npm run build".**
+
+  Add more RAM to your server environment.
 
 ## Built With
 

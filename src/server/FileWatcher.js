@@ -45,9 +45,9 @@ class FileWatcher {
       this.subfolder,
       this.getLastXDays(nrDays),
       "*"
-    );
+    ).replace(/\\/g, '/');
     const dirKeys = await fg([directory], { onlyDirectories: true });
-    dirKeys.map((file) => {
+    dirKeys.each((file) => {
       let key = parseFloat(path.basename(file));
       if (!this.memory.has(key)) {
         this.queue.push(file);
