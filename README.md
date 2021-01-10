@@ -15,6 +15,8 @@ These instructions will get you a copy of the project up and running on your loc
   - test: Windows ✓ 
   - test: Edge ✓ 
   - test: IE ×
+  - test: CentOS ✓ 
+
 
 
 - 22.12.
@@ -82,9 +84,9 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Requirements
 
-To run this application, you will need to install **[Node.js](https://nodejs.org/en/download/)** (^13.12).
+To run this application, you will need to install **[Node.js](https://nodejs.org/en/download/)** (^14.0).
 
-- e.g. Linux/ Ubuntu:
+- e.g. Ubuntu:
 
 ```bash
 #install node and package manager
@@ -97,6 +99,12 @@ sudo npm install -g n
 sudo n stable
 ```
 
+- e.g. CentOs
+
+```bash
+dnf module install nodejs:14
+```
+
 - e.g. Mac:
 
 ```bash
@@ -105,7 +113,7 @@ brew install node
 
 - e.g. Windows
   
-  &rarr; use pre-built [_Windows Installer_](https://nodejs.org/en/download/)
+  &rarr; use pre-built _Windows Installer_
   
 
 ## Run
@@ -116,7 +124,7 @@ Get, build and run:
 #get and configure
 git clone https://github.com/duc-ng/cryo-em-monitor.git
 cd cryo-em-monitor
-vim .env            #e.g. set ROOT_DATA to your data folder
+vim .env            #set ROOT_DATA to your data folder
 
 #build
 npm install

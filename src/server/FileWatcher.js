@@ -47,7 +47,7 @@ class FileWatcher {
       "*"
     ).replace(/\\/g, '/');
     const dirKeys = await fg([directory], { onlyDirectories: true });
-    dirKeys.each((file) => {
+    dirKeys.forEach((file) => {
       let key = parseFloat(path.basename(file));
       if (!this.memory.has(key)) {
         this.queue.push(file);
