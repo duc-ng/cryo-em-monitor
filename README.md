@@ -100,6 +100,11 @@ sudo n stable
 brew install node
 ```
 
+- e.g. Windows
+  
+  &rarr; use pre-built [_Windows Installer_](https://nodejs.org/en/download/)
+  
+
 ## Run
 
 Get, build and run:
@@ -107,7 +112,7 @@ Get, build and run:
 ```bash
 #get and build
 git clone https://github.com/duc-ng/cryo-em-monitor.git
-cd web-monitoring
+cd cryo-em-monitor
 npm install
 npm run build
 
@@ -117,7 +122,7 @@ node test.js        #enter a number and exit with ctrl+c
 #start
 node app.js         #exit with ctrl+c
 
-#or start as daemon
+#or start with process manager (forever)
 npm start
 npm stop
 ```
