@@ -7,15 +7,18 @@ const Logger = require('./Logger')
 class AutoDelete {
   constructor () {
     this.logger = new Logger()
+  }
+
+  start () {
     if (config.app.autodelete.isOn) {
-      this.start()
+      this.autoDelete()
       setInterval(() => {
-        this.start()
+        this.autoDelete()
       }, 1000 * 60 * 60 * 24)
     }
   }
 
-  async start () {
+  async autoDelete () {
     // get and sort directories
     const directory = path.join(process.env.ROOT_DATA, '*', '*')
     let dirs = await fg([directory], { onlyDirectories: true })

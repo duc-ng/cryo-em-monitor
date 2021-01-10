@@ -22,7 +22,7 @@ app.listen(PORT, () => {
 const fw = config.microscopes.map(x => new FileWatcher(x.folder))
 const logger = new Logger()
 const autoDelete = new AutoDelete()
-autoDelete()
+autoDelete.start()
 
 // API: home
 app.get('/', (_, res) => {
