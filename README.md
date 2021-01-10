@@ -89,14 +89,8 @@ To run this application, you will need to install **[Node.js](https://nodejs.org
 - e.g. Ubuntu:
 
 ```bash
-#install node and package manager
-sudo apt install nodejs
-sudo apt install npm
-
-#update node to latest version (restart shell first)
-sudo npm cache clean -f
-sudo npm install -g n
-sudo n stable
+curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+sudo apt-get install -y nodejs
 ```
 
 - e.g. CentOs
