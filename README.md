@@ -17,8 +17,6 @@ These instructions will get you a copy of the project up and running on your loc
   - test: IE ×
   - test: CentOS ✓ 
 
-
-
 - 22.12.
 
   - fix Main plot: points/h
@@ -208,8 +206,8 @@ e.g.
 | --------- | ------- | -------- | ----------------------------------------------------------------------------- |
 | loopMs    | Integer | 10000    | Interval in ms, when generating test data                                     |
 | folder    | String  | "Titan1" | Directory of microscope, where test data is generated                         |
-| partial   | Boolean | true     | wether only a part of test data should contain test images (to save up space) |
-| partialNr | Integer | 50       | only last \_ data points generated will contain test images                   |
+| partial   | Boolean | true     | If true, not all data points will contain images |
+| partialProb | Float | 0.7       | % of data points with images         |
 
 #### **`microscopes`**
 

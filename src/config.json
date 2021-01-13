@@ -18,7 +18,7 @@
     "loopMs": 10000,
     "folder": "Titan1",
     "partial": true,
-    "partialNr": 50
+    "partialProb": 0.7
   },
 
   "microscopes": [

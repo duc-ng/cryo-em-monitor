@@ -9,4 +9,4 @@ _mmsdateProcessed_Value
 _mmsdateExported_Value
 _mmsdateError_Value
  
- XXX	AAA	TTT	TTT	TTT	EEE
+ XXX	AAA	SSS	TTT	UUU	EEE

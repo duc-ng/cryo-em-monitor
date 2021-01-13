@@ -47,10 +47,10 @@ class Test {
       async (x) => {
         if (Number.isInteger(parseInt(x))) n = x;
         for (let i = 0; i < n; i++) {
-          if (config.test.partial && i < n - config.test.partialNr) {
-            this.createFiles(false);
-          } else {
+          if (config.test.partial && Math.random() < config.test.partialProb) {
             this.createFiles(true);
+          } else {
+            this.createFiles(false);
           }
           process.stdout.write("Files generated: " + (i + 1) + "\r");
           await this.sleep(config.test.loopMs);
@@ -73,7 +73,9 @@ class Test {
     d = d.replace(/VVV/g, this.generateValue);
     d = d.replace(/PPP/g, this.generateValue2Digit);
     t = t.replace(/AAA/g, this.generateDate(false));
+    t = t.replace(/SSS/g, this.generateDate(true));
     t = t.replace(/TTT/g, this.generateDate(true));
+    t = t.replace(/UUU/g, this.generateDate(true));
     t = t.replace(/EEE/g, this.generateError);
 
     //write star files
@@ -114,7 +116,7 @@ class Test {
 
   generateDate = (isErrorPossible) => {
     if (isErrorPossible) {
-      return Math.random() < 0.05 ? 0 : this.getDate();
+      return Math.random() < 0.20 ? 0 : this.getDate();
     } else {
       return this.getDate();
     }
