@@ -16,6 +16,7 @@ These instructions will get you a copy of the project up and running on your loc
   - test: Edge ✓ 
   - test: IE ×
   - test: CentOS ✓ 
+  - Choose "All" in Plotmain
 
 - 22.12.
 
