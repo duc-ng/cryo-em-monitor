@@ -47,6 +47,12 @@ export default function Status() {
 
   const getColor = (i) => {
     switch (i) {
+      case 0:
+        return theme.palette.primary.main;
+      case 1:
+        return "#00bcd4";
+      case 2:
+        return "#1769aa";
       case 3:
         return theme.palette.success.main;
       case 4:

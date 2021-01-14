@@ -32,11 +32,11 @@
   "key": "_mmsImageKey_Value",
 
   "times.star": [
-    { "label": "Images acquired", "value": "_mmsdateAuqired_Value" },
-    { "label": "Images imported", "value": "_mmsdateImported_Value" },
-    { "label": "Images processed", "value": "_mmsdateProcessed_Value" },
-    { "label": "Images exported", "value": "_mmsdateExported_Value" },
-    { "label": "Images errors", "value": "_mmsdateError_Value" }
+    { "label": "Acquired", "value": "_mmsdateAuqired_Value" },
+    { "label": "Imported", "value": "_mmsdateImported_Value" },
+    { "label": "Processed", "value": "_mmsdateProcessed_Value" },
+    { "label": "Exported", "value": "_mmsdateExported_Value" },
+    { "label": "Errors", "value": "_mmsdateError_Value" }
   ],
 
   "data.star": [
