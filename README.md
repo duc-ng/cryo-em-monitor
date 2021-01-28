@@ -17,7 +17,6 @@ These instructions will get you a copy of the project up and running on your loc
   - for debugging: print key when selecting row in table
   - fix Images: Title on hover
   - deactivate: image play/pause button in fullscreen view
-  - deactivate: Pull and refresh 
   - deactivate: Fullscreen mode
 
 

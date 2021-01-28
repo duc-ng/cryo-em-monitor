@@ -14,7 +14,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Grid from "@material-ui/core/Grid";
 import TableContainer from "./content/table/TableContainer";
 import ScrollToTop from "./utils/ScrollToTop";
-import PullAndRefresh from "./utils/PullAndRefresh";
 import DetectWebGL from "./utils/DetectWebGL";
 
 //theme
