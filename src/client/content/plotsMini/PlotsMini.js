@@ -80,6 +80,7 @@ function MiniPlot(props) {
     plot_bgcolor: "rgba(0,0,0,0)",
     hovermode: type === "scattergl" ? "closest" : "x",
     barmode: "stack",
+    uirevision: "true", //keep ui state after update
     datarevision: revision,
     xaxis: {
       type: type === "scattergl" ? "date" : "",
@@ -249,7 +250,10 @@ export default function AllPlots() {
       xValues2: xValues2,
       yValues1: yValues1,
       yValues2: yValues2,
-      range: nrOutliers === 0 ? [] : [Math.max(0, mean - std), mean + std],
+      range: [
+        Math.max(Math.min(...yAll), mean - std),
+        Math.min(Math.max(...yAll), mean + std),
+      ],
       nrOutliers: nrOutliers,
     };
   });
