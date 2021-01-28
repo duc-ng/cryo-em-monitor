@@ -15,7 +15,7 @@
   },
 
   "test": {
-    "loopMs": 10000,
+    "loopMs": 100,
     "folder": "Titan1",
     "partial": true,
     "partialProb": 0.7
@@ -45,92 +45,93 @@
       "description": "Pixel Values [counts/px]",
       "value": "_mmsmean_Value",
       "maxOptimum": 0.6,
-      "minOptimum": 0.2
+      "minOptimum": 0.2,
+      "std": 4
     },
     {
       "label": "Drift",
       "description": "Total Sample Drift [Å]",
       "value": "_mmsdrift_Value",
       "maxOptimum": 0.6,
-      "minOptimum": 0.2
+      "minOptimum": 0.2,
+      "std": 4
     },
     {
       "label": "Iciness",
       "description": "Iciness [a.u.]",
       "value": "_mmsiciness_Value",
       "maxOptimum": 0.9,
-      "minOptimum": 0.1
+      "minOptimum": 0.1,
+      "std": 4
     },
     {
       "label": "Defocus",
       "description": "Defocus Fit [μm]",
       "value": "_mmsdefocus_Value",
       "maxOptimum": 0.0,
-      "minOptimum": 0.0
+      "minOptimum": 0.0,
+      "std": 4
     },
     {
       "label": "Resolution",
       "description": "Resolution of CTF Fit [Å]",
       "value": "_mmsresolution_Value",
       "maxOptimum": 0.5,
-      "minOptimum": 0.4
+      "minOptimum": 0.4,
+      "std": 4
     },
     {
       "label": "CCvalue",
       "description": "CC Value of CTF Fit [a.u.]",
       "value": "_mmsccOfCtfFit_Value",
       "maxOptimum": 0.7,
-      "minOptimum": 0.3
+      "minOptimum": 0.3,
+      "std": 4
     },
     {
       "label": "Astigmatism",
       "description": "Astigmatism [μm]",
       "value": "_mmsastigmatism_Value",
       "maxOptimum": 0.9,
-      "minOptimum": 0.0
+      "minOptimum": 0.0,
+      "std": 1
     },
     {
       "label": "Particles",
       "description": "Number of Particles",
       "value": "_mmnumberOfParticles_Value",
-      "maxOptimum": 10000,
-      "minOptimum": 0.0
+      "maxOptimum": -1,
+      "minOptimum": -1,
+      "std": 100
     }
   ],
 
   "images.star": [
     {
-      "label": "mmsrawAvg",
       "value": "_mmsrawAvg_Name",
       "info": "_mmsrawAvg_Info"
     },
     {
-      "label": "mmspsRawAvg",
       "value": "_mmspsRawAvg_Name",
       "info": "_mmspsRawAvg_Info"
     },
     {
-      "label": "mmsmotionCorrAvg",
       "value": "_mmsmotionCorrAvg_Name",
       "info": "_mmsmotionCorrAvg_Info"
     },
     {
-      "label": "mmspsMotionCorrAvg",
       "value": "_mmspsMotionCorrAvg_Name",
       "info": "_mmspsMotionCorrAvg_Info"
     },
     {
-      "label": "mmsdriftplot",
       "value": "_mmsdriftplot_Name",
       "info": "_mmsdriftplot_Info"
     },
     {
-      "label": "mmsctfdiag",
       "value": "_mmsctfdiag_Name",
       "info": "_mmsctfdiag_Info"
     },
     {
-      "label": "mmspick",
       "value": "_mmspick_Name",
       "info": "_mmspick_Info"
     }

@@ -82,7 +82,6 @@ export default function TableEnhanced(props) {
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
-
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, name);
     } else if (selectedIndex === 0) {
@@ -95,7 +94,7 @@ export default function TableEnhanced(props) {
         selected.slice(selectedIndex + 1)
       );
     }
-
+    console.log(name) //for debugging
     setSelected(newSelected);
   };
 

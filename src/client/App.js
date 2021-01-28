@@ -56,7 +56,7 @@ function App() {
             <PullAndRefresh>
               <Toolbar />
               <Status />
-              <PlotMain />
+              {/* <PlotMain /> */}
               <TableContainer />
               <ImageContainer />
               <PlotsMini />

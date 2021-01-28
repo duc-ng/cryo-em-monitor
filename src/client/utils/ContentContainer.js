@@ -50,7 +50,10 @@ export default function ContentContainer(props) {
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <Typography variant="body2" color="textSecondary">
+                  <Typography
+                    variant="body2"
+                    color="textSecondary"
+                  >
                     {props.midtext}
                   </Typography>
                 </Grid>

@@ -183,9 +183,10 @@ export default function ImageFullscreen(props) {
       onNextImage();
     } else if (e.key === "ArrowLeft") {
       onPrevImage();
-    } else if (e.key === " ") {
-      isPlaying ? onPause() : onPlay();
-    }
+    } 
+    // else if (e.key === " ") {
+    //   isPlaying ? onPause() : onPlay();
+    // }
   };
 
   React.useEffect(() => {
@@ -200,7 +201,7 @@ export default function ImageFullscreen(props) {
       <Grid container justify="center">
         <Grid item>
           <Typography variant="h6" className={classes.white}>
-            {image.data === undefined ? <Box m={4} /> : image.info}
+            {image.info}
           </Typography>
         </Grid>
       </Grid>
@@ -212,7 +213,7 @@ export default function ImageFullscreen(props) {
       <Grid container justify="center">
         <Grid item>
           <Typography variant="subtitle1" className={classes.grey}>
-            {image.data === undefined ? <Box m={4} /> : date}
+            {date}
           </Typography>
         </Grid>
       </Grid>
@@ -324,7 +325,8 @@ export default function ImageFullscreen(props) {
             <ArrowLeftDesktop />
             <ImageDisplay />
             <ArrowRightDesktop />
-            <PlayReset />
+            {/* deactivated: laggy, with loading delay */}
+            {/* <PlayReset /> */}
             <ImageCount />
             <ArrowLeftRightMobile />
           </Grid>

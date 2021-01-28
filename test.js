@@ -85,7 +85,6 @@ class Test {
       this.getFolder(),
       key.toString()
     );
-    console.log(src)
     this.createFolder(src);
     this.writeFile("data.star", d, src);
     this.writeFile("images.star", i, src);

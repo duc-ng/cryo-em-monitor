@@ -9,12 +9,23 @@ import Button from "@material-ui/core/Button";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { fade } from "@material-ui/core/styles/colorManipulator";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 const Plot = createPlotlyComponent(Plotly);
 
-const options = [{ label: "All" }].concat(
-  config["times.star"].map((obj) => ({ label: obj.label }))
-);
+const options = [
+  { label: "All" },
+  ...config["times.star"].map((obj) => ({ label: obj.label })),
+];
+
+//get rounded last date
+const getLastDate = (date, roundValue) => {
+  return date.setMinutes(
+    Math.floor(date.getMinutes() / roundValue) * roundValue,
+    0,
+    0
+  );
+};
 
 function PlotMain() {
   const theme = useTheme();
@@ -22,15 +33,7 @@ function PlotMain() {
   const [plotNr, setPlotNr] = React.useState(0);
   const maxDate = dateTo === undefined ? new Date() : dateTo;
   const minDate = dateFrom;
-
-  //get rounded last date
-  const getLastDate = (date, roundValue) => {
-    return date.setMinutes(
-      Math.floor(date.getMinutes() / roundValue) * roundValue,
-      0,
-      0
-    );
-  };
+  const isDesktop = useMediaQuery(theme.breakpoints.up("sm"));
 
   //get color
   const getColor = (i) => {
@@ -88,6 +91,7 @@ function PlotMain() {
       },
       fill: "tozeroy",
       fillcolor: fade(theme.palette.grey[50], 0.1),
+      cliponaxis: false, //show full markers on axis
       hoverinfo: "y",
     };
   };
@@ -99,18 +103,18 @@ function PlotMain() {
       : [calcXY(plotNr - 1)];
 
   const configLayout = {
-    autosize: true,
-    showlegend: plotNr === 0 ? true : false,
+    showlegend: plotNr === 0 && isDesktop,
     height: 270,
     margin: {
       t: 10,
       b: 55,
-      l: 45,
+      l: 35,
       r: 10,
       pad: 0,
     },
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
+    uirevision: "true", //keep ui state after update
     bargap: 0.001,
     font: {
       family: theme.typography.fontFamily,
@@ -125,12 +129,14 @@ function PlotMain() {
       range: [minDate, maxDate],
       gridcolor: theme.palette.divider,
       linecolor: theme.palette.divider,
+      fixedrange: true, //no zoom
     },
     yaxis: {
       rangemode: "tozero",
       gridcolor: theme.palette.divider,
       linecolor: theme.palette.divider,
       zerolinecolor: theme.palette.divider,
+      fixedrange: true, //no zoom
     },
   };
 
@@ -201,6 +207,7 @@ function PlotMain() {
         style={{
           width: "100%",
         }}
+        useResizeHandler={true}
       />
     </ContentContainer>
   );

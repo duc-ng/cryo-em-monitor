@@ -1,4 +1,5 @@
 const fs = require("fs");
+const config = require("./../config.json");
 
 /*
   converting star-file to object
@@ -10,12 +11,18 @@ class Reader {
     var keys = [];
     var values = [];
 
-    //remove empty strings and first two lines
+    //remove empty strings and first lines
     data = data.split(/[\n,\t]+/);
     data = data.map((e) => e.trim());
     data = data.filter(Boolean);
-    data.shift();
-    data.shift();
+    while (data.length !== 0) {
+      if (!data[0].startsWith("loop_")) {
+        data.shift();
+      } else {
+        data.shift();
+        break;
+      }
+    }
 
     //format and get keys/values
     for (let i = 0; i < data.length; i++) {

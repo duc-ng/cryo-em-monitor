@@ -7,6 +7,17 @@ This application reads data from from multiple microscopic recordings, when save
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 ## Latest update
+- 28.01
+  - add: do not show outliers in miniplots
+  - add: standard deviation in config
+  - add: validate() .star-File
+  - fix miniplots: deactivate zoom in mobile
+  - fix mainplot: state is preserved after update
+  - fix mainplot: deactivate legend & zoom in mobile
+  - for debugging: print key when selecting row in table
+  - deactivated image play/pause button in fullscreen view
+  - fix Images: Title on hover
+
 
 - 08.01.
 
@@ -260,6 +271,7 @@ _mmsdateError_Value
 | value       | String | Value name in .star file     |
 | maxOptimum  | Number | max. value for optimal range |
 | minOptimum  | Number | min. value for optimal range |
+| std         | Number | Standard deviation (values outside will be zoomed out) |
 
 &rarr; _This configuration is expandable._
 
@@ -286,7 +298,6 @@ _mmnumberOfParticles_Value
 
 | Name  | Type   | Description              |
 | ----- | ------ | ------------------------ |
-| label | String | Label displayed          |
 | value | String | Value name in .star file |
 | info  | String | Info name in .star file  |
 

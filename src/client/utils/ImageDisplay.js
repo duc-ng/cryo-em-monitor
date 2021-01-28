@@ -82,7 +82,7 @@ export default function ImageDisplay(props) {
   return (
     <React.Fragment>
       {/* image button */}
-      <Tooltip title={config["images.star"][props.i].label}>
+      <Tooltip title={image.info}>
         <Button onClick={handleOpen} className={classes.button}>
           {image.data === undefined ? (
             <Box className={classes.box} border={1}>
