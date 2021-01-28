@@ -15,8 +15,10 @@ These instructions will get you a copy of the project up and running on your loc
   - fix mainplot: state is preserved after update
   - fix mainplot: deactivate legend & zoom in mobile
   - for debugging: print key when selecting row in table
-  - deactivated image play/pause button in fullscreen view
   - fix Images: Title on hover
+  - deactivate: image play/pause button in fullscreen view
+  - deactivate: Pull and refresh 
+  - deactivate: Fullscreen mode
 
 
 - 08.01.
