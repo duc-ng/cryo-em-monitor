@@ -8,7 +8,6 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import FullscreenIcon from "@material-ui/icons/Fullscreen";
 import Grid from "@material-ui/core/Grid";
-import ContentContainer from "./../../utils/ContentContainer";
 import config from "./../../../config.json";
 import { makeStyles } from "@material-ui/core/styles";
 import { DataContext } from "./../../global/Data";
@@ -41,7 +40,7 @@ export default function PlotsFullscreen(props) {
     refresh(); //less Webgl contexts for plotly
   };
 
-  const MiniPlot = props.miniPlot;
+  const { MiniPlot, setRevision, plotData,revision } = props;
 
   return (
     <Hidden mdDown>
@@ -75,15 +74,18 @@ export default function PlotsFullscreen(props) {
           >
             {config["data.star"].map((x, i) => (
               <Grid item xs={4} key={i}>
-                <ContentContainer
-                  id={"section_images_" + i}
-                  title={x.label}
-                  subtitle={config["data.star"][i].description}
-                  height={props.HEIGHT}
-                  divider={false}
-                >
-                  <MiniPlot plotType={props.plotType[i]} i={i} />
-                </ContentContainer>
+                <MiniPlot
+                  i={i}
+                  percentPlotted={100}
+                  setRevision={setRevision}
+                  revision={revision}
+                  xValues1={plotData[i].xValues1}
+                  xValues2={plotData[i].xValues2}
+                  yValues1={plotData[i].yValues1}
+                  yValues2={plotData[i].yValues2}
+                  range={plotData[i].range}
+                  nrOutliers={plotData[i].nrOutliers}
+                />
               </Grid>
             ))}
           </Grid>

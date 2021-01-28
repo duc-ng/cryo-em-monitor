@@ -46,7 +46,7 @@
       "value": "_mmsmean_Value",
       "maxOptimum": 0.6,
       "minOptimum": 0.2,
-      "std": 4
+      "std": 1
     },
     {
       "label": "Drift",
@@ -62,7 +62,7 @@
       "value": "_mmsiciness_Value",
       "maxOptimum": 0.9,
       "minOptimum": 0.1,
-      "std": 4
+      "std": 1
     },
     {
       "label": "Defocus",
@@ -70,7 +70,7 @@
       "value": "_mmsdefocus_Value",
       "maxOptimum": 0.0,
       "minOptimum": 0.0,
-      "std": 4
+      "std": 2
     },
     {
       "label": "Resolution",
@@ -78,7 +78,7 @@
       "value": "_mmsresolution_Value",
       "maxOptimum": 0.5,
       "minOptimum": 0.4,
-      "std": 4
+      "std": 2
     },
     {
       "label": "CCvalue",
@@ -86,7 +86,7 @@
       "value": "_mmsccOfCtfFit_Value",
       "maxOptimum": 0.7,
       "minOptimum": 0.3,
-      "std": 4
+      "std": 1
     },
     {
       "label": "Astigmatism",
@@ -102,7 +102,7 @@
       "value": "_mmnumberOfParticles_Value",
       "maxOptimum": -1,
       "minOptimum": -1,
-      "std": 100
+      "std": 500
     }
   ],
 

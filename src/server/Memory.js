@@ -65,9 +65,47 @@ class Memory {
     }
   };
 
+  validate = (obj) => {
+    //key
+    const key1IsValid = typeof obj.data[config.key] == "number";
+    const key2IsValid = typeof obj.times[config.key] == "number";
+
+    //data.star
+    const dataIsValid =
+      config["data.star"].filter((a) => typeof obj.data[a.value] !== "number")
+        .length === 0;
+
+    //times.star
+    const timesIsValid =
+      config["times.star"].filter(
+        (a) =>
+          !(
+            typeof obj.data[a.value] == "string" ||
+            typeof obj.data[a.value] == "number"
+          )
+      ).length === 0;
+
+    //images.star
+    const imageIsValid =
+      config["images.star"].filter(
+        (a) => typeof obj.times[a.value] !== "string"
+      ).length === 0;
+
+    return (
+      key1IsValid && key2IsValid && dataIsValid && timesIsValid && imageIsValid
+    );
+  };
+
   add = (obj, subfolder) => {
     const key = obj.data[config.key];
     const date = obj.data[config["times.star"][0].value];
+
+    if (!this.validate(obj)) {
+      if (!this.dataValues.has(key)) {
+        this.dataValues.set(key, null);
+        throw new Error("Could not validate: " + obj.path);
+      }
+    }
 
     if (!this.dataValues.has(key) && date !== undefined) {
       //insert

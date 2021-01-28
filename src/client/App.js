@@ -53,15 +53,15 @@ function App() {
             justify="center"
             className={classes.content}
           >
-            <PullAndRefresh>
+            {/* <PullAndRefresh> */}
               <Toolbar />
               <Status />
-              {/* <PlotMain /> */}
+              <PlotMain />
               <TableContainer />
               <ImageContainer />
               <PlotsMini />
               <Footer />
-            </PullAndRefresh>
+            {/* </PullAndRefresh> */}
           </Grid>
           <ScrollToTop />
         </div>

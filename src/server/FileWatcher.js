@@ -91,10 +91,8 @@ class FileWatcher {
         ]);
         const merge = { ...files[0], ...files[1] };
         const obj = { path: dirPath, data: merge, times: files[2] };
-        if (this.validate(files[0], files[1], files[2])) {
+        if (Object.keys(merge).length !== 0) {
           this.memory.add(obj, this.subfolder);
-        } else {
-          throw new Error("Could not validate: " + dirPath);
         }
       } catch (error) {
         this.errorCount++;
@@ -104,48 +102,6 @@ class FileWatcher {
         );
       }
     }
-  };
-
-  validate = (obj1, obj2, obj3) => {
-    //keys
-    const key1IsValid = typeof obj1[config.key] == "number";
-    const key2IsValid = typeof obj2[config.key] == "number";
-    const key3IsValid = typeof obj3[config.key] == "number";
-
-    //data.star
-    const dataIsValid =
-      config["data.star"].filter((a) => typeof obj1[a.value] !== "number")
-        .length === 0;
-
-    //times.star
-    const timesIsValid =
-      config["times.star"].filter(
-        (a) =>
-          !(
-            typeof obj2[a.value] == "string" || typeof obj2[a.value] == "number"
-          )
-      ).length === 0;
-
-    //images.star
-    const imageIsValid =
-      config["images.star"].filter((a) => typeof obj3[a.value] !== "string")
-        .length === 0;
-
-    // console.log(key1IsValid)
-    // console.log(key2IsValid)
-    // console.log(key3IsValid)
-    // console.log(dataIsValid)
-    // console.log(timesIsValid)
-    // console.log(imageIsValid)
-
-    return (
-      key1IsValid &&
-      key2IsValid &&
-      key3IsValid &&
-      dataIsValid &&
-      timesIsValid &&
-      imageIsValid
-    );
   };
 
   set memory(val) {

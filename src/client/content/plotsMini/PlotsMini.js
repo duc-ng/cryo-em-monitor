@@ -32,13 +32,9 @@ function MiniPlot(props) {
     xValues2,
     yValues1,
     yValues2,
-    rangeFrom,
-    rangeTo,
+    range,
     nrOutliers,
   } = props;
-
-  console.log("from: " + rangeFrom);
-  console.log("to: " + rangeTo);
 
   const plotData = [
     {
@@ -100,7 +96,7 @@ function MiniPlot(props) {
       rangemode: "tozero",
       gridcolor: theme.palette.divider,
       linecolor: theme.palette.divider,
-      range: [rangeFrom, rangeTo],
+      range: type === "scattergl" ? range : [],
       fixedrange: isMobile, //no zoom if mobile
     },
     autosize: true,
@@ -248,16 +244,12 @@ export default function AllPlots() {
     const nrOutliers = yAll.filter((x) => x < mean - std || x > mean + std)
       .length;
 
-    console.log(mean);
-    console.log(nrOutliers);
-
     return {
       xValues1: xValues1,
       xValues2: xValues2,
       yValues1: yValues1,
       yValues2: yValues2,
-      rangeFrom: Math.max(0, mean - std),
-      rangeTo: mean + std,
+      range: nrOutliers === 0 ? [] : [Math.max(0, mean - std), mean + std],
       nrOutliers: nrOutliers,
     };
   });
@@ -265,7 +257,12 @@ export default function AllPlots() {
   return (
     <React.Fragment>
       <div id="section_plots" />
-      {/* <PlotsFullscreen miniPlot={MiniPlot} HEIGHT={HEIGHT} plotType={type} /> */}
+      {/* <PlotsFullscreen
+        MiniPlot={MiniPlot}
+        setRevision={setRevision}
+        plotData={plotData}
+        revision={revision}
+      /> */}
       <Grid container justify="center" spacing={2}>
         {config["data.star"].map((_, i) => (
           <Grid item xs={12} sm={6} key={i}>
@@ -278,8 +275,7 @@ export default function AllPlots() {
               xValues2={plotData[i].xValues2}
               yValues1={plotData[i].yValues1}
               yValues2={plotData[i].yValues2}
-              rangeFrom={plotData[i].rangeFrom}
-              rangeTo={plotData[i].rangeTo}
+              range={plotData[i].range}
               nrOutliers={plotData[i].nrOutliers}
             />
           </Grid>
