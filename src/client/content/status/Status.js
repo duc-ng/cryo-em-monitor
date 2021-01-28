@@ -2,7 +2,6 @@ import React from "react";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Card from "@material-ui/core/Card";
-import Box from "@material-ui/core/Box";
 import SmallDivider from "./../../utils/SmallDivider";
 import Typography from "@material-ui/core/Typography";
 import config from "../../../config.json";
@@ -69,7 +68,7 @@ export default function Status() {
   };
 
   return (
-    <Box m={1}>
+    <Grid container>
       <div id="section_status" />
       <Grid container spacing={2} justify="center">
         {config["times.star"].map(({ label, value }, i) => {
@@ -102,6 +101,6 @@ export default function Status() {
         })}
       </Grid>
       <SmallDivider />
-    </Box>
+    </Grid>
   );
 }
