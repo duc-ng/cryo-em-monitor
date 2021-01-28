@@ -15,7 +15,7 @@
   },
 
   "test": {
-    "loopMs": 100,
+    "loopMs": 10000,
     "folder": "Titan1",
     "partial": true,
     "partialProb": 0.7
