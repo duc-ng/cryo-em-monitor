@@ -80,7 +80,6 @@ function MiniPlot(props) {
     plot_bgcolor: "rgba(0,0,0,0)",
     hovermode: type === "scattergl" ? "closest" : "x",
     barmode: "stack",
-    uirevision: "true", //keep ui state after update
     datarevision: revision,
     xaxis: {
       type: type === "scattergl" ? "date" : "",
@@ -89,7 +88,7 @@ function MiniPlot(props) {
       linecolor: theme.palette.divider,
       range:
         type === "scattergl"
-          ? [dateFrom, dateTo === undefined ? new Date() : dateTo]
+          ? [dateFrom, dateTo === undefined ? new Date().toString() : dateTo]
           : [],
       fixedrange: isMobile, //no zoom if mobile
     },
@@ -149,8 +148,8 @@ function MiniPlot(props) {
         setType("histogram");
       } else {
         setType("scattergl");
+        setRedraw(true);
       }
-      setRedraw(true);
     };
 
     return (
