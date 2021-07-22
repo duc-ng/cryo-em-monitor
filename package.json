@@ -31,7 +31,7 @@
     "source-map-explorer": "^2.5.0",
     "winston": "^3.3.3",
     "winston-daily-rotate-file": "^4.5.0",
-    "xlsx": "^0.16.8"
+    "xlsx": "^0.17.0"
   },
   "scripts": {
     "start": "forever start app.js",
