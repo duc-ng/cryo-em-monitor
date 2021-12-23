@@ -6,6 +6,8 @@ This application reads data from from multiple microscopic recordings, when save
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
+![](https://github.com/duc-ng/cryo-em-monitor/blob/master/example.gif)
+
 ## Latest update
 - 28.01
   - add: do not show outliers in miniplots
